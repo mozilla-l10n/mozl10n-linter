@@ -1,0 +1,19 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+# ID01: check that identifiers only use lowercase and hyphens (Gecko)
+# ID02: check that identifiers have a minimum length (Gecko)
+
+---
+ID01:
+    enabled: false
+    exclusions:
+        messages: []
+        files: []
+ID02:
+    enabled: false
+    min_length: 9
+    exclusions:
+        messages: []
+        files: []
