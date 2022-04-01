@@ -11,3 +11,5 @@ resources.
 |[Firefox Monitor](https://github.com/flodolo/fluent-linter/actions/workflows/monitor.yaml)|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Monitor/badge.svg)
 |[Firefox Profiler](https://github.com/flodolo/fluent-linter/actions/workflows/profiler.yaml)|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Profiler/badge.svg)
 |[mozilla.org](https://github.com/flodolo/fluent-linter/actions/workflows/mozorg.yaml)|![Linter status](https://github.com/flodolo/fluent-linter/workflows/MozOrg/badge.svg)
+
+The list of errors for failed runs is available as an artifact (`errors-list`).
