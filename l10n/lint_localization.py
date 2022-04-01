@@ -483,7 +483,8 @@ def main():
             with open(out_file, "w") as f:
                 f.write("\n".join(output))
         # Print errors anyway on screen
-        sys.exit("\n".join(output))
+        print("\n".join(output))
+        sys.exit(1)
     else:
         print("No issues found.")
 

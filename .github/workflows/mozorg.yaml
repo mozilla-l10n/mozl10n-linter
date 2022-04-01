@@ -1,0 +1,45 @@
+name: MozOrg
+on:
+  schedule:
+    - cron: '0 7 * * 1-5' # Run Mon-Fri at 7AM UTC
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          path: "scripts_repo"
+      - name: Clone target repository
+        uses: actions/checkout@v3
+        with:
+          repository: "mozilla-l10n/www-l10n"
+          path: "target_repo"
+      - name: Set up Python 3
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+      - name: Install Python dependencies
+        run: |
+          pip install -r scripts_repo/.github/requirements.txt
+      - name: Lint localization (vendor)
+        # Allow to continue if the linter fails, so we can upload the list of
+        # errors as artifact
+        continue-on-error: true
+        run: |
+          python scripts_repo/l10n/lint_localization.py --toml target_repo/l10n-vendor.toml --ref en --dest errors_vendors.txt
+      - name: Lint localization (community)
+        continue-on-error: true
+        run: |
+          python scripts_repo/l10n/lint_localization.py --toml target_repo/l10n-pontoon.toml --ref en --dest errors_community.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: errors-list
+          path: errors_*.txt
+      - name: Fail on errors
+        run: |
+          if [ -f "errors_vendors.txt" ] || [ -f "errors_community.txt" ]; then
+            exit 1
+          fi
