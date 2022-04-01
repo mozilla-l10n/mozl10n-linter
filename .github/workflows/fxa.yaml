@@ -1,0 +1,28 @@
+name: FxA
+on:
+  schedule:
+    - cron: '0 7 * * 1-5' # Run Mon-Fri at 7AM UTC
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+        with:
+          path: "scripts_repo"
+      - name: Clone target repository
+        uses: actions/checkout@v3
+        with:
+          repository: "mozilla/fxa-content-server-l10n"
+          path: "target_repo"
+      - name: Set up Python 3
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+      - name: Install Python dependencies
+        run: |
+          pip install -r scripts_repo/.github/requirements.txt
+      - name: Lint localization
+        run: |
+          python scripts_repo/l10n/lint_localization.py --l10n target_repo/locale/ --ref templates

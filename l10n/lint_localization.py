@@ -43,6 +43,8 @@ class StringExtraction:
 
         if not project_config.all_locales:
             print("No locales defined in the project configuration.")
+        else:
+            print("Extracting strings based on project config.")
         for locale in project_config.all_locales:
             files = paths.ProjectFiles(locale, [project_config])
             self.translations[locale] = {}
@@ -142,8 +144,10 @@ class StringExtraction:
         locales.sort()
 
         # Extract strings for reference locale
+        print(f"Extracting strings for reference locale ({self.reference_locale}).")
         self.extractLocale(self.reference_locale, base_dir)
         for locale in locales:
+            print("Extracting strings for other locales.")
             self.extractLocale(locale, base_dir)
 
     def extractStrings(self):
@@ -468,6 +472,8 @@ def main():
     output = checks.printErrors()
     if output:
         sys.exit("\n".join(output))
+    else:
+        print("No issues found.")
 
 
 if __name__ == "__main__":
