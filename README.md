@@ -7,3 +7,4 @@ resources.
 | Project | Linter Status |
 |---------|---------------|
 |Firefox Monitor|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Monitor/badge.svg)
+|Firefox Profiler|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Profiler/badge.svg)
