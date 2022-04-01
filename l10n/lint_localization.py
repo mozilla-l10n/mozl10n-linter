@@ -43,9 +43,9 @@ class StringExtraction:
 
         if not project_config.all_locales:
             print("No locales defined in the project configuration.")
-        else:
-            print("Extracting strings based on project config.")
+
         for locale in project_config.all_locales:
+            print(f"Extracting strings for locale: {locale}.")
             files = paths.ProjectFiles(locale, [project_config])
             self.translations[locale] = {}
             for l10n_file, reference_file, _, _ in files:
@@ -81,6 +81,7 @@ class StringExtraction:
                     )
                     for entity in p.parse()
                 )
+        print(f"  {len(self.translations[locale])} strings extracted")
 
     def extractLocale(self, locale, base_dir):
         """Extract strings for a locale"""
@@ -146,9 +147,11 @@ class StringExtraction:
         # Extract strings for reference locale
         print(f"Extracting strings for reference locale ({self.reference_locale}).")
         self.extractLocale(self.reference_locale, base_dir)
+        print(f"  {len(self.translations[self.reference_locale])} strings extracted")
         for locale in locales:
-            print("Extracting strings for other locales.")
+            print(f"Extracting strings for locale: {locale}")
             self.extractLocale(locale, base_dir)
+            print(f"  {len(self.translations[locale])} strings extracted")
 
     def extractStrings(self):
         """Extract strings from all locales."""
@@ -435,6 +438,8 @@ class QualityCheck:
 
             output.append(f"\nTotal errors: {total}")
 
+        return output
+
 
 def main():
     # Read command line input parameters
@@ -446,6 +451,7 @@ def main():
         "--l10n", nargs="?", dest="l10n_path", help="Path to l10n.toml file"
     )
     parser.add_argument("--ref", dest="reference_code", help="Reference language code")
+    parser.add_argument("--dest", dest="dest_file", help="Save output to file")
     parser.add_argument(
         "--exceptions",
         nargs="?",
@@ -471,7 +477,14 @@ def main():
     checks = QualityCheck(translations, args.reference_code, args.exceptions_file)
     output = checks.printErrors()
     if output:
-        sys.exit("\n".join(output))
+        out_file = args.dest_file
+        if out_file:
+            print(f"Saving output to {out_file}")
+            with open(out_file, "w") as f:
+                f.write("\n".join(output))
+        else:
+            print("\n".join(output))
+        sys.exit(1)
     else:
         print("No issues found.")
 

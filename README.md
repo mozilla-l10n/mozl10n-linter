@@ -6,6 +6,6 @@ resources.
 
 | Project | Linter Status |
 |---------|---------------|
-|Firefox Accounts|![Linter status](https://github.com/flodolo/fluent-linter/workflows/FxA/badge.svg)
-|Firefox Monitor|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Monitor/badge.svg)
-|Firefox Profiler|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Profiler/badge.svg)
+|[Firefox Accounts](https://github.com/flodolo/fluent-linter/actions/workflows/fxa.yaml)|![Linter status](https://github.com/flodolo/fluent-linter/workflows/FxA/badge.svg)
+|[Firefox Monitor](https://github.com/flodolo/fluent-linter/actions/workflows/monitor.yaml)|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Monitor/badge.svg)
+|[Firefox Profiler](https://github.com/flodolo/fluent-linter/actions/workflows/profiler.yaml)|![Linter status](https://github.com/flodolo/fluent-linter/workflows/Profiler/badge.svg)
