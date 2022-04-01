@@ -24,5 +24,18 @@ jobs:
         run: |
           pip install -r scripts_repo/.github/requirements.txt
       - name: Lint localization
+        # Allow to continue if the linter fails, so we can upload the list of
+        # errors as artifact
+        continue-on-error: true
         run: |
-          python scripts_repo/l10n/lint_localization.py --l10n target_repo/locale/ --ref templates
+          python scripts_repo/l10n/lint_localization.py --l10n target_repo/locale/ --ref templates --dest errors.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: errors-list
+          path: errors.txt
+      - name: Fail on errors
+        run: |
+          if [ -f "errors.txt" ]; then
+            exit 1
+          fi
