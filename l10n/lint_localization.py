@@ -105,7 +105,9 @@ class StringExtraction:
                         # Store attributes
                         for attribute in entity.attributes:
                             attr_string_id = f"{relative_file}:{entity}.{attribute}"
-                            self.translations[locale][attr_string_id] = attribute.raw_val
+                            self.translations[locale][
+                                attr_string_id
+                            ] = attribute.raw_val
                     else:
                         self.translations[locale][string_id] = entity.raw_val
             except Exception as e:
@@ -117,7 +119,6 @@ class StringExtraction:
             for string_id in list(self.translations[locale].keys()):
                 if string_id not in self.translations[self.reference_locale]:
                     del self.translations[locale][string_id]
-
 
     def extractStringsFolder(self):
         """Extract strings searching for FTL files in folders."""
@@ -131,9 +132,7 @@ class StringExtraction:
         # Store the list of FTL files, with paths relative to the source folder
         ref_path = Path(ref_dir)
         files = ref_path.glob("**/*.ftl")
-        self.file_list = [
-            os.path.relpath(fp, ref_dir) for fp in files
-        ]
+        self.file_list = [os.path.relpath(fp, ref_dir) for fp in files]
 
         # Get a list of subfolders, assume they're locales
         locales = [
@@ -425,12 +424,12 @@ class QualityCheck:
             locales.sort()
 
             for locale in locales:
-                print(f"Locale: {locale} ({len(self.error_messages[locale])})")
+                output.append(f"Locale: {locale} ({len(self.error_messages[locale])})")
                 total += len(self.error_messages[locale])
                 for e in self.error_messages[locale]:
-                    print(f"  {e}")
+                    output.append(f"  {e}")
 
-            print(f"\nTotal errors: {total}")
+            output.append(f"\nTotal errors: {total}")
 
 
 def main():
@@ -467,6 +466,8 @@ def main():
 
     checks = QualityCheck(translations, args.reference_code, args.exceptions_file)
     output = checks.printErrors()
+    if output:
+        sys.exit("\n".join(output))
 
 
 if __name__ == "__main__":
