@@ -1,0 +1,23 @@
+{
+  "HTML": {
+    "locales": {
+      "it": [
+        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2",
+        "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox"
+      ]
+    },
+    "strings": []
+  },
+  "ignore": {
+    "locales": {},
+    "strings": []
+  },
+  "data-l10n-names": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {},
+    "strings": []
+  }
+}

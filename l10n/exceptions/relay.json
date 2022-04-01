@@ -1,0 +1,22 @@
+{
+  "HTML": {
+    "locales": {},
+    "strings": []
+  },
+  "ignore": {
+    "locales": {},
+    "strings": []
+  },
+  "data-l10n-names": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {
+      "sk": [
+        "app.ftl:profile-promo-email-blocking-label-forwarding"
+      ]
+    },
+    "strings": []
+  }
+}
