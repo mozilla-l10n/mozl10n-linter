@@ -1,0 +1,15 @@
+{
+    "ellipsis": {
+        "excluded_locales": [
+            "ja"
+        ]
+    },
+    "placeholders": {
+        "cs": [
+            "Autocomplete.mySitesDesc"
+        ],
+        "pl": [
+            "trackingProtection.toggleDescription1"
+        ]
+    }
+}

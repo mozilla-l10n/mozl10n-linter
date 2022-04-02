@@ -1,1 +1,2 @@
 compare-locales==8.2.1
+lxml==4.8.0

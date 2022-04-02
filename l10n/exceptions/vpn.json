@@ -1,0 +1,11 @@
+{
+    "ellipsis": {
+        "it": [
+            "vpn.errors.somethingWentWrong"
+        ],
+        "excluded_locales": [
+            "ja"
+        ]
+    },
+    "placeholders": {}
+}
