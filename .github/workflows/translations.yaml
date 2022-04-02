@@ -1,7 +1,7 @@
-name: Profiler
+name: Translations
 on:
   schedule:
-    - cron: '0 1 25 * 1-5'
+    - cron: '0 2 5 * 1-5' # Run Mon-Fri at 7AM UTC
   workflow_dispatch:
 jobs:
   update:
@@ -14,8 +14,7 @@ jobs:
       - name: Clone target repository
         uses: actions/checkout@v3
         with:
-          repository: "firefox-devtools/profiler"
-          ref: "l10n"
+          repository: "mozilla-l10n/firefox-translations-l10n/"
           path: "target_repo"
       - name: Set up Python 3
         uses: actions/setup-python@v3
@@ -29,7 +28,7 @@ jobs:
         # errors as artifact
         continue-on-error: true
         run: |
-          python scripts_repo/l10n/fluent_l10n.py --l10n target_repo/locales/ --ref en-US --dest errors.txt
+          python scripts_repo/l10n/json_l10n.py --l10n target_repo/ --ref en_US --dest errors.txt --exceptions scripts_repo/l10n/exceptions/translations.json
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

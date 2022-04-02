@@ -1,7 +1,14 @@
 {
   "HTML": {
-    "locales": {},
-    "strings": []
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
+    },
+    "strings": [
+      "string3"
+    ]
   },
   "ignore": {
     "locales": {},

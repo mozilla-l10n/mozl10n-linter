@@ -1,7 +1,7 @@
 name: MozOrg
 on:
   schedule:
-    - cron: '0 7 * * 1-5' # Run Mon-Fri at 7AM UTC
+    - cron: '0 1 20 * 1-5'
   workflow_dispatch:
 jobs:
   update:

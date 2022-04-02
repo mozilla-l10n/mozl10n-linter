@@ -1,0 +1,17 @@
+{
+    "ellipsis": {
+        "it": [
+            "string1",
+            "string2"
+        ],
+        "excluded_locales": [
+            "ja"
+        ]
+    },
+    "placeholders": {
+        "it": [
+            "string1",
+            "string2"
+        ]
+    }
+}
