@@ -1,7 +1,7 @@
-name: Monitor
+name: Translations
 on:
   schedule:
-    - cron: '10 1 * * 1-5'
+    - cron: '35 1 * * 1-5'
   workflow_dispatch:
 jobs:
   update:
@@ -14,22 +14,18 @@ jobs:
       - name: Clone target repository
         uses: actions/checkout@v3
         with:
-          repository: "mozilla/blurts-server"
-          ref: "localization"
+          repository: "mozilla-l10n/firefox-translations-l10n"
           path: "target_repo"
       - name: Set up Python 3
         uses: actions/setup-python@v3
         with:
           python-version: '3.9'
-      - name: Install Python dependencies
-        run: |
-          pip install -r scripts_repo/.github/requirements.txt
       - name: Lint localization
         # Allow to continue if the linter fails, so we can upload the list of
         # errors as artifact
         continue-on-error: true
         run: |
-          python scripts_repo/l10n/fluent_l10n.py --l10n target_repo/locales/ --ref en --dest errors.txt
+          python scripts_repo/l10n/json_l10n.py --l10n target_repo/ --ref en_US --dest errors.txt --exceptions scripts_repo/l10n/exceptions/translations.json
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
