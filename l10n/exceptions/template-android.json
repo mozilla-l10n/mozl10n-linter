@@ -1,0 +1,21 @@
+{
+  "HTML": {
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
+    },
+    "strings": [
+      "string3"
+    ]
+  },
+  "ignore": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {},
+    "strings": []
+  }
+}

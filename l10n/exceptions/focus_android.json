@@ -1,0 +1,22 @@
+{
+  "HTML": {
+    "locales": {
+      "it": [
+        "app/src/main/res/values/strings.xml:your_rights_content5"
+      ]
+    },
+    "strings": []
+  },
+  "ignore": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {
+      "he": [
+        "app/src/main/res/values/strings.xml:tip_request_desktop2"
+      ]
+    },
+    "strings": []
+  }
+}

@@ -4,7 +4,17 @@ The scripts in this repository can be used to lint reference files and
 localized monorepos, i.e. repositories which include source and localized
 resources.
 
-The list of errors for failed runs is available as an artifact (`errors-list`).
+The list of errors for failed runs is available as an artifact (`errors-list`):
+* Click on the link in the project column.
+* Click on the first failed run (with a red cross) on the right.
+* Download the file in the `Artifacts` section at the bottom of the page.
+
+## Android (XML)
+
+| Project | Linter Status |
+|---------|---------------|
+|[Firefox for Android](https://github.com/flodolo/mozl10n-linter/actions/workflows/firefox_android.yaml)|![Linter status](https://github.com/flodolo/mozl10n-linter/workflows/Firefox%20Android/badge.svg)
+|[Focus for Android](https://github.com/flodolo/mozl10n-linter/actions/workflows/focus_android.yaml)|![Linter status](https://github.com/flodolo/mozl10n-linter/workflows/Focus%20Android/badge.svg)
 
 ## Fluent
 
