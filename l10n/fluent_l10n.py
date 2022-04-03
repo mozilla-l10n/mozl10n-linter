@@ -9,6 +9,7 @@ from configparser import ConfigParser
 from fluent.syntax import parse, visitor, serialize
 from fluent.syntax.serializer import FluentSerializer
 from html.parser import HTMLParser
+from pathlib import Path
 import argparse
 import json
 import os
