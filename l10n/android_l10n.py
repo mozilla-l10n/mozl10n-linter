@@ -200,7 +200,7 @@ class QualityCheck:
             # General checks on localized strings
             for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
-                if ignoreString(exceptions, "ignore", string_id):
+                if ignoreString(exceptions, "general", string_id):
                     continue
 
                 translation = locale_translations[string_id]

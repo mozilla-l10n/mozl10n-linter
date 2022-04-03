@@ -9,6 +9,8 @@ The list of errors for failed runs is available as an artifact (`errors-list`):
 * Click on the first failed run (with a red cross) on the right.
 * Download the file in the `Artifacts` section at the bottom of the page.
 
+It's possible to define [exceptions](https://github.com/flodolo/mozl10n-linter/tree/main/l10n/exceptions) for specific type of checks in each project.
+
 ## Android (XML)
 
 | Project | Linter Status |

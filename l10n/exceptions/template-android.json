@@ -10,7 +10,7 @@
       "string3"
     ]
   },
-  "ignore": {
+  "general": {
     "locales": {},
     "strings": []
   },
