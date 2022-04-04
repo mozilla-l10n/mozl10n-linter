@@ -1,10 +1,11 @@
 {
     "ellipsis": {
+        "locales": {},
         "excluded_locales": [
             "ja"
         ]
     },
-    "placeholders": {
+    "placeables": {
         "cs": [
             "Autocomplete.mySitesDesc"
         ],
