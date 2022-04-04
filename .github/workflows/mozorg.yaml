@@ -41,5 +41,7 @@ jobs:
       - name: Fail on errors
         run: |
           if [ -f "errors_vendors.txt" ] || [ -f "errors_community.txt" ]; then
+            cat errors_vendors.txt
+            cat errors_community.txt
             exit 1
           fi

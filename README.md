@@ -7,7 +7,7 @@ resources.
 The list of errors for failed runs is available as an artifact (`errors-list`):
 * Click on the link in the project column.
 * Click on the first failed run (with a red cross) on the right.
-* Download the file in the `Artifacts` section at the bottom of the page.
+* The list of errors will be displayed in the logs. It’s also possible to download the list as a file in the `Artifacts` section at the bottom of the page. For both actions it’s necessary to be logged in to GitHub.
 
 It's possible to define [exceptions](https://github.com/flodolo/mozl10n-linter/tree/main/l10n/exceptions) for specific type of checks in each project.
 

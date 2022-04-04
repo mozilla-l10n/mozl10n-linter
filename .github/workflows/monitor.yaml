@@ -38,5 +38,6 @@ jobs:
       - name: Fail on errors
         run: |
           if [ -f "errors.txt" ]; then
+            cat errors.txt
             exit 1
           fi
