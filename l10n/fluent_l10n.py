@@ -325,7 +325,10 @@ class QualityCheck:
 
                 # Check for stray spaces
                 if '{ "' in translation:
-                    error_msg = f"Fluent literal in string ({string_id})"
+                    error_msg = (
+                        f"Fluent literal in string ({string_id})\n"
+                        f"  Translation: {translation}"
+                    )
                     self.error_messages[locale].append(error_msg)
 
                 # Check for the message ID repeated in the translation
@@ -360,7 +363,11 @@ class QualityCheck:
                 tags = html_parser.get_tags()
 
                 if tags != ref_tags:
-                    error_msg = f"Mismatched HTML elements in string ({string_id})"
+                    error_msg = (
+                        f"Mismatched HTML elements in string ({string_id})\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                    )
                     self.error_messages[locale].append(error_msg)
 
             # Check data-l10n-names
@@ -385,11 +392,19 @@ class QualityCheck:
                     translated_groups = sorted(matches)
                     if translated_groups != groups:
                         # Groups are not matching
-                        error_msg = f"data-l10n-name mismatch in string ({string_id})"
+                        error_msg = (
+                            f"data-l10n-name mismatch in string ({string_id})\n"
+                            f"  Translation: {translation}\n"
+                            f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        )
                         self.error_messages[locale].append(error_msg)
                 else:
                     # There are no data-l10n-name
-                    error_msg = f"data-l10n-name missing in string ({string_id})"
+                    error_msg = (
+                        f"data-l10n-name missing in string ({string_id})\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                    )
                     self.error_messages[locale].append(error_msg)
 
             # Check placeables
@@ -414,11 +429,19 @@ class QualityCheck:
                     translated_groups = sorted(matches)
                     if translated_groups != groups:
                         # Groups are not matching
-                        error_msg = f"Placeable mismatch in string ({string_id})"
+                        error_msg = (
+                            f"Placeable mismatch in string ({string_id})\n"
+                            f"  Translation: {translation}\n"
+                            f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        )
                         self.error_messages[locale].append(error_msg)
                 else:
                     # There are no data-l10n-name
-                    error_msg = f"Placeable missing in string ({string_id})"
+                    error_msg = (
+                        f"Placeable missing in string ({string_id})\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                    )
                     self.error_messages[locale].append(error_msg)
 
     def printErrors(self):
@@ -431,10 +454,10 @@ class QualityCheck:
             locales.sort()
 
             for locale in locales:
-                output.append(f"Locale: {locale} ({len(self.error_messages[locale])})")
+                output.append(f"\nLocale: {locale} ({len(self.error_messages[locale])})")
                 total += len(self.error_messages[locale])
                 for e in self.error_messages[locale]:
-                    output.append(f"  {e}")
+                    output.append(f"\n  {e}")
 
             output.append(f"\nTotal errors: {total}")
 

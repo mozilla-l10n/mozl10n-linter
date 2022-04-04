@@ -99,7 +99,7 @@ def main():
                     ) or string_id in tmp_exceptions.get("locales", {}).get(locale, []):
                         continue
                     errors[locale].append(
-                        f"'…' missing in {string_id}\nText: {l10n_string}"
+                        f"'…' missing in {string_id}\n  Translation: {l10n_string}"
                     )
 
                 # Check placeables
@@ -113,13 +113,15 @@ def main():
 
                     if ref_matches != l10n_matches:
                         errors[locale].append(
-                            f"Variable mismatch in {string_id}\nText: {l10n_string}\nReference: {ref_string}"
+                            f"Variable mismatch in {string_id}\n"
+                            f"  Translation: {l10n_string}\n"
+                            f"  Reference: {ref_string}"
                         )
 
                 # Check pilcrow
                 if "¶" in l10n_string:
                     errors[locale].append(
-                        f"'¶' in {string_id}\nText: {l10n_string}\nReference: {ref_string}"
+                        f"'¶' in {string_id}\n  Translation: {l10n_string}"
                     )
 
     if errors:
@@ -129,10 +131,10 @@ def main():
         output = []
         total_errors = 0
         for locale in locales:
-            output.append(f"Locale: {locale} ({len(errors[locale])})")
+            output.append(f"\nLocale: {locale} ({len(errors[locale])})")
             total_errors += len(errors[locale])
             for e in errors[locale]:
-                output.append(f"  {e}")
+                output.append(f"\n  {e}")
         output.append(f"\nTotal errors: {total_errors}")
 
         out_file = args.dest_file

@@ -133,7 +133,9 @@ def main():
 
             if sorted(placeholders) != sorted(l10n_placeholders):
                 errors[locale].append(
-                    f"Placeholder mismatch in {message_id}\n  Text: {l10n_message}"
+                    f"Placeholder mismatch in {message_id}\n"
+                    f"  Translation: {l10n_message}\n"
+                    f"  Reference: {reference_messages[message_id]}"
                 )
 
         for message_id, message_data in locale_messages.items():
@@ -141,7 +143,9 @@ def main():
 
             # Check for pilcrows
             if "¶" in l10n_message:
-                errors[locale].append(f"'¶' in {message_id}\n  Text: {l10n_message}")
+                errors[locale].append(
+                    f"'¶' in {message_id}\n  Translation: {l10n_message}"
+                )
 
             # Check for ellipsis
             if (
@@ -149,7 +153,9 @@ def main():
                 and message_id not in exceptions["ellipsis"].get(locale, {})
                 and locale not in exceptions["ellipsis"].get("excluded_locales", [])
             ):
-                errors[locale].append(f"'...' in {message_id}\n  Text: {l10n_message}")
+                errors[locale].append(
+                    f"'...' in {message_id}\n  Translation: {l10n_message}"
+                )
 
     if errors:
         locales = list(errors.keys())
@@ -158,10 +164,10 @@ def main():
         output = []
         total_errors = 0
         for locale in locales:
-            output.append(f"Locale: {locale} ({len(errors[locale])})")
+            output.append(f"\nLocale: {locale} ({len(errors[locale])})")
             total_errors += len(errors[locale])
             for e in errors[locale]:
-                output.append(f"  {e}")
+                output.append(f"\n  {e}")
         output.append(f"\nTotal errors: {total_errors}")
 
         out_file = args.dest_file
