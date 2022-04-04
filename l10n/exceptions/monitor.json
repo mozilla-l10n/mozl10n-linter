@@ -1,0 +1,22 @@
+{
+  "HTML": {
+    "locales": {},
+    "strings": []
+  },
+  "general": {
+    "locales": {},
+    "strings": []
+  },
+  "data-l10n-names": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {
+        "ca": [
+            "app.ftl:ecosystem-promo-body"
+        ]
+    },
+    "strings": []
+  }
+}
