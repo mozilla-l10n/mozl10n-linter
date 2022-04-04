@@ -143,7 +143,7 @@ class QualityCheck:
 
             return False
 
-        placeable_pattern = re.compile("(%(?:[0-9]+\$){0,1}([sd]))")
+        placeable_pattern = re.compile("((%)(?:[0-9]+\$){0,1}([sd]))")
 
         # Load exceptions
         if not self.exceptions_path:
@@ -170,13 +170,20 @@ class QualityCheck:
                 continue
 
             matches_iterator = placeable_pattern.finditer(text)
-            matches = []
+            matches = defaultdict(list)
             for m in matches_iterator:
-                matches.append(m.group(1))
+                matches["original"].append(m.group(1))
+                if len(m.group()) > 3:
+                    # String is using ordered placeables
+                    matches["unordered"].append(m.group(2) + m.group(3))
+                else:
+                    # String is already using unordered placeables
+                    matches["unordered"].append(m.group(1))
             if matches:
-                # Remove duplicates
-                matches = list(set(matches))
-                placeable_ids[string_id] = sorted(matches)
+                placeable_ids[string_id] = {
+                    "original": sorted(matches["original"]),
+                    "unordered": matches["unordered"],
+                }
 
         # Store strings with HTML elements
         html_parser = MyHTMLParser()
@@ -248,15 +255,26 @@ class QualityCheck:
                 if not isinstance(translation, str):
                     continue
                 matches_iterator = placeable_pattern.finditer(translation)
-                matches = []
+                matches = defaultdict(list)
                 for m in matches_iterator:
-                    matches.append(m.group(1))
-                # Remove duplicates
-                matches = list(set(matches))
+                    matches["original"].append(m.group(1))
+                    if len(m.group()) > 3:
+                        # String is using ordered placeables
+                        matches["unordered"].append(m.group(2) + m.group(3))
+                    else:
+                        # String is already using unordered placeables
+                        matches["unordered"].append(m.group(1))
+
                 if matches:
-                    translated_groups = sorted(matches)
-                    if translated_groups != groups:
-                        # Groups are not matching
+                    translated_groups = sorted(matches["original"])
+                    if translated_groups != groups["original"]:
+                        # Groups are not matching, but the translation might be
+                        # using ordered placeables instead of unordered, or
+                        # the other way around.
+                        # "%1$s" would be stored as "%s" in the "unordered"
+                        # array.
+                        if matches["unordered"] == groups["unordered"]:
+                            continue
                         error_msg = f"Placeable mismatch in string ({string_id})"
                         self.error_messages[locale].append(error_msg)
                 else:

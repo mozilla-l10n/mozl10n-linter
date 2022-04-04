@@ -46,7 +46,9 @@ def main():
                 exceptions = json.load(f)
             json_name = os.path.basename(fn)
             if json_name in schemas:
-                with open(os.path.join(schemas_path, f"{schemas[json_name]}.json")) as s:
+                with open(
+                    os.path.join(schemas_path, f"{schemas[json_name]}.json")
+                ) as s:
                     schema = json.load(s)
                     v = Draft7Validator(schema)
                     for error in sorted(v.iter_errors(exceptions), key=str):
