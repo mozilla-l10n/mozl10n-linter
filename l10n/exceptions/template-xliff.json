@@ -1,14 +1,16 @@
 {
     "ellipsis": {
-        "it": [
-            "string1",
-            "string2"
-        ],
+        "locales": {
+            "it": [
+                "string1",
+                "string2"
+            ]
+        },
         "excluded_locales": [
             "ja"
         ]
     },
-    "placeholders": {
+    "placeables": {
         "it": [
             "string1",
             "string2"

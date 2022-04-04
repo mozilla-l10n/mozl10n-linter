@@ -1,0 +1,51 @@
+{
+    "description": "List of exceptions for Android linter",
+    "title": "Android Exceptions",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "HTML": {
+            "$ref": "#/definitions/ExceptionsList"
+        },
+        "general": {
+            "$ref": "#/definitions/ExceptionsList"
+        },
+        "placeables": {
+            "$ref": "#/definitions/ExceptionsList"
+        }
+    },
+    "required": [
+        "HTML",
+        "general",
+        "placeables"
+    ],
+    "definitions": {
+        "ExceptionsList": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "locales": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "strings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "locales",
+                "strings"
+            ]
+        }
+    }
+}

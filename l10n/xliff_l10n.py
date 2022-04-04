@@ -96,16 +96,16 @@ def main():
                     tmp_exceptions = exceptions.get("ellipsis", {})
                     if locale in tmp_exceptions.get(
                         "excluded_locales", []
-                    ) or string_id in tmp_exceptions.get(locale, []):
+                    ) or string_id in tmp_exceptions.get("locales", {}).get(locale, []):
                         continue
                     errors[locale].append(
                         f"'…' missing in {string_id}\nText: {l10n_string}"
                     )
 
-                # Check placeholders
+                # Check placeables
                 ref_matches = placeables_pattern.findall(ref_string)
                 if ref_matches:
-                    if string_id in exceptions.get("placeholders", {}).get(locale, []):
+                    if string_id in exceptions.get("placeables", {}).get(locale, []):
                         continue
                     ref_matches.sort()
                     l10n_matches = placeables_pattern.findall(l10n_string)

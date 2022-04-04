@@ -16,5 +16,8 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: '3.9'
+      - name: Install Python dependencies
+        run: |
+          pip install -r .github/requirements.txt
       - name: Run linter
         run: python .github/scripts/validate_json.py .
