@@ -126,7 +126,7 @@ class QualityCheck:
     def runChecks(self):
         """Check translations for issues"""
 
-        def ignoreString(exceptions, errorcode, string_id):
+        def ignoreString(exceptions, locale, errorcode, string_id):
             """Check if a string should be ignored"""
 
             if not exceptions:
@@ -207,7 +207,7 @@ class QualityCheck:
             # General checks on localized strings
             for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
-                if ignoreString(exceptions, "general", string_id):
+                if ignoreString(exceptions, locale, "general", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -227,7 +227,7 @@ class QualityCheck:
                     continue
 
                 # Ignore excluded strings
-                if ignoreString(exceptions, "HTML", string_id):
+                if ignoreString(exceptions, locale, "HTML", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -252,7 +252,7 @@ class QualityCheck:
                     continue
 
                 # Ignore excluded strings
-                if ignoreString(exceptions, "placeables", string_id):
+                if ignoreString(exceptions, locale, "placeables", string_id):
                     continue
 
                 translation = locale_translations[string_id]

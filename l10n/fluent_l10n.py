@@ -90,6 +90,8 @@ class StringExtraction:
     def extractLocale(self, locale, base_dir):
         """Extract strings for a locale"""
 
+        # Normalize locale code
+        normalized_locale = locale.replace("_", "-")
         self.translations[locale] = {}
         for relative_file in self.file_list:
             file_name = os.path.join(base_dir, locale, relative_file)
@@ -108,24 +110,26 @@ class StringExtraction:
                     string_id = f"{relative_file}:{entity}"
                     if file_extension == ".ftl":
                         if entity.raw_val is not None:
-                            self.translations[locale][string_id] = entity.raw_val
+                            self.translations[normalized_locale][
+                                string_id
+                            ] = entity.raw_val
                         # Store attributes
                         for attribute in entity.attributes:
                             attr_string_id = f"{relative_file}:{entity}.{attribute}"
-                            self.translations[locale][
+                            self.translations[normalized_locale][
                                 attr_string_id
                             ] = attribute.raw_val
                     else:
-                        self.translations[locale][string_id] = entity.raw_val
+                        self.translations[normalized_locale][string_id] = entity.raw_val
             except Exception as e:
                 print(f"Error parsing file: {file_name}")
                 print(e)
 
         # Remove extra strings from locale
         if self.reference_locale != locale:
-            for string_id in list(self.translations[locale].keys()):
+            for string_id in list(self.translations[normalized_locale].keys()):
                 if string_id not in self.translations[self.reference_locale]:
-                    del self.translations[locale][string_id]
+                    del self.translations[normalized_locale][string_id]
 
     def extractStringsFolder(self):
         """Extract strings searching for FTL files in folders."""
@@ -152,10 +156,14 @@ class StringExtraction:
         print(f"Extracting strings for reference locale ({self.reference_locale}).")
         self.extractLocale(self.reference_locale, base_dir)
         print(f"  {len(self.translations[self.reference_locale])} strings extracted")
+
+        # Extract strings for other locales
         for locale in locales:
             print(f"Extracting strings for locale: {locale}")
             self.extractLocale(locale, base_dir)
-            print(f"  {len(self.translations[locale])} strings extracted")
+            # Normalize locale code
+            normalized_locale = locale.replace("_", "-")
+            print(f"  {len(self.translations[normalized_locale])} strings extracted")
 
     def extractStrings(self):
         """Extract strings from all locales."""
@@ -215,7 +223,7 @@ class QualityCheck:
     def runChecks(self):
         """Check translations for issues"""
 
-        def ignoreString(exceptions, errorcode, string_id):
+        def ignoreString(exceptions, locale, errorcode, string_id):
             """Check if a string should be ignored"""
 
             if not exceptions:
@@ -311,7 +319,7 @@ class QualityCheck:
             # General checks on localized strings
             for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
-                if ignoreString(exceptions, "general", string_id):
+                if ignoreString(exceptions, locale, "general", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -376,7 +384,7 @@ class QualityCheck:
                     continue
 
                 # Ignore excluded strings
-                if ignoreString(exceptions, "data-l10n-names", string_id):
+                if ignoreString(exceptions, locale, "data-l10n-names", string_id):
                     continue
 
                 translation = locale_translations[string_id]

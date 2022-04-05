@@ -116,6 +116,9 @@ def main():
         locale_messages = {}
         parseJsonFiles(base_path, locale_messages, locale)
 
+        # Normalize locale code, e.g. zh_TW => zh-TW
+        normalized_locale = locale.replace("_", "-")
+
         # Check for missing placeholders
         for message_id, placeholders in messages_with_placeholders.items():
             # Skip if message isn't available in translation
@@ -123,7 +126,7 @@ def main():
                 continue
 
             # Skip if it's a known exception
-            if message_id in exceptions["placeholders"].get(locale, {}):
+            if message_id in exceptions["placeholders"].get(normalized_locale, {}):
                 continue
 
             l10n_message = locale_messages[message_id]["text"]
@@ -132,7 +135,7 @@ def main():
             l10n_placeholders = list(set(p.lower() for p in l10n_placeholders))
 
             if sorted(placeholders) != sorted(l10n_placeholders):
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"Placeholder mismatch in {message_id}\n"
                     f"  Translation: {l10n_message}\n"
                     f"  Reference: {reference_messages[message_id]}"
@@ -143,17 +146,18 @@ def main():
 
             # Check for pilcrows
             if "¶" in l10n_message:
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"'¶' in {message_id}\n  Translation: {l10n_message}"
                 )
 
             # Check for ellipsis
             if (
                 "..." in l10n_message
-                and message_id not in exceptions["ellipsis"].get(locale, {})
-                and locale not in exceptions["ellipsis"].get("excluded_locales", [])
+                and message_id not in exceptions["ellipsis"].get(normalized_locale, {})
+                and normalized_locale
+                not in exceptions["ellipsis"].get("excluded_locales", [])
             ):
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"'...' in {message_id}\n  Translation: {l10n_message}"
                 )
 

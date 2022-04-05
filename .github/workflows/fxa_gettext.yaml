@@ -1,4 +1,4 @@
-name: FxA
+name: FxA Gettext
 on:
   schedule:
     - cron: '0 1 * * 1-5'
@@ -28,7 +28,7 @@ jobs:
         # errors as artifact
         continue-on-error: true
         run: |
-          python scripts_repo/l10n/fluent_l10n.py --l10n target_repo/locale/ --ref templates --dest errors.txt --exceptions scripts_repo/l10n/exceptions/fxa.xml
+          python scripts_repo/l10n/gettext_l10n.py --l10n target_repo/locale/ --dest errors.txt --exceptions scripts_repo/l10n/exceptions/fxa_gettext.xml
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

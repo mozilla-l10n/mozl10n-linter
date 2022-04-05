@@ -1,0 +1,70 @@
+{
+    "description": "List of exceptions for Android linter",
+    "title": "Android Exceptions",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "ellipsis": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "locales": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "excluded_locales": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "HTML": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "locales": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "placeables": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "locales": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "ellipsis",
+        "HTML",
+        "placeables"
+    ]
+}

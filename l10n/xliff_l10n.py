@@ -72,7 +72,8 @@ def main():
     errors = defaultdict(list)
     for file_path in file_paths:
         locale_errors = {}
-        locale = file_path.split(os.sep)[-2]
+        # Extract and normalize locale code
+        locale = file_path.split(os.sep)[-2].replace("_", "-")
 
         # Read localized XML file
         try:

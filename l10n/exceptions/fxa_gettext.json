@@ -1,0 +1,13 @@
+{
+	"ellipsis": {
+		"excluded_locales": [
+			"ja"
+		]
+	},
+	"HTML": {
+        "zh-TW": [
+            "b5241fff2ca27859f78182bc74ba86e5662567af685965707138e97f58643baf"
+        ]
+    },
+	"placeables": {}
+}
