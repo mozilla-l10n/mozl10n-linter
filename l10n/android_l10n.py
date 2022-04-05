@@ -304,7 +304,9 @@ class QualityCheck:
             locales.sort()
 
             for locale in locales:
-                output.append(f"\nLocale: {locale} ({len(self.error_messages[locale])})")
+                output.append(
+                    f"\nLocale: {locale} ({len(self.error_messages[locale])})"
+                )
                 total += len(self.error_messages[locale])
                 for e in self.error_messages[locale]:
                     output.append(f"\n  {e}")

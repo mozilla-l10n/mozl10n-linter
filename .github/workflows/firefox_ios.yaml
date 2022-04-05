@@ -28,7 +28,7 @@ jobs:
         # errors as artifact
         continue-on-error: true
         run: |
-          python scripts_repo/l10n/xliff_l10n.py --l10n target_repo/ --xliff firefoxios-ios.xliff --dest errors.txt --exceptions scripts_repo/l10n/exceptions/firefox_ios.json
+          python scripts_repo/l10n/xliff_l10n.py --l10n target_repo/ --xliff firefox-ios.xliff --dest errors.txt --exceptions scripts_repo/l10n/exceptions/firefox_ios.json
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
