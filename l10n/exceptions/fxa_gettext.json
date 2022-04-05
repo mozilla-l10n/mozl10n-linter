@@ -1,0 +1,13 @@
+{
+	"ellipsis": {
+		"excluded_locales": [
+			"ja"
+		]
+	},
+	"HTML": {
+        "zh_TW": [
+            "Approval now required <small>from your other device</small>"
+        ]
+    },
+	"placeables": {}
+}

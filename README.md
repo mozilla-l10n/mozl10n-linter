@@ -41,3 +41,8 @@ It's possible to define [exceptions](https://github.com/flodolo/mozl10n-linter/t
 |[Firefox for iOS](https://github.com/flodolo/mozl10n-linter/actions/workflows/firefox_ios.yaml)|![Linter status](https://github.com/flodolo/mozl10n-linter/workflows/Firefox%20iOS/badge.svg)
 |[Focus for iOS](https://github.com/flodolo/mozl10n-linter/actions/workflows/focus_ios.yaml)|![Linter status](https://github.com/flodolo/mozl10n-linter/workflows/Focus%20iOS/badge.svg)
 |[Mozilla VPN Client](https://github.com/flodolo/mozl10n-linter/actions/workflows/vpn.yaml)|![Linter status](https://github.com/flodolo/mozl10n-linter/workflows/VPN%20Client/badge.svg)
+
+## Gettext
+| Project | Linter Status |
+|---------|---------------|
+|[Firefox Accounts](https://github.com/flodolo/mozl10n-linter/actions/workflows/fxa_gettext.yaml)|![Linter status](https://github.com/flodolo/mozl10n-linter/workflows/FxA%20Gettext/badge.svg)
