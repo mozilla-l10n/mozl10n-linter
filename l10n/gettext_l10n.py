@@ -33,6 +33,7 @@ class MyHTMLParser(HTMLParser):
         self.tags.sort()
         return self.tags
 
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -86,6 +87,9 @@ def main():
         search_path = Path(l10n_path)
         files = search_path.glob("**/*.po")
 
+        # Normalize locale code, e.g. zh_TW => zh-TW
+        normalized_locale = locale.replace("_", "-")
+
         locale_messages = {}
         for f in files:
             pofile = polib.pofile(f)
@@ -99,14 +103,14 @@ def main():
                 continue
 
             # Skip if it's a known exception
-            if message_id in exceptions["placeables"].get(locale, {}):
+            if message_id in exceptions["placeables"].get(normalized_locale, {}):
                 continue
 
             ref_placeholders = placeable_pattern.findall(message_id)
             l10n_placeholders = placeable_pattern.findall(translation)
 
             if sorted(ref_placeholders) != sorted(l10n_placeholders):
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"Placeholder mismatch in {message_id}\n"
                     f"  Translation: {translation}\n"
                     f"  Reference: {message_id}"
@@ -119,7 +123,7 @@ def main():
                 continue
 
             # Skip if it's a known exception
-            if message_id in exceptions["HTML"].get(locale, {}):
+            if message_id in exceptions["HTML"].get(normalized_locale, {}):
                 continue
 
             html_parser.clear()
@@ -131,7 +135,7 @@ def main():
             l10n_tags = html_parser.get_tags()
 
             if l10n_tags != ref_tags:
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"Mismatched HTML elements in string ({message_id})\n"
                     f"  Translation: {translation}\n"
                     f"  Reference: {message_id}"
@@ -145,17 +149,18 @@ def main():
 
             # Check for pilcrows
             if "¶" in translation:
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"'¶' in {message_id}\n  Translation: {translation}"
                 )
 
             # Check for ellipsis
             if (
                 "..." in translation
-                and message_id not in exceptions["ellipsis"].get(locale, {})
-                and locale not in exceptions["ellipsis"].get("excluded_locales", [])
+                and message_id not in exceptions["ellipsis"].get(normalized_locale, {})
+                and normalized_locale
+                not in exceptions["ellipsis"].get("excluded_locales", [])
             ):
-                errors[locale].append(
+                errors[normalized_locale].append(
                     f"'...' in {message_id}\n  Translation: {translation}"
                 )
 
