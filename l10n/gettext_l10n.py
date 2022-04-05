@@ -9,6 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 import argparse
 import json
+import hashlib
 import os
 import polib
 import re
@@ -93,11 +94,19 @@ def main():
         locale_messages = {}
         for f in files:
             pofile = polib.pofile(f)
-            for entry in pofile:
-                locale_messages[entry.msgid] = entry.msgstr
+            for entry in pofile.translated_entries():
+                msgid = hashlib.sha256(entry.msgid.encode("utf-8")).hexdigest()
+
+                locale_messages[msgid] = {
+                    "reference": entry.msgid,
+                    "translation": entry.msgstr,
+                }
 
         # Check for missing placeables
-        for message_id, translation in locale_messages.items():
+        for message_id, message_data in locale_messages.items():
+            reference = message_data["reference"]
+            translation = message_data["translation"]
+
             # Skip if message isn't translated
             if translation == "":
                 continue
@@ -106,18 +115,21 @@ def main():
             if message_id in exceptions["placeables"].get(normalized_locale, {}):
                 continue
 
-            ref_placeholders = placeable_pattern.findall(message_id)
+            ref_placeholders = placeable_pattern.findall(reference)
             l10n_placeholders = placeable_pattern.findall(translation)
 
             if sorted(ref_placeholders) != sorted(l10n_placeholders):
                 errors[normalized_locale].append(
                     f"Placeholder mismatch in {message_id}\n"
                     f"  Translation: {translation}\n"
-                    f"  Reference: {message_id}"
+                    f"  Reference: {reference}"
                 )
 
         # Check for HTML tags
-        for message_id, translation in locale_messages.items():
+        for message_id, message_data in locale_messages.items():
+            reference = message_data["reference"]
+            translation = message_data["translation"]
+
             # Skip if message isn't translated
             if translation == "":
                 continue
@@ -127,7 +139,7 @@ def main():
                 continue
 
             html_parser.clear()
-            html_parser.feed(message_id)
+            html_parser.feed(reference)
             ref_tags = html_parser.get_tags()
 
             html_parser.clear()
@@ -138,7 +150,7 @@ def main():
                 errors[normalized_locale].append(
                     f"Mismatched HTML elements in string ({message_id})\n"
                     f"  Translation: {translation}\n"
-                    f"  Reference: {message_id}"
+                    f"  Reference: {reference}"
                 )
 
         # General checks
@@ -150,7 +162,9 @@ def main():
             # Check for pilcrows
             if "¶" in translation:
                 errors[normalized_locale].append(
-                    f"'¶' in {message_id}\n  Translation: {translation}"
+                    f"'¶' in {message_id}\n"
+                    f"  Translation: {translation}\n"
+                    f"  Reference: {reference}"
                 )
 
             # Check for ellipsis
@@ -161,7 +175,9 @@ def main():
                 not in exceptions["ellipsis"].get("excluded_locales", [])
             ):
                 errors[normalized_locale].append(
-                    f"'...' in {message_id}\n  Translation: {translation}"
+                    f"'...' in {message_id}\n"
+                    f"  Translation: {translation}\n"
+                    f"  Reference: {reference}"
                 )
 
     if errors:
