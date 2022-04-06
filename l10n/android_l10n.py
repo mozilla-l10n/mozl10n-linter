@@ -26,7 +26,7 @@ class StringExtraction:
     def __init__(self, l10n_path, reference_locale):
         """Initialize object."""
 
-        self.translations = {}
+        self.translations = defaultdict(dict)
 
         self.l10n_path = l10n_path
         self.reference_locale = reference_locale
@@ -39,7 +39,6 @@ class StringExtraction:
         basedir = os.path.join(basedir, project_config.root)
 
         reference_cache = {}
-        self.translations[self.reference_locale] = {}
 
         if not project_config.all_locales:
             print("No locales defined in the project configuration.")
@@ -47,7 +46,7 @@ class StringExtraction:
         for locale in project_config.all_locales:
             print(f"Extracting strings for locale: {locale}.")
             files = paths.ProjectFiles(locale, [project_config])
-            self.translations[locale] = {}
+
             for l10n_file, reference_file, _, _ in files:
                 if not os.path.exists(l10n_file):
                     # File not available in localization
