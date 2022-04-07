@@ -138,7 +138,7 @@ def main():
                 errors[normalized_locale].append(
                     f"Placeholder mismatch in {message_id}\n"
                     f"  Translation: {l10n_message}\n"
-                    f"  Reference: {reference_messages[message_id]}"
+                    f"  Reference: {reference_messages[message_id]['text']}"
                 )
 
         for message_id, message_data in locale_messages.items():
