@@ -13,8 +13,14 @@
   },
   "placeables": {
     "locales": {
-      "he": [
+      "eo": [
+        "app/src/main/res/values/strings.xml:firstrun_shortcut_text"
+      ],
+      "iw": [
         "app/src/main/res/values/strings.xml:tip_request_desktop2"
+      ],
+      "pl": [
+        "app/src/main/res/values/strings.xml:firstrun_shortcut_text"
       ]
     },
     "strings": []

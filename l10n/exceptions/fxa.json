@@ -12,7 +12,12 @@
     "strings": []
   },
   "placeables": {
-    "locales": {},
+    "locales": {
+      "it": [
+        "auth.ftl:subscriptionFirstInvoiceDiscount-content-discount-repeating",
+        "auth.ftl:subscriptionSubsequentInvoiceDiscount-content-discount-repeating"
+      ]
+    },
     "strings": []
   }
 }
