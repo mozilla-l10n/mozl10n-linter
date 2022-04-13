@@ -106,6 +106,10 @@ def main():
             print(e)
             continue
 
+        ignore_ellipsis = locale in exceptions.get("ellipsis", {}).get(
+            "excluded_locales", []
+        )
+
         for trans_node in root.xpath("//x:trans-unit", namespaces=NS):
             for child in trans_node.xpath("./x:target", namespaces=NS):
                 file_name = trans_node.getparent().getparent().get("original")
@@ -115,14 +119,13 @@ def main():
                 l10n_string = child.text
 
                 # Check ellipsis
-                if "…" in ref_string and "…" not in l10n_string:
-                    tmp_exceptions = exceptions.get("ellipsis", {})
-                    if locale in tmp_exceptions.get(
-                        "excluded_locales", []
-                    ) or string_id in tmp_exceptions.get("locales", {}).get(locale, []):
+                if not ignore_ellipsis and "..." in l10n_string:
+                    if string_id in exceptions.get("ellipsis", {}).get(
+                        "locales", {}
+                    ).get(locale, []):
                         continue
                     errors[locale].append(
-                        f"'…' missing in {string_id}\n  Translation: {l10n_string}"
+                        f"'...' in {string_id}\n  Translation: {l10n_string}"
                     )
 
                 # Check placeables

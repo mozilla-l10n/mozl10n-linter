@@ -154,6 +154,9 @@ def main():
                 )
 
         # General checks
+        ignore_ellipsis = normalized_locale in exceptions["ellipsis"].get(
+            "excluded_locales", []
+        )
         for message_id, translation in locale_messages.items():
             # Skip if message isn't translated
             if translation == "":
@@ -168,12 +171,11 @@ def main():
                 )
 
             # Check for ellipsis
-            if (
-                "..." in translation
-                and message_id not in exceptions["ellipsis"].get(normalized_locale, {})
-                and normalized_locale
-                not in exceptions["ellipsis"].get("excluded_locales", [])
-            ):
+            if not ignore_ellipsis and "..." in translation:
+                if message_id in exceptions["ellipsis"].get("locales", {}).get(
+                    normalized_locale, []
+                ):
+                    continue
                 errors[normalized_locale].append(
                     f"'...' in {message_id}\n"
                     f"  Translation: {translation}\n"

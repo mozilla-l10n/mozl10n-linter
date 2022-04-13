@@ -141,6 +141,9 @@ def main():
                     f"  Reference: {reference_messages[message_id]['text']}"
                 )
 
+        ignore_ellipsis = normalized_locale in exceptions["ellipsis"].get(
+            "excluded_locales", []
+        )
         for message_id, message_data in locale_messages.items():
             l10n_message = message_data["text"]
 
@@ -151,12 +154,11 @@ def main():
                 )
 
             # Check for ellipsis
-            if (
-                "..." in l10n_message
-                and message_id not in exceptions["ellipsis"].get(normalized_locale, {})
-                and normalized_locale
-                not in exceptions["ellipsis"].get("excluded_locales", [])
-            ):
+            if not ignore_ellipsis and "..." in l10n_message:
+                if message_id in exceptions["ellipsis"].get("locales", {}).get(
+                    normalized_locale, []
+                ):
+                    continue
                 errors[normalized_locale].append(
                     f"'...' in {message_id}\n  Translation: {l10n_message}"
                 )
