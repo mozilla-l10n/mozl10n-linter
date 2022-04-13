@@ -38,6 +38,7 @@ jobs:
         with:
           name: errors-list
           path: errors_*.txt
+          if-no-files-found: ignore
       - name: Fail on errors
         run: |
           if [ -f "errors_vendors.txt" ] || [ -f "errors_community.txt" ]; then
