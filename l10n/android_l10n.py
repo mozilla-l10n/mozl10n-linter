@@ -131,14 +131,20 @@ class QualityCheck:
             if not exceptions:
                 return False
 
-            # Ignore excluded strings
-            if string_id in exceptions[errorcode]["strings"]:
-                return True
-            if (
-                locale in exceptions[errorcode]["locales"]
-                and string_id in exceptions[errorcode]["locales"][locale]
-            ):
-                return True
+            if errorcode == "ellipsis":
+                if locale in exceptions[errorcode][
+                    "excluded_locales"
+                ] or string_id in exceptions[errorcode]["locales"].get(locale, {}):
+                    return True
+            else:
+                # Ignore excluded strings
+                if string_id in exceptions[errorcode]["strings"]:
+                    return True
+                if (
+                    locale in exceptions[errorcode]["locales"]
+                    and string_id in exceptions[errorcode]["locales"][locale]
+                ):
+                    return True
 
             return False
 
@@ -213,9 +219,30 @@ class QualityCheck:
                 if not isinstance(translation, str):
                     continue
 
+                # Ignore if it's an obsolete translation not available in the
+                # reference file.
+                if string_id not in self.translations[self.reference_locale]:
+                    continue
+                reference = self.translations[self.reference_locale][string_id]
+
                 # Check for pilcrow character
                 if "¶" in translation:
-                    error_msg = f"Pilcrow character in string ({string_id})"
+                    error_msg = (
+                        f"'¶' in {string_id}\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
+                    self.error_messages[locale].append(error_msg)
+
+                # Check for 3 dots instead of ellipsis
+                if "..." in translation and not ignoreString(
+                    exceptions, locale, "ellipsis", string_id
+                ):
+                    error_msg = (
+                        f"'...' in {string_id}\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
                     self.error_messages[locale].append(error_msg)
 
             # Check for HTML elements mismatch
