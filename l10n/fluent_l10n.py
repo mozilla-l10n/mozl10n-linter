@@ -226,14 +226,20 @@ class QualityCheck:
             if not exceptions:
                 return False
 
-            # Ignore excluded strings
-            if string_id in exceptions[errorcode]["strings"]:
-                return True
-            if (
-                locale in exceptions[errorcode]["locales"]
-                and string_id in exceptions[errorcode]["locales"][locale]
-            ):
-                return True
+            if errorcode == "ellipsis":
+                if locale in exceptions[errorcode][
+                    "excluded_locales"
+                ] or string_id in exceptions[errorcode]["locales"].get(locale, {}):
+                    return True
+            else:
+                # Ignore excluded strings
+                if string_id in exceptions[errorcode]["strings"]:
+                    return True
+                if (
+                    locale in exceptions[errorcode]["locales"]
+                    and string_id in exceptions[errorcode]["locales"][locale]
+                ):
+                    return True
 
             return False
 
@@ -341,6 +347,16 @@ class QualityCheck:
                 pattern = re.compile(re.escape(message_id) + "\s*=", re.UNICODE)
                 if pattern.search(translation):
                     error_msg = f"Message ID is repeated in string ({string_id})"
+                    self.error_messages[locale].append(error_msg)
+
+                # Check for 3 dots instead of ellipsis
+                if "..." in translation and not ignoreString(
+                    exceptions, locale, "ellipsis", string_id
+                ):
+                    error_msg = (
+                        f"'...' in {string_id}\n"
+                        f"  Translation: {translation}"
+                    )
                     self.error_messages[locale].append(error_msg)
 
             # Check for HTML elements mismatch
