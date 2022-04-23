@@ -20,7 +20,8 @@
   "placeables": {
     "locales": {
       "sk": [
-        "app.ftl:profile-promo-email-blocking-label-forwarding"
+        "app.ftl:profile-promo-email-blocking-label-forwarding",
+        "app.ftl:whatsnew-feature-alias-to-mask-snippet"
       ]
     },
     "strings": []
