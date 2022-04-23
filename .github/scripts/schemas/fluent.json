@@ -15,11 +15,35 @@
         },
         "placeables": {
             "$ref": "#/definitions/ExceptionsList"
+        },
+        "ellipsis": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "locales": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "excluded_locales": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
         }
     },
     "required": [
         "data-l10n-names",
         "HTML",
+        "ellipsis",
         "general",
         "placeables"
     ],

@@ -3,6 +3,12 @@
     "locales": {},
     "strings": []
   },
+  "ellipsis": {
+    "locales": {},
+    "excluded_locales": [
+      "ja"
+    ]
+  },
   "general": {
     "locales": {},
     "strings": []
