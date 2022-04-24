@@ -1,7 +1,7 @@
 name: FxA
 on:
   schedule:
-    - cron: '0 1 * * 1-5'
+    - cron: '10 1,13 * * *'
   workflow_dispatch:
 jobs:
   update:
