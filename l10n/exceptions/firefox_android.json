@@ -31,6 +31,9 @@
         "app/src/main/res/values/strings.xml:history_search_group_site",
         "app/src/main/res/values/strings.xml:recently_closed_tab",
         "app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
+      ],
+      "szl": [
+        "app/src/main/res/values/strings.xml:recently_closed_tab"
       ]
     },
     "strings": []
