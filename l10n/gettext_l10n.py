@@ -32,6 +32,10 @@ class MyHTMLParser(HTMLParser):
 
     def get_tags(self):
         self.tags.sort()
+
+        # Remove line breaks
+        self.tags = [t for t in self.tags if t != "br"]
+
         return self.tags
 
 

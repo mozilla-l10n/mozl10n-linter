@@ -192,6 +192,10 @@ class MyHTMLParser(HTMLParser):
 
     def get_tags(self):
         self.tags.sort()
+
+        # Remove line breaks
+        self.tags = [t for t in self.tags if t != "br"]
+
         return self.tags
 
 
@@ -354,8 +358,7 @@ class QualityCheck:
                     exceptions, locale, "ellipsis", string_id
                 ):
                     error_msg = (
-                        f"'...' in {string_id}\n"
-                        f"  Translation: {translation}"
+                        f"'...' in {string_id}\n" f"  Translation: {translation}"
                     )
                     self.error_messages[locale].append(error_msg)
 
