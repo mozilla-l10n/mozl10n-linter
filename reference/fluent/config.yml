@@ -2,8 +2,24 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-# ID01: check that identifiers only use lowercase and hyphens (Gecko)
-# ID02: check that identifiers have a minimum length (Gecko)
+# ID checks
+# ID01: check that identifiers only use lowercase and hyphens
+# ID02: check that identifiers have a minimum length
+#
+# Syntax checks
+#
+# Specify if syntax features are disabled. If the config is missing, it
+# will considered as enabled.
+#
+# Example:
+# SY01:
+#     disabled: true
+#
+# SY01: terms
+# SY02: message references
+# SY03: term references
+# SY04: variants
+# SY05: attributes
 
 ---
 ID01:

@@ -60,9 +60,7 @@ class Linter(visitor.Visitor):
         self.single_quote_re = re.compile(r"'(.+)'")
         self.double_quote_re = re.compile(r"\".+\"")
         self.ellipsis_re = re.compile(r"\.\.\.")
-
-        self.minimum_id_length = 9
-
+        self.ids = []
         self.state = {
             # The resource comment should be at the top of the page after the license.
             "node_can_be_resource_comment": True,
@@ -98,8 +96,13 @@ class Linter(visitor.Visitor):
         super(Linter, self).generic_visit(node)
 
     def visit_Attribute(self, node):
-        # Only visit values for Attribute nodes, the identifier comes from dom.
-        super().generic_visit(node.value)
+        # Log errors if attributes are not supported
+        if "SY05" in self.config and self.config["SY05"]["disabled"]:
+            self.add_error(node, "SY05", "Attributes are not supported.")
+            pass
+        else:
+            # Only visit values for Attribute nodes, the identifier comes from dom.
+            super().generic_visit(node.value)
 
     def visit_FunctionReference(self, node):
         # We don't recurse into function references, the identifiers there are
@@ -109,21 +112,49 @@ class Linter(visitor.Visitor):
     def visit_Term(self, node):
         # There must be at least one message or term between group comments.
         self.state["can_have_group_comment"] = True
+
+        # Log errors if terms are not supported
+        if "SY01" in self.config and self.config["SY01"]["disabled"]:
+            self.add_error(node, "SY01", "Terms are not supported.")
+
         super().generic_visit(node)
 
     def visit_Message(self, node):
         # There must be at least one message or term between group comments.
         self.state["can_have_group_comment"] = True
+
+        # Check for duplicates
+        if node.id.name in self.ids:
+            self.add_error(
+                node,
+                "MI01",
+                f"Identifier {node.id.name} is present more than once in the file.",
+            )
+        else:
+            self.ids.append(node.id.name)
+
         super().generic_visit(node)
 
     def visit_MessageReference(self, node):
+        # Log errors if message references are not supported
+        if "SY02" in self.config and self.config["SY02"]["disabled"]:
+            self.add_error(node, "SY02", "Message references are not supported.")
+
         # We don't recurse into message references, the identifiers are either
         # checked elsewhere or are attributes and come from DOM.
+
+        pass
+
+    def visit_TermReference(self, node):
+        # Log errors if term references are not supported
+        if "SY03" in self.config and self.config["SY03"]["disabled"]:
+            self.add_error(node, "SY03", "Terms are not supported.")
         pass
 
     def visit_Identifier(self, node):
         if (
-            self.config["ID01"]["enabled"]
+            "ID01" in self.config
+            and self.config["ID01"]["enabled"]
             and self.path not in self.config["ID01"]["exclusions"]["files"]
             and node.name not in self.config["ID01"]["exclusions"]["messages"]
             and not self.identifier_re.fullmatch(node.name)
@@ -132,17 +163,17 @@ class Linter(visitor.Visitor):
                 node, "ID01", "Identifiers may only contain lowercase characters and -"
             )
 
-        min_id_length = self.config["ID02"]["min_length"]
         if (
-            self.config["ID02"]["enabled"]
-            and len(node.name) < min_id_length
+            "ID02" in self.config
+            and self.config["ID02"]["enabled"]
+            and len(node.name) < self.config["ID02"]["min_length"]
             and self.path not in self.config["ID02"]["exclusions"]["files"]
             and node.name not in self.config["ID02"]["exclusions"]["messages"]
         ):
             self.add_error(
                 node,
                 "ID02",
-                f"Identifiers must be at least {min_id_length} characters long",
+                f"Identifiers must be at least {self.config['ID02']['min_length']} characters long",
             )
 
     def visit_TextElement(self, node):
@@ -220,10 +251,15 @@ class Linter(visitor.Visitor):
             return
 
     def visit_SelectExpression(self, node):
-        # We only want to visit the variant values, the identifiers in selectors
-        # and keys are allowed to be free form.
-        for variant in node.variants:
-            super().generic_visit(variant.value)
+        # Log errors if variants are not supported
+        if node.variants and "SY04" in self.config and self.config["SY04"]["disabled"]:
+            self.add_error(node, "SY04", "Variants are not supported.")
+            pass
+        else:
+            # We only want to visit the variant values, the identifiers in selectors
+            # and keys are allowed to be free form.
+            for variant in node.variants:
+                super().generic_visit(variant.value)
 
     def visit_GroupComment(self, node):
         # This node is a comment with: "##"
@@ -339,18 +375,29 @@ def get_newlines_count_before(span, contents):
     return count
 
 
-def lint(root_folder):
+def lint(root_folder, config_path):
 
     # Get list of FTL files
     root_folder = os.path.abspath(root_folder)
     files = get_file_list(root_folder)
 
     # Get config, including exclusions
-    config_file = os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), "config.yml"
-    )
-    with open(config_file) as f:
-        config = list(yaml.safe_load_all(f))[0]
+    if config_path:
+        config_file = config_path
+    else:
+        config_file = os.path.join(
+            os.path.dirname(os.path.realpath(__file__)), "config.yml"
+        )
+
+    # Warn if a config file is provided but missing
+    if config_path and not os.path.exists(config_file):
+        print(f"Configuration file not found: {config_file}")
+
+    if os.path.exists(config_file):
+        with open(config_file) as f:
+            config = list(yaml.safe_load_all(f))[0]
+    else:
+        config = {}
 
     results = []
     for path in files:
@@ -384,9 +431,13 @@ def main():
     parser.add_argument(
         "files_path", help="Path to root folder with FTL files for reference locale"
     )
+    parser.add_argument(
+        "--config",
+        help="Path to config file. If not provided, it will be searched in the same path of the script",
+    )
     args = parser.parse_args()
 
-    results = lint(args.files_path)
+    results = lint(args.files_path, args.config)
     if results:
         for r in results:
             print(r)
