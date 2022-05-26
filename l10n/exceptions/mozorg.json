@@ -2,8 +2,11 @@
   "HTML": {
     "locales": {
       "it": [
-        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2",
-        "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox"
+        "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
+        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2"
+      ],
+      "zh-TW": [
+        "en/mozorg/newsletters.ftl:newsletters-read-all-about-it-in-our-newsletter"
       ]
     },
     "strings": []
@@ -23,7 +26,16 @@
     "strings": []
   },
   "placeables": {
-    "locales": {},
+    "locales": {
+      "cs": [
+          "en/firefox/browsers.ftl:firefox-browsers-enterprise-packages",
+          "en/firefox/browsers/mobile/ios.ftl:mobile-ios-add-firefox-across",
+          "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
+          "en/footer.ftl:footer-follow-firefox",
+          "en/footer.ftl:footer-follow-mozilla",
+          "en/mozorg/newsletters.ftl:newsletters-beta-news)"
+      ]
+    },
     "strings": []
   }
 }
