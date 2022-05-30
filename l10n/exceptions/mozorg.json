@@ -38,5 +38,11 @@
     },
     "strings": []
   },
-  "excluded_locales": []
+  "excluded_locales": [
+      "am",
+      "fa",
+      "ml",
+      "mr",
+      "ta"
+  ]
 }
