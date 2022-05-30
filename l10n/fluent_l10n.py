@@ -185,16 +185,14 @@ class MyHTMLParser(HTMLParser):
         self.tags = []
 
     def handle_starttag(self, tag, attrs):
-        self.tags.append(tag)
+        self.tags.append(f"<{tag}>")
 
     def handle_endtag(self, tag):
-        self.tags.append(tag)
+        self.tags.append(f"</{tag}>")
 
     def get_tags(self):
-        self.tags.sort()
-
         # Remove line breaks
-        self.tags = [t for t in self.tags if t != "br"]
+        self.tags = [t for t in self.tags if t != "<br>"]
 
         return self.tags
 
@@ -392,21 +390,10 @@ class QualityCheck:
                 tags = html_parser.get_tags()
 
                 if tags != ref_tags:
-                    missing_html = ", ".join(list(set(ref_tags) - set(tags)))
-                    additional_html = ", ".join(list(set(tags) - set(ref_tags)))
-                    extra_msg = ""
-                    extra_msg += (
-                        f"  Missing: {missing_html}\n" if missing_html != "" else ""
-                    )
-                    extra_msg += (
-                        f"  Additional: {additional_html}\n"
-                        if additional_html != ""
-                        else ""
-                    )
-
                     error_msg = (
                         f"Mismatched HTML elements in string ({string_id})\n"
-                        f"{extra_msg}"
+                        f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
+                        f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                         f"  Translation: {translation}\n"
                         f"  Reference: {self.translations[self.reference_locale][string_id]}"
                     )
