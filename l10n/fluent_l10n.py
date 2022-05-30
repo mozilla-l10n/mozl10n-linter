@@ -392,8 +392,21 @@ class QualityCheck:
                 tags = html_parser.get_tags()
 
                 if tags != ref_tags:
+                    missing_html = ", ".join(list(set(ref_tags) - set(tags)))
+                    additional_html = ", ".join(list(set(tags) - set(ref_tags)))
+                    extra_msg = ""
+                    extra_msg += (
+                        f"  Missing: {missing_html}\n" if missing_html != "" else ""
+                    )
+                    extra_msg += (
+                        f"  Additional: {additional_html}\n"
+                        if additional_html != ""
+                        else ""
+                    )
+
                     error_msg = (
                         f"Mismatched HTML elements in string ({string_id})\n"
+                        f"{extra_msg}"
                         f"  Translation: {translation}\n"
                         f"  Reference: {self.translations[self.reference_locale][string_id]}"
                     )
