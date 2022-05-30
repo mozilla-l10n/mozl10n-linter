@@ -216,32 +216,41 @@ class QualityCheck:
 
         self.translations = translations
         self.reference_locale = reference_locale
-        self.exceptions_path = exceptions_path
         self.error_messages = defaultdict(list)
+
+        # Load exceptions
+        if not exceptions_path:
+            self.exceptions = {}
+        else:
+            try:
+                with open(exceptions_path) as f:
+                    self.exceptions = json.load(f)
+            except Exception as e:
+                sys.exit(e)
 
         self.runChecks()
 
     def runChecks(self):
         """Check translations for issues"""
 
-        def ignoreString(exceptions, locale, errorcode, string_id):
+        def ignoreString(locale, errorcode, string_id):
             """Check if a string should be ignored"""
 
-            if not exceptions:
+            if not self.exceptions:
                 return False
 
             if errorcode == "ellipsis":
-                if locale in exceptions[errorcode][
+                if locale in self.exceptions[errorcode][
                     "excluded_locales"
-                ] or string_id in exceptions[errorcode]["locales"].get(locale, {}):
+                ] or string_id in self.exceptions[errorcode]["locales"].get(locale, {}):
                     return True
             else:
                 # Ignore excluded strings
-                if string_id in exceptions[errorcode]["strings"]:
+                if string_id in self.exceptions[errorcode]["strings"]:
                     return True
                 if (
-                    locale in exceptions[errorcode]["locales"]
-                    and string_id in exceptions[errorcode]["locales"][locale]
+                    locale in self.exceptions[errorcode]["locales"]
+                    and string_id in self.exceptions[errorcode]["locales"][locale]
                 ):
                     return True
 
@@ -254,17 +263,6 @@ class QualityCheck:
         placeable_pattern = re.compile(
             '(?<!\{)\{\s*([\$|-]?[A-Za-z0-9._-]+)(?:[\[(]?[A-Za-z0-9_\-, :"]+[\])])*\s*\}'
         )
-
-        # Load exceptions
-        if not self.exceptions_path:
-            exceptions = {}
-        else:
-            exceptions_filename = os.path.basename(self.exceptions_path)
-            try:
-                with open(self.exceptions_path) as f:
-                    exceptions = json.load(f)
-            except Exception as e:
-                sys.exit(e)
 
         """
         Store specific reference strings for addictional FTL checks:
@@ -323,10 +321,17 @@ class QualityCheck:
             if locale == self.reference_locale:
                 continue
 
+            # Ignore excluded locales
+            if (
+                "excluded_locales" in self.exceptions
+                and locale in self.exceptions["excluded_locales"]
+            ):
+                continue
+
             # General checks on localized strings
             for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
-                if ignoreString(exceptions, locale, "general", string_id):
+                if ignoreString(locale, "general", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -355,7 +360,7 @@ class QualityCheck:
 
                 # Check for 3 dots instead of ellipsis
                 if "..." in translation and not ignoreString(
-                    exceptions, locale, "ellipsis", string_id
+                    locale, "ellipsis", string_id
                 ):
                     error_msg = (
                         f"'...' in {string_id}\n" f"  Translation: {translation}"
@@ -370,7 +375,7 @@ class QualityCheck:
                     continue
 
                 # Ignore excluded strings
-                if ignoreString(exceptions, locale, "HTML", string_id):
+                if ignoreString(locale, "HTML", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -400,7 +405,7 @@ class QualityCheck:
                     continue
 
                 # Ignore excluded strings
-                if ignoreString(exceptions, locale, "data-l10n-names", string_id):
+                if ignoreString(locale, "data-l10n-names", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -437,7 +442,7 @@ class QualityCheck:
                     continue
 
                 # Ignore excluded strings
-                if ignoreString(exceptions, locale, "placeables", string_id):
+                if ignoreString(locale, "placeables", string_id):
                     continue
 
                 translation = locale_translations[string_id]
@@ -486,6 +491,11 @@ class QualityCheck:
                     output.append(f"\n  {e}")
 
             output.append(f"\nTotal errors: {total}")
+            excluded_locales = self.exceptions.get("excluded_locales", [])
+            excluded_locales.sort()
+            if excluded_locales:
+                excluded_locales = ", ".join(excluded_locales)
+                output.append(f"Excluded locales: {excluded_locales}")
 
         return output
 

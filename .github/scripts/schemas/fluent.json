@@ -38,6 +38,12 @@
                     }
                 }
             }
+        },
+        "excluded_locales": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     },
     "required": [
