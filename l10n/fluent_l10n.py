@@ -457,9 +457,25 @@ class QualityCheck:
                 if matches:
                     translated_groups = sorted(matches)
                     if translated_groups != groups:
+                        missing_placeables = ", ".join(list(set(groups) - set(matches)))
+                        additional_placeables = ", ".join(
+                            list(set(matches) - set(groups))
+                        )
+                        extra_msg = ""
+                        extra_msg += (
+                            f"  Missing: {missing_placeables}\n"
+                            if missing_placeables != ""
+                            else ""
+                        )
+                        extra_msg += (
+                            f"  Additional: {additional_placeables}\n"
+                            if additional_placeables != ""
+                            else ""
+                        )
                         # Groups are not matching
                         error_msg = (
                             f"Placeable mismatch in string ({string_id})\n"
+                            f"{extra_msg}"
                             f"  Translation: {translation}\n"
                             f"  Reference: {self.translations[self.reference_locale][string_id]}"
                         )
@@ -468,6 +484,7 @@ class QualityCheck:
                     # There are no data-l10n-name
                     error_msg = (
                         f"Placeable missing in string ({string_id})\n"
+                        "  Missing: " + ", ".join(groups) + "\n"
                         f"  Translation: {translation}\n"
                         f"  Reference: {self.translations[self.reference_locale][string_id]}"
                     )
