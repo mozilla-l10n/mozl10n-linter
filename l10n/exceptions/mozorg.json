@@ -1,6 +1,10 @@
 {
   "HTML": {
     "locales": {
+      "cs": [
+        "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum",
+        "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback"
+      ],
       "it": [
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
         "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2"

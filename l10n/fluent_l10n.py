@@ -191,8 +191,10 @@ class MyHTMLParser(HTMLParser):
         self.tags.append(f"</{tag}>")
 
     def get_tags(self):
-        # Remove line breaks
-        self.tags = [t for t in self.tags if t != "<br>"]
+        # Ignore some tags
+        ignored_tags = ["<br>", "</br>"]
+
+        self.tags = [t for t in self.tags if t not in ignored_tags]
 
         return self.tags
 
