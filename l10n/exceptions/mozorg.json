@@ -9,6 +9,14 @@
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
         "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2"
       ],
+      "pl": [
+        "en/firefox/browsers.ftl:firefox-browsers-build-sites-and-refine-your"
+      ],
+      "pt-BR": [
+        "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback",
+        "en/firefox/features/translate.ftl:features-translate-with-the-to",
+        "en/firefox/privacy/passwords.ftl:privacy-passwords-in-general-the"
+      ],
       "zh-TW": [
         "en/mozorg/newsletters.ftl:newsletters-read-all-about-it-in-our-newsletter"
       ]
@@ -37,7 +45,7 @@
           "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
           "en/footer.ftl:footer-follow-firefox",
           "en/footer.ftl:footer-follow-mozilla",
-          "en/mozorg/newsletters.ftl:newsletters-beta-news)"
+          "en/mozorg/newsletters.ftl:newsletters-beta-news"
       ]
     },
     "strings": []
