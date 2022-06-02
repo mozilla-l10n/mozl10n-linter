@@ -7,10 +7,10 @@
     },
     "placeables": {
         "cs": [
-            "Autocomplete.mySitesDesc"
+            "focus-ios.xliff:Autocomplete.mySitesDesc"
         ],
         "pl": [
-            "trackingProtection.toggleDescription1"
+            "focus-ios.xliff:trackingProtection.toggleDescription1"
         ]
     }
 }
