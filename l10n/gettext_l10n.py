@@ -67,7 +67,6 @@ def main():
     if not args.exceptions_file:
         exceptions = defaultdict(dict)
     else:
-        exceptions_filename = os.path.basename(args.exceptions_file)
         try:
             with open(args.exceptions_file) as f:
                 exceptions = json.load(f)
@@ -75,7 +74,7 @@ def main():
             sys.exit(e)
 
     errors = defaultdict(list)
-    placeable_pattern = re.compile("%\([a-zA-Z]+\)s")
+    placeable_pattern = re.compile(r"%\([a-zA-Z]+\)s")
 
     # Get a list of locales (subfolders in <locales_path>, exclude hidden folders)
     locales = [

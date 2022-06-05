@@ -5,8 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
-from configparser import ConfigParser
-from fluent.syntax import parse, visitor, serialize
+from fluent.syntax import parse, visitor
 from fluent.syntax.serializer import FluentSerializer
 from html.parser import HTMLParser
 from pathlib import Path
@@ -144,7 +143,9 @@ class StringExtraction:
 
         # Get a list of subfolders, assume they're locales
         locales = [
-            l for l in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, l))
+            loc
+            for loc in os.listdir(base_dir)
+            if os.path.isdir(os.path.join(base_dir, loc))
         ]
         locales.remove(self.reference_locale)
         locales.sort()
@@ -257,11 +258,11 @@ class QualityCheck:
             return False
 
         datal10n_pattern = re.compile(
-            'data-l10n-name\s*=\s*"([a-zA-Z\-]*)"', re.UNICODE
+            r'data-l10n-name\s*=\s*"([a-zA-Z\-]*)"', re.UNICODE
         )
 
         placeable_pattern = re.compile(
-            '(?<!\{)\{\s*([\$|-]?[A-Za-z0-9._-]+)(?:[\[(]?[A-Za-z0-9_\-, :"]+[\])])*\s*\}'
+            r'(?<!\{)\{\s*([\$|-]?[A-Za-z0-9._-]+)(?:[\[(]?[A-Za-z0-9_\-, :"]+[\])])*\s*\}'
         )
 
         """
@@ -353,7 +354,7 @@ class QualityCheck:
 
                 # Check for the message ID repeated in the translation
                 message_id = string_id.split(":")[1]
-                pattern = re.compile(re.escape(message_id) + "\s*=", re.UNICODE)
+                pattern = re.compile(re.escape(message_id) + r"\s*=", re.UNICODE)
                 if pattern.search(translation):
                     error_msg = f"Message ID is repeated in string ({string_id})"
                     self.error_messages[locale].append(error_msg)

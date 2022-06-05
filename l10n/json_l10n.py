@@ -21,7 +21,6 @@ def parseJsonFiles(base_path, messages, locale):
 
     file_list = []
     for f in glob(os.path.join(base_path, locale) + "/*.json"):
-        parts = f.split(os.sep)
         file_list.append(f)
 
     for f in file_list:
@@ -86,7 +85,6 @@ def main():
     if not args.exceptions_file:
         exceptions = defaultdict(dict)
     else:
-        exceptions_filename = os.path.basename(args.exceptions_file)
         try:
             with open(args.exceptions_file) as f:
                 exceptions = json.load(f)
@@ -94,7 +92,7 @@ def main():
             sys.exit(e)
 
     errors = defaultdict(list)
-    placeholder_pattern = re.compile("\$([a-zA-Z0-9_@]+)\$")
+    placeholder_pattern = re.compile(r"\$([a-zA-Z0-9_@]+)\$")
 
     # Get a list of locales (subfolders in <locales_path>, exclude hidden folders)
     locales = [

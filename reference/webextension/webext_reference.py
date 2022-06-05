@@ -25,10 +25,10 @@ def main():
 
     # Get a list of files to check (absolute paths)
     search_path = Path(args.ref_path)
-    file_paths = search_path.glob(f"**/*.json")
+    file_paths = search_path.glob("**/*.json")
 
     errors = defaultdict(list)
-    placeholder_pattern = re.compile("\$([a-zA-Z0-9_@]+)\$")
+    placeholder_pattern = re.compile(r"\$([a-zA-Z0-9_@]+)\$")
 
     for fn in file_paths:
         filename = os.path.basename(fn)

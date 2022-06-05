@@ -10,7 +10,6 @@ from pathlib import Path
 import argparse
 import json
 import os
-import sys
 
 
 def main():
@@ -22,7 +21,7 @@ def main():
     args = parser.parse_args()
 
     search_path = Path(args.json_path)
-    file_paths = search_path.glob(f"**/*.json")
+    file_paths = search_path.glob("**/*.json")
 
     schemas_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "schemas"))
     schemas = {
@@ -61,7 +60,7 @@ def main():
             for i in fn_issues:
                 print(f"Error in {fn}: {i}")
     else:
-        print(f"No issues found.")
+        print("No issues found.")
 
 
 if __name__ == "__main__":

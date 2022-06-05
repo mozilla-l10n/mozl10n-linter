@@ -5,7 +5,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
-from configparser import ConfigParser
 from html.parser import HTMLParser
 import argparse
 import json
@@ -152,13 +151,12 @@ class QualityCheck:
 
             return False
 
-        placeable_pattern = re.compile("((%)(?:[0-9]+\$){0,1}([sd]))")
+        placeable_pattern = re.compile(r"((%)(?:[0-9]+\$){0,1}([sd]))")
 
         # Load exceptions
         if not self.exceptions_path:
             exceptions = {}
         else:
-            exceptions_filename = os.path.basename(self.exceptions_path)
             try:
                 with open(self.exceptions_path) as f:
                     exceptions = json.load(f)
