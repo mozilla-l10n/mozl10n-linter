@@ -10,6 +10,7 @@ from pathlib import Path
 import argparse
 import json
 import os
+import sys
 
 
 def main():
