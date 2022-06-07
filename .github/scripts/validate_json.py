@@ -59,6 +59,7 @@ def main():
         for fn, fn_issues in issues.items():
             for i in fn_issues:
                 print(f"Error in {fn}: {i}")
+                sys.exit(1)
     else:
         print("No issues found.")
 
