@@ -49,7 +49,9 @@
           "en/footer.ftl:footer-follow-firefox",
           "en/footer.ftl:footer-follow-mozilla",
           "en/mozorg/newsletters.ftl:newsletters-beta-news"
-      ]
+      ],
+      "zh-TW": [
+          "en/mozorg/about/history.ftl:history-the-history-of-firefox-and"
     },
     "strings": []
   },
