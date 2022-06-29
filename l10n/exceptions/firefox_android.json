@@ -4,6 +4,9 @@
       "ar": [
         "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_host_message"
       ],
+      "cs": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
+      ],
       "el": [
         "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_protocol_message"
       ],
