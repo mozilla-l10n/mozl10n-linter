@@ -1,8 +1,29 @@
 {
   "HTML": {
     "locales": {
+      "ar": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_host_message"
+      ],
+      "cs": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
+      ],
+      "el": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_protocol_message"
+      ],
+      "fa": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
+      ],
+      "id": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_file_not_found_message"
+      ],
       "it": [
         "app/src/main/res/values/strings.xml:your_rights_content5"
+      ],
+      "my": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_port_blocked_message"
+      ],
+      "sq": [
+        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_net_timeout_message"
       ]
     },
     "strings": []
