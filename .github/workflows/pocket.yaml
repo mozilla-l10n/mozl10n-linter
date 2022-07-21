@@ -1,4 +1,4 @@
-name: Pocket on Bedrock
+name: Pocket Marketing Pages
 on:
   schedule:
     - cron: "13 1 * * 1"
@@ -28,7 +28,7 @@ jobs:
         # errors as artifact
         continue-on-error: true
         run: |
-          python scripts_repo/l10n/fluent_l10n.py --toml target_repo/l10n-vendor.toml --ref en --dest errors.txt --exceptions scripts_repo/l10n/exceptions/pocket_bedrock.json
+          python scripts_repo/l10n/fluent_l10n.py --toml target_repo/l10n-vendor.toml --ref en --dest errors.txt --exceptions scripts_repo/l10n/exceptions/pocket.json
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
