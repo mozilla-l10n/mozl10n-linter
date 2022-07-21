@@ -1,0 +1,25 @@
+{
+  "HTML": {
+    "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
+    "locales": {},
+    "excluded_locales": [
+      "ja"
+    ]
+  },
+  "general": {
+    "locales": {},
+    "strings": []
+  },
+  "data-l10n-names": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {},
+    "strings": []
+  },
+  "excluded_locales": []
+}
