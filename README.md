@@ -27,6 +27,7 @@ It's possible to define [exceptions](https://github.com/mozilla-l10n/mozl10n-lin
 |[Firefox Monitor](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/workflows/Monitor/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml)
 |[Firefox Profiler](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/workflows/Profiler/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml)
 |[mozilla.org](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mozorg.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/workflows/MozOrg/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mozorg.yaml)
+|[Pocket Marketing Pages](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/pocket.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/workflows/Pocket%20Marketing%20Pages/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/pocket.yaml)
 
 ## JSON (WebExtensions)
 | Project | Linter Status |
