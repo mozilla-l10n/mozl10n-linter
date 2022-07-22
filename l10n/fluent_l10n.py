@@ -375,6 +375,9 @@ class QualityCheck:
                 tags = html_parser.get_tags()
 
                 if sorted(tags) != sorted(ref_tags):
+                    # Ignore if only the order was changed
+                    if sorted(tags) == sorted(ref_tags):
+                        continue
                     error_msg = (
                         f"Mismatched HTML elements in string ({string_id})\n"
                         f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"

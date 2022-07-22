@@ -129,8 +129,13 @@ def main():
                     l10n_tags = html_parser.get_tags()
 
                     if l10n_tags != ref_tags:
+                        # Ignore if only the order was changed
+                        if sorted(l10n_tags) == sorted(ref_tags):
+                            continue
                         errors[locale].append(
                             f"Mismatched HTML elements in string ({string_id})\n"
+                            f"  Translation tags ({len(l10n_tags)}): {', '.join(l10n_tags)}\n"
+                            f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                             f"  Translation: {l10n_string}\n"
                             f"  Reference: {ref_string}"
                         )
