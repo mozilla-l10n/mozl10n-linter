@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/fxa_gettext.yaml'
       - 'l10n/gettext_l10n.py'
+      - 'l10n/exceptions/fxa_gettext.json'
   schedule:
     - cron: '10 1 * * *'
   workflow_dispatch:

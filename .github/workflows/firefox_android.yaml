@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/firefox_android.yaml'
       - 'l10n/android_l10n.py'
+      - 'l10n/exceptions/firefox_android.json'
   schedule:
     - cron: '0 1 * * *'
   workflow_dispatch:

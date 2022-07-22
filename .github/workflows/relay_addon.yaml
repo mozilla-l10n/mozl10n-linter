@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/relay_addon.yaml'
       - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/relay_addon.json'
   schedule:
     - cron: '5 1 * * *'
   workflow_dispatch:

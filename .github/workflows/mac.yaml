@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/mac.yaml'
       - 'l10n/webext_l10n.py'
+      - 'l10n/exceptions/mac.json'
   schedule:
     - cron: '5 1 * * *'
   workflow_dispatch:
