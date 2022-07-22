@@ -113,8 +113,6 @@ def main():
                     if ref_matches != l10n_matches:
                         errors[locale].append(
                             f"Variable mismatch in {string_id}\n"
-                            f"  Translation tags ({len(l10n_tags)}): {', '.join(l10n_tags)}\n"
-                            f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                             f"  Translation: {l10n_string}\n"
                             f"  Reference: {ref_string}"
                         )

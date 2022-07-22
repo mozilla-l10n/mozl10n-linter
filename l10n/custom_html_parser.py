@@ -33,7 +33,7 @@ class MyHTMLParser(HTMLParser):
                     if name in ["alt"]:
                         value = "-"
                     attributes_str += (
-                        f' {name}="{value}"' if value != None else f" {name}"
+                        f' {name}="{value}"' if value is not None else f" {name}"
                     )
                 tag_str = f"<{tag}{attributes_str}>"
             else:
