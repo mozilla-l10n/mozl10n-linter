@@ -5,7 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
-from html.parser import HTMLParser
+from custom_html_parser import MyHTMLParser
 import argparse
 import json
 import os
@@ -90,29 +90,6 @@ class StringExtraction:
         """Return dictionary with translations"""
 
         return self.translations
-
-
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        self.clear()
-        super().__init__(convert_charrefs=True)
-
-    def clear(self):
-        self.tags = []
-
-    def handle_starttag(self, tag, attrs):
-        self.tags.append(tag)
-
-    def handle_endtag(self, tag):
-        self.tags.append(tag)
-
-    def get_tags(self):
-        self.tags.sort()
-
-        # Remove line breaks
-        self.tags = [t for t in self.tags if t != "br"]
-
-        return self.tags
 
 
 class QualityCheck:
@@ -269,6 +246,8 @@ class QualityCheck:
                 if tags != ref_tags:
                     error_msg = (
                         f"Mismatched HTML elements in string ({string_id})\n"
+                        f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
+                        f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                         f"  Translation: {translation}\n"
                         f"  Reference: {self.translations[self.reference_locale][string_id]}"
                     )

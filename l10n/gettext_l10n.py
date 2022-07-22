@@ -5,7 +5,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
-from html.parser import HTMLParser
+from custom_html_parser import MyHTMLParser
 from pathlib import Path
 import argparse
 import json
@@ -14,29 +14,6 @@ import os
 import polib
 import re
 import sys
-
-
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        self.clear()
-        super().__init__(convert_charrefs=True)
-
-    def clear(self):
-        self.tags = []
-
-    def handle_starttag(self, tag, attrs):
-        self.tags.append(tag)
-
-    def handle_endtag(self, tag):
-        self.tags.append(tag)
-
-    def get_tags(self):
-        self.tags.sort()
-
-        # Remove line breaks
-        self.tags = [t for t in self.tags if t != "br"]
-
-        return self.tags
 
 
 def main():
@@ -152,6 +129,8 @@ def main():
             if l10n_tags != ref_tags:
                 errors[normalized_locale].append(
                     f"Mismatched HTML elements in string ({message_id})\n"
+                    f"  Translation tags ({len(l10n_tags)}): {', '.join(l10n_tags)}\n"
+                    f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                     f"  Translation: {translation}\n"
                     f"  Reference: {reference}"
                 )

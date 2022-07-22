@@ -1,5 +1,11 @@
 name: FxA
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/fxa.yaml'
+      - 'l10n/fluent_l10n.py'
   schedule:
     - cron: '10 1 * * *'
   workflow_dispatch:

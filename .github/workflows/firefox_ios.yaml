@@ -1,5 +1,11 @@
 name: Firefox iOS
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/firefox_ios.yaml'
+      - 'l10n/xliff_l10n.py'
   schedule:
     - cron: '0 1 * * *'
   workflow_dispatch:

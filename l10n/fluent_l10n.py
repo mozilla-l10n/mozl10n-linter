@@ -5,9 +5,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
+from custom_html_parser import MyHTMLParser
 from fluent.syntax import parse, visitor
 from fluent.syntax.serializer import FluentSerializer
-from html.parser import HTMLParser
 from pathlib import Path
 import argparse
 import json
@@ -175,29 +175,6 @@ class StringExtraction:
         """Return dictionary with translations"""
 
         return self.translations
-
-
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        self.clear()
-        super().__init__(convert_charrefs=True)
-
-    def clear(self):
-        self.tags = []
-
-    def handle_starttag(self, tag, attrs):
-        self.tags.append(f"<{tag}>")
-
-    def handle_endtag(self, tag):
-        self.tags.append(f"</{tag}>")
-
-    def get_tags(self):
-        # Ignore some tags
-        ignored_tags = ["<br>", "</br>"]
-
-        self.tags = [t for t in self.tags if t not in ignored_tags]
-
-        return self.tags
 
 
 class flattenSelectExpression(visitor.Transformer):

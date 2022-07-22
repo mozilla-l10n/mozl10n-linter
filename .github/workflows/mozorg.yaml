@@ -1,5 +1,11 @@
 name: MozOrg
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/mozorg.yaml'
+      - 'l10n/fluent_l10n.py'
   schedule:
     - cron: '10 1 * * 1'
   workflow_dispatch:
