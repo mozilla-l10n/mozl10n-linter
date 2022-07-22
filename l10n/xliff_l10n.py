@@ -5,8 +5,8 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from collections import defaultdict
+from custom_html_parser import MyHTMLParser
 from glob import glob
-from html.parser import HTMLParser
 from lxml import etree
 import argparse
 import html
@@ -14,38 +14,6 @@ import json
 import os
 import re
 import sys
-
-
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        self.clear()
-        super().__init__(convert_charrefs=True)
-
-    def clear(self):
-        self.tags = []
-
-    def handle_starttag(self, tag, attrs):
-        # Ignore specific tags
-        if tag not in ["br"]:
-            # Order attributes by name
-            attributes = sorted(attrs, key=lambda tup: tup[0])
-
-            if attributes:
-                attributes_str = ""
-                for name, value in attributes:
-                    attributes_str += f' {name}="{value}"'
-                tag_str = f"{tag}{attributes_str}"
-            else:
-                tag_str = tag
-            self.tags.append(tag_str)
-
-    def handle_endtag(self, tag):
-        self.tags.append(tag)
-
-    def get_tags(self):
-        self.tags.sort()
-
-        return self.tags
 
 
 def main():
