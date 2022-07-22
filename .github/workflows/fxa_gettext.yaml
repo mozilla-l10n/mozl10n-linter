@@ -1,5 +1,11 @@
 name: FxA Gettext
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/fxa_gettext.yaml'
+      - 'l10n/gettext_l10n.py'
   schedule:
     - cron: '10 1 * * *'
   workflow_dispatch:

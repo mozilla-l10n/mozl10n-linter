@@ -1,5 +1,11 @@
 name: Relay
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/relay.yaml'
+      - 'l10n/json_l10n.py'
   schedule:
     - cron: '10 1 * * *'
   workflow_dispatch:
