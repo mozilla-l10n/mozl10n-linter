@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/relay.yaml'
       - 'l10n/webext_l10n.py'
+      - 'l10n/exceptions/relay.json'
   schedule:
     - cron: '10 1 * * *'
   workflow_dispatch:

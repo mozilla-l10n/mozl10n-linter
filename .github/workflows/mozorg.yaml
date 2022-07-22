@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/mozorg.yaml'
       - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/mozorg.json'
   schedule:
     - cron: '10 1 * * 1'
   workflow_dispatch:

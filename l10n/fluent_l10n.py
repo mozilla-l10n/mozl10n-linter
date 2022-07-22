@@ -287,8 +287,12 @@ class QualityCheck:
                 serializer = FluentSerializer()
                 text = serializer.serialize(flattener.visit(resource))
 
+            # Remove Fluent placeables before parsing HTML, because the parser
+            # will consider curly parentheses and other elements as starting
+            # tags.
+            cleaned_text = placeable_pattern.sub("", text)
             html_parser.clear()
-            html_parser.feed(text)
+            html_parser.feed(cleaned_text)
 
             tags = html_parser.get_tags()
             if tags:
@@ -366,7 +370,8 @@ class QualityCheck:
                     translation = serializer.serialize(flattener.visit(resource))
 
                 html_parser.clear()
-                html_parser.feed(translation)
+                cleaned_translation = placeable_pattern.sub("", translation)
+                html_parser.feed(cleaned_translation)
                 tags = html_parser.get_tags()
 
                 if sorted(tags) != sorted(ref_tags):

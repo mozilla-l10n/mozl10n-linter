@@ -28,6 +28,10 @@ class MyHTMLParser(HTMLParser):
                     # parentheses are treated as tags by the parser.
                     if name in ["{", "}"]:
                         continue
+
+                    # Ignore value for localizable attributes
+                    if name in ["alt"]:
+                        value = "-"
                     attributes_str += (
                         f' {name}="{value}"' if value != None else f" {name}"
                     )

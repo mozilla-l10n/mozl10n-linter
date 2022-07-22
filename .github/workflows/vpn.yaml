@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/vpn.yaml'
       - 'l10n/xliff_l10n.py'
+      - 'l10n/exceptions/vpn.json'
   schedule:
     - cron: '0 1 * * *'
   workflow_dispatch:

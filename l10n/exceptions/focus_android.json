@@ -3,6 +3,12 @@
     "locales": {
       "it": [
         "app/src/main/res/values/strings.xml:your_rights_content5"
+      ],
+      "pt-BR": [
+        "app/src/main/res/values/strings.xml:your_rights_content5"
+      ],
+      "tr": [
+        "app/src/main/res/values/strings.xml:your_rights_content5"
       ]
     },
     "strings": []
