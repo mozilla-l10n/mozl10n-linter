@@ -186,7 +186,19 @@ class MyHTMLParser(HTMLParser):
         self.tags = []
 
     def handle_starttag(self, tag, attrs):
-        self.tags.append(f"<{tag}>")
+        # Order attributes by name
+        attributes = sorted(attrs, key=lambda tup: tup[0])
+
+        if attributes:
+            attributes_str = ""
+            for name, value in attributes:
+                if name in ["{", "}"]:
+                    continue
+                attributes_str += f' {name}="{value}"' if value else f" {name}"
+            tag_str = f"<{tag}{attributes_str}>"
+        else:
+            tag_str = f"<{tag}>"
+        self.tags.append(tag_str)
 
     def handle_endtag(self, tag):
         self.tags.append(f"</{tag}>")

@@ -25,16 +25,25 @@ class MyHTMLParser(HTMLParser):
         self.tags = []
 
     def handle_starttag(self, tag, attrs):
-        self.tags.append(tag)
+        # Ignore specific tags
+        if tag not in ["br"]:
+            # Order attributes by name
+            attributes = sorted(attrs, key=lambda tup: tup[0])
+
+            if attributes:
+                attributes_str = ""
+                for name, value in attributes:
+                    attributes_str += f' {name}="{value}"'
+                tag_str = f"{tag}{attributes_str}"
+            else:
+                tag_str = tag
+            self.tags.append(tag_str)
 
     def handle_endtag(self, tag):
         self.tags.append(tag)
 
     def get_tags(self):
         self.tags.sort()
-
-        # Remove line breaks
-        self.tags = [t for t in self.tags if t != "br"]
 
         return self.tags
 
@@ -152,6 +161,8 @@ def main():
             if l10n_tags != ref_tags:
                 errors[normalized_locale].append(
                     f"Mismatched HTML elements in string ({message_id})\n"
+                    f"  Translation tags ({len(l10n_tags)}): {', '.join(l10n_tags)}\n"
+                    f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                     f"  Translation: {translation}\n"
                     f"  Reference: {reference}"
                 )
