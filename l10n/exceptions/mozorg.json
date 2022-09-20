@@ -51,7 +51,7 @@
           "en/footer.ftl:footer-follow-mozilla",
           "en/mozorg/newsletters.ftl:newsletters-beta-news"
       ],
-      "fr: [
+      "fr": [
           "en/mozorg/about/history.ftl:history-the-history-of-firefox-and"
       ]
     },
