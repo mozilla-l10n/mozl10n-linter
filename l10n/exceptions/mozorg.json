@@ -21,7 +21,7 @@
         "en/firefox/privacy/passwords.ftl:privacy-passwords-in-general-the"
       ],
       "zh-TW": [
-        "en/mozorg/about/history.ftl:history-the-history-of-firefox-and"
+        "en/mozorg/about/history.ftl:history-the-history-of-firefox-and",
         "en/mozorg/newsletters.ftl:newsletters-read-all-about-it-in-our-newsletter"
       ]
     },
