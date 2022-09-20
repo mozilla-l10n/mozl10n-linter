@@ -52,7 +52,7 @@
           "en/mozorg/newsletters.ftl:newsletters-beta-news"
       ],
       "fr": [
-          "en/mozorg/about/history.ftl:history-the-history-of-firefox-and"
+          "en/navigation_v2.ftl:navigation-v2-firefox-browsers"
       ]
     },
     "strings": []
