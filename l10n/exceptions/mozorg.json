@@ -67,7 +67,6 @@
   },
   "excluded_locales": [
       "am",
-      "fa",
       "ml",
       "mr",
       "ta"
