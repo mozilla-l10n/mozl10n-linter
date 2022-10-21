@@ -29,17 +29,11 @@
         },
         "placeholders": {
             "type": "object",
-            "additionalProperties": false,
-            "properties": {
-                "locales": {
-                    "type": "object",
-                    "patternProperties": {
-                        "^.*$": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
+            "patternProperties": {
+                "^.*$": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
                     }
                 }
             }
