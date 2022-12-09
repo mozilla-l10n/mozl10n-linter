@@ -29,6 +29,7 @@ class StringExtraction:
         """Initialize object."""
 
         self.translations = defaultdict(dict)
+        self.msg_ids = defaultdict(list)
         self.msg_attributes = defaultdict(dict)
 
         self.l10n_path = l10n_path
@@ -105,33 +106,45 @@ class StringExtraction:
                     if isinstance(entity, parser.Junk):
                         continue
                     string_id = f"{relative_file}:{entity}"
-                    if file_extension == ".ftl":
-                        if entity.raw_val is not None:
-                            self.translations[normalized_locale][
-                                string_id
-                            ] = entity.raw_val
-                        # Store attributes
-                        for attribute in entity.attributes:
-                            attr_string_id = f"{relative_file}:{entity}.{attribute}"
-                            self.translations[normalized_locale][
-                                attr_string_id
-                            ] = attribute.raw_val
-                            # Store attributes for checks
-                            if string_id not in self.msg_attributes[locale]:
-                                self.msg_attributes[locale][string_id] = [
-                                    str(attribute)
-                                ]
-                            else:
-                                self.msg_attributes[locale][string_id].append(
-                                    str(attribute)
-                                )
-                    else:
+
+                    # Store the string ID
+                    self.msg_ids[normalized_locale].append(string_id)
+
+                    # Store value if defined
+                    if entity.raw_val is not None:
                         self.translations[normalized_locale][string_id] = entity.raw_val
+
+                    # Store attributes
+                    for attribute in entity.attributes:
+                        attr_string_id = f"{relative_file}:{entity}.{attribute}"
+                        self.translations[normalized_locale][
+                            attr_string_id
+                        ] = attribute.raw_val
+
+                        # Store attributes for checks if it's the reference
+                        # locale, if the string ID is available in the
+                        # reference locale, and if it's not a term.
+                        if (
+                            locale == self.reference_locale
+                            or string_id in self.msg_ids[self.reference_locale]
+                        ):
+                            if not isinstance(entity, parser.FluentTerm):
+                                if (
+                                    string_id
+                                    not in self.msg_attributes[normalized_locale]
+                                ):
+                                    self.msg_attributes[normalized_locale][
+                                        string_id
+                                    ] = [str(attribute)]
+                                else:
+                                    self.msg_attributes[normalized_locale][
+                                        string_id
+                                    ].append(str(attribute))
             except Exception as e:
                 print(f"Error parsing file: {file_name}")
                 print(e)
 
-        # Remove extra strings from locale
+        # Remove obsolete strings from locale
         if self.reference_locale != locale:
             for string_id in list(self.translations[normalized_locale].keys()):
                 if string_id not in self.translations[self.reference_locale]:
@@ -184,12 +197,11 @@ class StringExtraction:
     def getTranslations(self):
         """Return dictionary with translations"""
 
-        return self.translations
-
-    def getMsgAttributes(self):
-        """Return dictionary with msg attributes for each locale"""
-
-        return self.msg_attributes
+        return {
+            "translations": self.translations,
+            "attributes": self.msg_attributes,
+            "ids": self.msg_ids,
+        }
 
 
 class flattenSelectExpression(visitor.Transformer):
@@ -205,10 +217,11 @@ class flattenSelectExpression(visitor.Transformer):
 
 
 class QualityCheck:
-    def __init__(self, translations, msg_attributes, reference_locale, exceptions_path):
+    def __init__(self, translations, reference_locale, exceptions_path):
 
-        self.translations = translations
-        self.msg_attributes = msg_attributes
+        self.translations = translations["translations"]
+        self.msg_attributes = translations["attributes"]
+        self.msg_ids = translations["ids"]
         self.reference_locale = reference_locale
         self.error_messages = defaultdict(list)
 
@@ -316,6 +329,7 @@ class QualityCheck:
 
         # Check missing or additional attributes in messages
         ref_msg_attributes = self.msg_attributes[self.reference_locale]
+        ref_msg_attributes_ids = list(ref_msg_attributes.keys())
         for locale, l10n_msg_attributes in self.msg_attributes.items():
             # Ignore reference locale
             if locale == self.reference_locale:
@@ -325,7 +339,7 @@ class QualityCheck:
                 # Ignore untranslated strings. We compare against translations,
                 # not msg_attributes, in case the translated string doesn't have
                 # any attribute.
-                if string_id not in self.translations[locale]:
+                if string_id not in self.msg_ids[locale]:
                     continue
 
                 l10n_string_msg_attributes = l10n_msg_attributes.get(string_id, [])
@@ -348,6 +362,19 @@ class QualityCheck:
                         f"Extra attributes in string ({string_id}): {extra_list}"
                     )
                     self.error_messages[locale].append(error_msg)
+
+            # Check if there are strings in locale with attributes that have
+            # none in the reference locale.
+            l10n_msg_attributes_ids = list(l10n_msg_attributes.keys())
+            extra_attributes = list(
+                set(l10n_msg_attributes_ids) - set(ref_msg_attributes_ids)
+            )
+            for string_id in extra_attributes:
+                attributes_list = ", ".join(l10n_msg_attributes[string_id])
+                error_msg = (
+                    f"Extra attributes in string ({string_id}): {attributes_list}"
+                )
+                self.error_messages[locale].append(error_msg)
 
         for locale, locale_translations in self.translations.items():
             # Ignore reference locale
@@ -588,11 +615,8 @@ def main():
     )
     extracted_strings.extractStrings()
     translations = extracted_strings.getTranslations()
-    msg_attributes = extracted_strings.getMsgAttributes()
 
-    checks = QualityCheck(
-        translations, msg_attributes, args.reference_code, args.exceptions_file
-    )
+    checks = QualityCheck(translations, args.reference_code, args.exceptions_file)
     output = checks.printErrors()
     if output:
         out_file = args.dest_file
