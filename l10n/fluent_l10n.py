@@ -29,6 +29,7 @@ class StringExtraction:
         """Initialize object."""
 
         self.translations = defaultdict(dict)
+        self.msg_attributes = defaultdict(dict)
 
         self.l10n_path = l10n_path
         self.search_type = search_type
@@ -115,6 +116,15 @@ class StringExtraction:
                             self.translations[normalized_locale][
                                 attr_string_id
                             ] = attribute.raw_val
+                            # Store attributes for checks
+                            if string_id not in self.msg_attributes[locale]:
+                                self.msg_attributes[locale][string_id] = [
+                                    str(attribute)
+                                ]
+                            else:
+                                self.msg_attributes[locale][string_id].append(
+                                    str(attribute)
+                                )
                     else:
                         self.translations[normalized_locale][string_id] = entity.raw_val
             except Exception as e:
@@ -176,6 +186,11 @@ class StringExtraction:
 
         return self.translations
 
+    def getMsgAttributes(self):
+        """Return dictionary with msg attributes for each locale"""
+
+        return self.msg_attributes
+
 
 class flattenSelectExpression(visitor.Transformer):
     def visit_SelectExpression(self, node):
@@ -190,9 +205,10 @@ class flattenSelectExpression(visitor.Transformer):
 
 
 class QualityCheck:
-    def __init__(self, translations, reference_locale, exceptions_path):
+    def __init__(self, translations, msg_attributes, reference_locale, exceptions_path):
 
         self.translations = translations
+        self.msg_attributes = msg_attributes
         self.reference_locale = reference_locale
         self.error_messages = defaultdict(list)
 
@@ -243,7 +259,7 @@ class QualityCheck:
         )
 
         """
-        Store specific reference strings for addictional FTL checks:
+        Store specific reference strings for additional FTL checks:
         - Strings with data-l10n-names
         - Strings with message, terms, or variable references
         """
@@ -297,6 +313,41 @@ class QualityCheck:
             tags = html_parser.get_tags()
             if tags:
                 html_strings[string_id] = tags
+
+        # Check missing or additional attributes in messages
+        ref_msg_attributes = self.msg_attributes[self.reference_locale]
+        for locale, l10n_msg_attributes in self.msg_attributes.items():
+            # Ignore reference locale
+            if locale == self.reference_locale:
+                continue
+
+            for string_id, ref_string_msg_attributes in ref_msg_attributes.items():
+                # Ignore untranslated strings. We compare against translations,
+                # not msg_attributes, in case the translated string doesn't have
+                # any attribute.
+                if string_id not in self.translations[locale]:
+                    continue
+
+                l10n_string_msg_attributes = l10n_msg_attributes.get(string_id, [])
+                missing_attributes = list(
+                    set(ref_string_msg_attributes) - set(l10n_string_msg_attributes)
+                )
+                if missing_attributes:
+                    missing_list = ", ".join(missing_attributes)
+                    error_msg = (
+                        f"Missing attributes in string ({string_id}): {missing_list}"
+                    )
+                    self.error_messages[locale].append(error_msg)
+
+                extra_attributes = list(
+                    set(l10n_string_msg_attributes) - set(ref_string_msg_attributes)
+                )
+                if extra_attributes:
+                    extra_list = ", ".join(extra_attributes)
+                    error_msg = (
+                        f"Extra attributes in string ({string_id}): {extra_list}"
+                    )
+                    self.error_messages[locale].append(error_msg)
 
         for locale, locale_translations in self.translations.items():
             # Ignore reference locale
@@ -537,8 +588,11 @@ def main():
     )
     extracted_strings.extractStrings()
     translations = extracted_strings.getTranslations()
+    msg_attributes = extracted_strings.getMsgAttributes()
 
-    checks = QualityCheck(translations, args.reference_code, args.exceptions_file)
+    checks = QualityCheck(
+        translations, msg_attributes, args.reference_code, args.exceptions_file
+    )
     output = checks.printErrors()
     if output:
         out_file = args.dest_file
