@@ -36,58 +36,6 @@ class StringExtraction:
         self.search_type = search_type
         self.reference_locale = reference_locale
 
-    def extractStringsToml(self):
-        """Extract strings using TOML configuration."""
-
-        basedir = os.path.dirname(self.l10n_path)
-        if not os.path.exists(self.l10n_path):
-            sys.exit("Specified TOML file does not exist.")
-        project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
-        basedir = os.path.join(basedir, project_config.root)
-
-        reference_cache = {}
-
-        if not project_config.all_locales:
-            print("No locales defined in the project configuration.")
-
-        for locale in project_config.all_locales:
-            print(f"Extracting strings for locale: {locale}.")
-            files = paths.ProjectFiles(locale, [project_config])
-            for l10n_file, reference_file, _, _ in files:
-                if not os.path.exists(l10n_file):
-                    # File not available in localization
-                    continue
-
-                if not os.path.exists(reference_file):
-                    # File not available in reference
-                    continue
-
-                key_path = os.path.relpath(reference_file, basedir)
-                try:
-                    p = parser.getParser(reference_file)
-                except UserWarning:
-                    continue
-                if key_path not in reference_cache:
-                    p.readFile(reference_file)
-                    reference_cache[key_path] = set(p.parse().keys())
-                    self.translations[self.reference_locale].update(
-                        (
-                            f"{key_path}:{entity.key}",
-                            entity.raw_val,
-                        )
-                        for entity in p.parse()
-                    )
-
-                p.readFile(l10n_file)
-                self.translations[locale].update(
-                    (
-                        f"{key_path}:{entity.key}",
-                        entity.raw_val,
-                    )
-                    for entity in p.parse()
-                )
-            print(f"  {len(self.translations[locale])} strings extracted")
-
     def storeFluentStrings(self, locale, filename, relative_filename):
         try:
             file_extension = os.path.splitext(filename)[1]
@@ -132,6 +80,57 @@ class StringExtraction:
             print(f"Error parsing file: {filename}")
             print(e)
 
+    def removeObsoleteStrings(self, locale):
+        # Remove obsolete strings from locale
+        if locale != self.reference_locale:
+            for string_id in list(self.translations[locale].keys()):
+                if string_id not in self.translations[self.reference_locale]:
+                    del self.translations[locale][string_id]
+
+    def extractStringsToml(self):
+        """Extract strings using TOML configuration."""
+
+        basedir = os.path.dirname(self.l10n_path)
+        if not os.path.exists(self.l10n_path):
+            sys.exit("Specified TOML file does not exist.")
+        project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
+        basedir = os.path.join(basedir, project_config.root)
+
+        if not project_config.all_locales:
+            print("No locales defined in the project configuration.")
+
+        read_references = []
+        for locale in project_config.all_locales:
+            print(f"Extracting strings for locale: {locale}.")
+
+            files = paths.ProjectFiles(locale, [project_config])
+            for l10n_file, reference_file, _, _ in files:
+                if not os.path.exists(l10n_file):
+                    # File not available in localization
+                    continue
+
+                if not os.path.exists(reference_file):
+                    # File not available in reference
+                    continue
+
+                key_path = os.path.relpath(reference_file, basedir)
+
+                # Extract reference strings if not already available
+                if reference_file not in read_references:
+                    self.storeFluentStrings(
+                        self.reference_locale,
+                        reference_file,
+                        key_path,
+                    )
+
+                # Extract localized strings
+                self.storeFluentStrings(locale, l10n_file, key_path)
+
+        # Use a second loop to remove obsolete strings, since reference files
+        # are not available beforehand.
+        for locale in project_config.all_locales:
+            self.removeObsoleteStrings(locale)
+
     def extractLocale(self, locale, base_dir):
         """Extract strings for a locale"""
 
@@ -144,10 +143,7 @@ class StringExtraction:
             self.storeFluentStrings(normalized_locale, file_name, relative_file)
 
         # Remove obsolete strings from locale
-        if self.reference_locale != locale:
-            for string_id in list(self.translations[normalized_locale].keys()):
-                if string_id not in self.translations[self.reference_locale]:
-                    del self.translations[normalized_locale][string_id]
+        self.removeObsoleteStrings(normalized_locale)
 
     def extractStringsFolder(self):
         """Extract strings searching for FTL files in folders."""
@@ -544,6 +540,8 @@ class QualityCheck:
                             f"  Translation: {translation}\n"
                             f"  Reference: {self.translations[self.reference_locale][string_id]}"
                         )
+                        print(groups)
+                        print(translated_groups)
                         self.error_messages[locale].append(error_msg)
                 else:
                     # There are no data-l10n-name
