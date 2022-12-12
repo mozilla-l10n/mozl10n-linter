@@ -40,6 +40,8 @@ class StringExtraction:
         """Extract strings using TOML configuration."""
 
         basedir = os.path.dirname(self.l10n_path)
+        if not os.path.exists(self.l10n_path):
+            sys.exit("Specified TOML file does not exist.")
         project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
         basedir = os.path.join(basedir, project_config.root)
 
@@ -86,6 +88,50 @@ class StringExtraction:
                 )
             print(f"  {len(self.translations[locale])} strings extracted")
 
+    def storeFluentStrings(self, locale, filename, relative_filename):
+        try:
+            file_extension = os.path.splitext(filename)[1]
+            file_parser = parser.getParser(file_extension)
+            file_parser.readFile(filename)
+            entities = file_parser.parse()
+            for entity in entities:
+                # Ignore Junk
+                if isinstance(entity, parser.Junk):
+                    continue
+                string_id = f"{relative_filename}:{entity}"
+
+                # Store the string ID
+                self.msg_ids[locale].append(string_id)
+
+                # Store value if defined
+                if entity.raw_val is not None:
+                    self.translations[locale][string_id] = entity.raw_val
+
+                # Store attributes
+                for attribute in entity.attributes:
+                    attr_string_id = f"{relative_filename}:{entity}.{attribute}"
+                    self.translations[locale][attr_string_id] = attribute.raw_val
+
+                    # Store attributes for checks if it's the reference
+                    # locale, if the string ID is available in the
+                    # reference locale, and if it's not a term.
+                    if (
+                        locale == self.reference_locale
+                        or string_id in self.msg_ids[self.reference_locale]
+                    ):
+                        if not isinstance(entity, parser.FluentTerm):
+                            if string_id not in self.msg_attributes[locale]:
+                                self.msg_attributes[locale][string_id] = [
+                                    str(attribute)
+                                ]
+                            else:
+                                self.msg_attributes[locale][string_id].append(
+                                    str(attribute)
+                                )
+        except Exception as e:
+            print(f"Error parsing file: {filename}")
+            print(e)
+
     def extractLocale(self, locale, base_dir):
         """Extract strings for a locale"""
 
@@ -95,54 +141,7 @@ class StringExtraction:
             file_name = os.path.join(base_dir, locale, relative_file)
             if not os.path.exists(file_name):
                 continue
-            file_extension = os.path.splitext(file_name)[1]
-
-            file_parser = parser.getParser(file_extension)
-            file_parser.readFile(file_name)
-            try:
-                entities = file_parser.parse()
-                for entity in entities:
-                    # Ignore Junk
-                    if isinstance(entity, parser.Junk):
-                        continue
-                    string_id = f"{relative_file}:{entity}"
-
-                    # Store the string ID
-                    self.msg_ids[normalized_locale].append(string_id)
-
-                    # Store value if defined
-                    if entity.raw_val is not None:
-                        self.translations[normalized_locale][string_id] = entity.raw_val
-
-                    # Store attributes
-                    for attribute in entity.attributes:
-                        attr_string_id = f"{relative_file}:{entity}.{attribute}"
-                        self.translations[normalized_locale][
-                            attr_string_id
-                        ] = attribute.raw_val
-
-                        # Store attributes for checks if it's the reference
-                        # locale, if the string ID is available in the
-                        # reference locale, and if it's not a term.
-                        if (
-                            locale == self.reference_locale
-                            or string_id in self.msg_ids[self.reference_locale]
-                        ):
-                            if not isinstance(entity, parser.FluentTerm):
-                                if (
-                                    string_id
-                                    not in self.msg_attributes[normalized_locale]
-                                ):
-                                    self.msg_attributes[normalized_locale][
-                                        string_id
-                                    ] = [str(attribute)]
-                                else:
-                                    self.msg_attributes[normalized_locale][
-                                        string_id
-                                    ].append(str(attribute))
-            except Exception as e:
-                print(f"Error parsing file: {file_name}")
-                print(e)
+            self.storeFluentStrings(normalized_locale, file_name, relative_file)
 
         # Remove obsolete strings from locale
         if self.reference_locale != locale:
