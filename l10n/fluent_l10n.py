@@ -540,8 +540,6 @@ class QualityCheck:
                             f"  Translation: {translation}\n"
                             f"  Reference: {self.translations[self.reference_locale][string_id]}"
                         )
-                        print(groups)
-                        print(translated_groups)
                         self.error_messages[locale].append(error_msg)
                 else:
                     # There are no data-l10n-name
