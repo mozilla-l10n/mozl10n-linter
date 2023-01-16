@@ -447,7 +447,7 @@ class QualityCheck:
                 html_parser.feed(cleaned_translation)
                 tags = html_parser.get_tags()
 
-                if sorted(tags) != sorted(ref_tags):
+                if tags != ref_tags:
                     # Ignore if only the order was changed
                     if sorted(tags) == sorted(ref_tags):
                         continue
