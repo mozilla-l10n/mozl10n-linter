@@ -13,6 +13,7 @@ class MyHTMLParser(HTMLParser):
         super().__init__(convert_charrefs=True)
 
     def clear(self):
+        self.reset()
         self.tags = []
 
     def handle_starttag(self, tag, attrs):
