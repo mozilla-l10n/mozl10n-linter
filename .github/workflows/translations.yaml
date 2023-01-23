@@ -7,6 +7,9 @@ on:
       - '.github/workflows/translations.yaml'
       - 'l10n/webext_l10n.py'
       - 'l10n/exceptions/translations.json'
+  pull_request:
+    branches:
+      - main
   schedule:
     - cron: '5 1 * * *'
   workflow_dispatch:
@@ -31,8 +34,12 @@ jobs:
         # Allow to continue if the linter fails, so we can upload the list of
         # errors as artifact
         continue-on-error: true
-        run: |
-          python scripts_repo/l10n/webext_l10n.py --l10n target_repo/ --ref en_US --dest errors.txt --exceptions scripts_repo/l10n/exceptions/translations.json
+        run: >
+          python scripts_repo/l10n/webext_l10n.py
+          --l10n target_repo/
+          --ref en_US
+          --dest errors.txt
+          --exceptions scripts_repo/l10n/exceptions/translations.json
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

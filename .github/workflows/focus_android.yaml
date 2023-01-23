@@ -7,6 +7,9 @@ on:
       - '.github/workflows/focus_android.yaml'
       - 'l10n/android_l10n.py'
       - 'l10n/exceptions/focus_android.json'
+  pull_request:
+    branches:
+      - main
   schedule:
     - cron: '0 1 * * *'
   workflow_dispatch:
@@ -34,8 +37,11 @@ jobs:
         # Allow to continue if the linter fails, so we can upload the list of
         # errors as artifact
         continue-on-error: true
-        run: |
-          python scripts_repo/l10n/android_l10n.py --toml target_repo/mozilla-mobile/focus-android/l10n.toml --dest errors.txt --exceptions scripts_repo/l10n/exceptions/focus_android.json
+        run: >
+          python scripts_repo/l10n/android_l10n.py
+          --toml target_repo/mozilla-mobile/focus-android/l10n.toml
+          --dest errors.txt
+          --exceptions scripts_repo/l10n/exceptions/focus_android.json
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

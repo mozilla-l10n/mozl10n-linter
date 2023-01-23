@@ -151,6 +151,15 @@ def main():
                     f"'¶' in {message_id}\n  Translation: {l10n_message}"
                 )
 
+            # Check for empty translation
+            if l10n_message == "":
+                error_msg = (
+                    f"{message_id} is empty\n"
+                    f"  Translation: {l10n_message}\n"
+                    f"  Reference: {reference_messages[message_id]}"
+                )
+                self.error_messages[locale].append(error_msg)
+
             # Check for ellipsis
             if not ignore_ellipsis and "..." in l10n_message:
                 if message_id in exceptions["ellipsis"].get("locales", {}).get(
