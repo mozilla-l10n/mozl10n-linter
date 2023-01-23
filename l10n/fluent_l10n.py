@@ -398,6 +398,15 @@ class QualityCheck:
                     error_msg = f"Pilcrow character in string ({string_id})"
                     self.error_messages[locale].append(error_msg)
 
+                # Check for empty translation
+                if translation == "":
+                    error_msg = (
+                        f"{string_id} is empty\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
+                    self.error_messages[locale].append(error_msg)
+
                 # Check for stray spaces
                 if '{ "' in translation:
                     error_msg = (

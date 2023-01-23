@@ -155,6 +155,15 @@ def main():
                     f"  Reference: {reference}"
                 )
 
+            # Check for empty translation
+            if translation == "":
+                error_msg = (
+                    f"{string_id} is empty\n"
+                    f"  Translation: {translation}\n"
+                    f"  Reference: {reference}"
+                )
+                self.error_messages[locale].append(error_msg)
+
             # Check for ellipsis
             if not ignore_ellipsis and "..." in translation:
                 if message_id in exceptions["ellipsis"].get("locales", {}).get(

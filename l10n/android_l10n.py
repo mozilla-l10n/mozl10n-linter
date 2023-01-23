@@ -213,6 +213,15 @@ class QualityCheck:
                     )
                     self.error_messages[locale].append(error_msg)
 
+                # Check for empty translation
+                if translation == "":
+                    error_msg = (
+                        f"{string_id} is empty\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
+                    self.error_messages[locale].append(error_msg)
+
                 # Check for 3 dots instead of ellipsis
                 if "..." in translation and not ignoreString(
                     exceptions, locale, "ellipsis", string_id

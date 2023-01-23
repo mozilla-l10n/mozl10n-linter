@@ -144,6 +144,15 @@ def main():
                         f"'¶' in {string_id}\n  Translation: {l10n_string}"
                     )
 
+                # Check for empty translation
+                if l10n_string == "":
+                    error_msg = (
+                        f"{string_id} is empty\n"
+                        f"  Translation: {l10n_string}\n"
+                        f"  Reference: {ref_string}"
+                    )
+                    errors[locale].append(error_msg)
+
     if errors:
         locales = list(errors.keys())
         locales.sort()
