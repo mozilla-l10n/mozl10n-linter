@@ -10,6 +10,10 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/focus_ios.yaml'
+      - 'l10n/xliff_l10n.py'
+      - 'l10n/exceptions/focus_ios.json'
   schedule:
     - cron: '0 1 * * *'
   workflow_dispatch:

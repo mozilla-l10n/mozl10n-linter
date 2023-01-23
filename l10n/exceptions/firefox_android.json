@@ -2,28 +2,28 @@
   "HTML": {
     "locales": {
       "ar": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_host_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_host_message"
       ],
       "cs": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
       ],
       "el": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_protocol_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_protocol_message"
       ],
       "fa": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
       ],
       "id": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_file_not_found_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_file_not_found_message"
       ],
       "it": [
-        "app/src/main/res/values/strings.xml:your_rights_content5"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:your_rights_content5"
       ],
       "my": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_port_blocked_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_port_blocked_message"
       ],
       "sq": [
-        "components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_net_timeout_message"
+        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_net_timeout_message"
       ]
     },
     "strings": []
@@ -41,20 +41,20 @@
   "placeables": {
     "locales": {
       "cs": [
-        "app/src/main/res/values/strings.xml:history_search_group_site",
-        "app/src/main/res/values/strings.xml:recently_closed_tab",
-        "app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site",
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab",
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
       ],
       "eu": [
-        "app/src/main/res/values/strings.xml:history_search_group_site"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site"
       ],
       "he": [
-        "app/src/main/res/values/strings.xml:history_search_group_site",
-        "app/src/main/res/values/strings.xml:recently_closed_tab",
-        "app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site",
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab",
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
       ],
       "szl": [
-        "app/src/main/res/values/strings.xml:recently_closed_tab"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab"
       ]
     },
     "strings": []
