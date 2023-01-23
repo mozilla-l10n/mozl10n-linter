@@ -10,6 +10,10 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/fxa.yaml'
+      - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/fxa.json'
   schedule:
     - cron: '10 1 * * *'
   workflow_dispatch:
