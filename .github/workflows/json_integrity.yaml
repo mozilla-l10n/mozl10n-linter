@@ -1,11 +1,15 @@
 name: JSON Linter
 on:
   push:
-    paths: ['**.json' ]
-    branches: [ main ]
+    paths:
+      - '**.json'
+    branches:
+      - main
   pull_request:
-    paths: ['**.json' ]
-    branches: [ main ]
+    paths:
+      - '**.json'
+    branches:
+      - main
 jobs:
   lint:
     runs-on: ubuntu-latest
