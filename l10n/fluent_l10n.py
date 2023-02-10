@@ -4,7 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from collections import defaultdict
+from collections import defaultdict, Counter
 from custom_html_parser import MyHTMLParser
 from fluent.syntax import parse, visitor
 from fluent.syntax.serializer import FluentSerializer
@@ -431,18 +431,13 @@ class QualityCheck:
                     )
                     self.error_messages[locale].append(error_msg)
 
-            # Check for HTML elements mismatch
+            # Check all localized strings for HTML elements mismatch or extra tags
             html_parser = MyHTMLParser()
-            for string_id, ref_tags in html_strings.items():
-                # Ignore untranslated strings
-                if string_id not in locale_translations:
-                    continue
-
+            for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
                 if ignoreString(locale, "HTML", string_id):
                     continue
 
-                translation = locale_translations[string_id]
                 if not isinstance(translation, str):
                     continue
                 if "*[" in translation:
@@ -456,10 +451,23 @@ class QualityCheck:
                 html_parser.feed(cleaned_translation)
                 tags = html_parser.get_tags()
 
+                ref_tags = html_strings.get(string_id, [])
                 if tags != ref_tags:
                     # Ignore if only the order was changed
                     if sorted(tags) == sorted(ref_tags):
                         continue
+
+                    # Check extra tags and ignore the error if it's only <i> and
+                    # <em>, and the number of extra tags is even.
+                    tags_diff = list(Counter(tags) - Counter(ref_tags))
+                    diff_list = [
+                        t
+                        for t in tags_diff
+                        if t not in ["<em>", "</em>", "<i>", "</i>"]
+                    ]
+                    if not diff_list and (len(tags_diff) % 2) == 0:
+                        continue
+
                     error_msg = (
                         f"Mismatched HTML elements in string ({string_id})\n"
                         f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
