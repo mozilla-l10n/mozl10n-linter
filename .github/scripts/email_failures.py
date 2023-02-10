@@ -14,7 +14,7 @@ def send_email(subject, body, sender, recipient, password, server, port):
     msg["To"] = recipient
     smtp_server = smtplib.SMTP_SSL(server, port)
     smtp_server.login(sender, password)
-    smtp_server.sendmail(sender, recipients, msg.as_string())
+    smtp_server.sendmail(sender, recipient, msg.as_string())
     smtp_server.quit()
 
 
