@@ -49,7 +49,7 @@ def main():
         "firefox_ios": ["dlebedel"],
         "focus_android": ["dlebedel"],
         "focus_ios": ["dlebedel"],
-        "fxa": ["bolsson"],
+        "fxa": ["bolsson", "flodolo"],
         "fxa_gettext": ["bolsson"],
         "mac": ["flodolo"],
         "monitor": ["flodolo"],
@@ -81,7 +81,7 @@ def main():
             for owner in owners:
                 failures[owner].append(
                     {
-                        "name": last_run["display_title"],
+                        "name": last_run["name"],
                         "url": last_run["html_url"],
                     }
                 )
