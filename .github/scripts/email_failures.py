@@ -49,7 +49,7 @@ def main():
         "firefox_ios": ["dlebedel"],
         "focus_android": ["dlebedel"],
         "focus_ios": ["dlebedel"],
-        "fxa": ["bolsson", "flodolo"],
+        "fxa": ["bolsson"],
         "fxa_gettext": ["bolsson"],
         "mac": ["flodolo"],
         "monitor": ["flodolo"],
