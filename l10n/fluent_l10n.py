@@ -6,7 +6,7 @@
 
 from collections import defaultdict, Counter
 from custom_html_parser import MyHTMLParser
-from fluent.syntax import parse, visitor
+from fluent.syntax import ast, parse, visitor
 from fluent.syntax.serializer import FluentSerializer
 from pathlib import Path
 import argparse
@@ -209,6 +209,39 @@ class flattenSelectExpression(visitor.Transformer):
         node.variants = [default_variant]
 
         return node
+
+
+class checkSelectExpression(visitor.Visitor):
+    def __init__(self):
+        super().__init__()
+        self.select_vars = []
+        self.msg_vars = []
+        self.is_message = True
+
+    def visit_Message(self, node):
+        self.is_message = True
+        super().generic_visit(node)
+
+    def visit_Term(self, node):
+        # No need to check selectExpression in terms
+        self.is_message = False
+
+    def visit_SelectExpression(self, node):
+        # Store the variable used in the selectExpression
+        if (
+            type(node.selector) == ast.VariableReference
+            and node.selector.id.name not in self.select_vars
+            and self.is_message
+        ):
+            self.select_vars.append(node.selector.id.name)
+
+        for variant in node.variants:
+            super().generic_visit(variant.value)
+
+    def visit_VariableReference(self, node):
+        # Store the variables used in the message
+        if node.id.name not in self.msg_vars and self.is_message:
+            self.msg_vars.append(node.id.name)
 
 
 class QualityCheck:
@@ -426,10 +459,31 @@ class QualityCheck:
                 if "..." in translation and not ignoreString(
                     locale, "ellipsis", string_id
                 ):
-                    error_msg = (
-                        f"'...' in {string_id}\n" f"  Translation: {translation}"
-                    )
+                    error_msg = f"'...' in {string_id}\n  Translation: {translation}"
                     self.error_messages[locale].append(error_msg)
+
+                # If it's a selectExpression, check if the variable used in
+                # selector matches one of the placeables.
+                if "*[" in translation:
+                    l10n_select = checkSelectExpression()
+                    ref_select = checkSelectExpression()
+                    serializer = FluentSerializer()
+                    message_id = string_id.split(":")[1]
+                    l10n_select.visit(parse(f"{message_id} = {translation}"))
+                    reference_string = reference_data.get(string_id, "")
+                    ref_select.visit(parse(f"{message_id} = {reference_string}"))
+
+                    for select_var in l10n_select.select_vars:
+                        # The select var should be used in the source string,
+                        # either in the selector or in one of the variants
+                        acceptable_vars = ref_select.msg_vars + ref_select.select_vars
+                        if select_var not in acceptable_vars:
+                            error_msg = (
+                                f"'${select_var}' is used in a selectExpression for {string_id} but it's not available in the source string\n"
+                                f"  Translation: {translation}\n"
+                                f"  Reference: {reference_string}\n"
+                            )
+                            self.error_messages[locale].append(error_msg)
 
             # Check all localized strings for HTML elements mismatch or extra tags
             html_parser = MyHTMLParser()
@@ -473,7 +527,7 @@ class QualityCheck:
                         f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
                         f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference_data[string_id]}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -502,7 +556,7 @@ class QualityCheck:
                         error_msg = (
                             f"data-l10n-name mismatch in string ({string_id})\n"
                             f"  Translation: {translation}\n"
-                            f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                            f"  Reference: {reference_data[string_id]}"
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
@@ -510,7 +564,7 @@ class QualityCheck:
                     error_msg = (
                         f"data-l10n-name missing in string ({string_id})\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference_data[string_id]}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -555,7 +609,7 @@ class QualityCheck:
                             f"Placeable mismatch in string ({string_id})\n"
                             f"{extra_msg}"
                             f"  Translation: {translation}\n"
-                            f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                            f"  Reference: {reference_data[string_id]}"
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
@@ -564,7 +618,7 @@ class QualityCheck:
                         f"Placeable missing in string ({string_id})\n"
                         "  Missing: " + ", ".join(groups) + "\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference_data[string_id]}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -602,9 +656,14 @@ def main():
         "--toml", nargs="?", dest="toml_path", help="Path to l10n.toml file"
     )
     parser.add_argument(
-        "--l10n", nargs="?", dest="l10n_path", help="Path to l10n.toml file"
+        "--l10n",
+        nargs="?",
+        dest="l10n_path",
+        help="Path to folder including folders for each locale",
     )
-    parser.add_argument("--ref", dest="reference_code", help="Reference language code")
+    parser.add_argument(
+        "--ref", dest="reference_code", help="Reference language code", default="en-US"
+    )
     parser.add_argument("--dest", dest="dest_file", help="Save output to file")
     parser.add_argument(
         "--exceptions",
