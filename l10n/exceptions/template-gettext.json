@@ -10,11 +10,15 @@
             "ja"
         ]
     },
-    "HTML": {},
+    "HTML": {
+        "locales": {}
+    },
     "placeables": {
-        "it": [
-            "string1",
-            "string2"
-        ]
+        "locales": {
+            "it": [
+                "string1",
+                "string2"
+            ]
+        }
     }
 }

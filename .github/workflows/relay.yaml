@@ -5,14 +5,14 @@ on:
       - main
     paths:
       - '.github/workflows/relay.yaml'
-      - 'l10n/webext_l10n.py'
+      - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/relay.json'
   pull_request:
     branches:
       - main
     paths:
       - '.github/workflows/relay.yaml'
-      - 'l10n/webext_l10n.py'
+      - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/relay.json'
   schedule:
     - cron: '10 1 * * *'

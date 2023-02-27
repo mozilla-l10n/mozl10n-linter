@@ -16,6 +16,9 @@
         "placeables": {
             "$ref": "#/definitions/ExceptionsList"
         },
+        "select": {
+            "$ref": "#/definitions/ExceptionsList"
+        },
         "ellipsis": {
             "type": "object",
             "additionalProperties": false,
