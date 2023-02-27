@@ -9,6 +9,12 @@
       "ja"
     ]
   },
+  "fluent-literal": {
+    "locales": {},
+    "strings": [
+      "app.ftl:offer-countdown-timer-alt"
+    ]
+  },
   "general": {
     "locales": {},
     "strings": []

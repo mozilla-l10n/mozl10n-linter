@@ -7,10 +7,13 @@
         "data-l10n-names": {
             "$ref": "#/definitions/ExceptionsList"
         },
-        "HTML": {
+        "fluent-literal": {
             "$ref": "#/definitions/ExceptionsList"
         },
         "general": {
+            "$ref": "#/definitions/ExceptionsList"
+        },
+        "HTML": {
             "$ref": "#/definitions/ExceptionsList"
         },
         "placeables": {
