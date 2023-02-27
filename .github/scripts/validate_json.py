@@ -27,15 +27,19 @@ def main():
     schemas_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "schemas"))
     schemas = {
         "firefox_android.json": "android",
-        "focus_android.json": "android",
-        "relay.json": "fluent",
-        "mozorg.json": "fluent",
-        "relay.json": "fluent",
-        "mac.json": "webextension",
-        "relay_addon.json": "webextension",
-        "translations.json": "webextension",
         "firefox_ios.json": "xliff",
+        "focus_android.json": "android",
         "focus_ios.json": "xliff",
+        "fxa_gettext.json": "gettext",
+        "fxa.json": "fluent",
+        "mac.json": "webextension",
+        "monitor.json": "fluent",
+        "mozorg.json": "fluent",
+        "pocket.json": "fluent",
+        "profiler.json": "fluent",
+        "relay_addon.json": "webextension",
+        "relay.json": "fluent",
+        "translations.json": "webextension",
         "vpn.json": "xliff",
     }
 

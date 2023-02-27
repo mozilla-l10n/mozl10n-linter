@@ -16,6 +16,27 @@ import re
 import sys
 
 
+def ignoreString(exceptions, locale, errorcode, string_id):
+    """Check if a string should be ignored"""
+
+    if not exceptions:
+        return False
+
+    if errorcode == "ellipsis":
+        if locale in exceptions[errorcode][
+            "excluded_locales"
+        ] or string_id in exceptions[errorcode]["locales"].get(locale, {}):
+            return True
+    else:
+        if (
+            locale in exceptions[errorcode]["locales"]
+            and string_id in exceptions[errorcode]["locales"][locale]
+        ):
+            return True
+
+    return False
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -92,7 +113,7 @@ def main():
                 continue
 
             # Skip if it's a known exception
-            if message_id in exceptions["placeables"].get(normalized_locale, {}):
+            if ignoreString(exceptions, normalized_locale, "placeables", message_id):
                 continue
 
             ref_placeholders = placeable_pattern.findall(reference)
@@ -115,7 +136,7 @@ def main():
                 continue
 
             # Skip if it's a known exception
-            if message_id in exceptions["HTML"].get(normalized_locale, {}):
+            if ignoreString(exceptions, normalized_locale, "HTML", message_id):
                 continue
 
             html_parser.clear()
@@ -166,9 +187,7 @@ def main():
 
             # Check for ellipsis
             if not ignore_ellipsis and "..." in translation:
-                if message_id in exceptions["ellipsis"].get("locales", {}).get(
-                    normalized_locale, []
-                ):
+                if ignoreString(exceptions, normalized_locale, "ellipsis", message_id):
                     continue
                 errors[normalized_locale].append(
                     f"'...' in {message_id}\n"

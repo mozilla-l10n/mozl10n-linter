@@ -21,5 +21,9 @@
   "placeables": {
     "locales": {},
     "strings": []
+  },
+  "select": {
+    "locales": {},
+    "strings": []
   }
 }
