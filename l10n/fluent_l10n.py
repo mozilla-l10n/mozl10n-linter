@@ -444,7 +444,9 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
                 # Check for stray spaces
-                if '{ "' in translation and not ignoreString(locale, "fluent-literal", string_id):
+                if '{ "' in translation and not ignoreString(
+                    locale, "fluent-literal", string_id
+                ):
                     error_msg = (
                         f"Fluent literal in string ({string_id})\n"
                         f"  Translation: {translation}"
@@ -516,9 +518,11 @@ class QualityCheck:
                     if sorted(tags) == sorted(ref_tags):
                         continue
 
-                    # Check extra tags and ignore the error if it's only <i> and
-                    # <em>, and the number of extra tags is even.
-                    tags_diff = list(Counter(tags) - Counter(ref_tags))
+                    # Check extra or missing tags and ignore the error if it's
+                    # only <i> and <em>, and the number of extra tags is even.
+                    tags_diff = list(Counter(tags) - Counter(ref_tags)) + list(
+                        Counter(ref_tags) - Counter(tags)
+                    )
                     diff_list = [
                         t
                         for t in tags_diff
