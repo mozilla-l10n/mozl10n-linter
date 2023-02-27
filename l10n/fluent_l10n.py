@@ -274,6 +274,9 @@ class QualityCheck:
             if not self.exceptions:
                 return False
 
+            if errorcode not in self.exceptions:
+                return False
+
             if errorcode == "ellipsis":
                 if locale in self.exceptions[errorcode][
                     "excluded_locales"
@@ -441,7 +444,7 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
                 # Check for stray spaces
-                if '{ "' in translation:
+                if '{ "' in translation and not ignoreString(locale, "fluent-literal", string_id):
                     error_msg = (
                         f"Fluent literal in string ({string_id})\n"
                         f"  Translation: {translation}"
