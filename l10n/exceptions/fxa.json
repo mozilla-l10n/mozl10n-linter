@@ -1,6 +1,11 @@
 {
   "HTML": {
-    "locales": {},
+    "locales": {
+      "zh-TW": [
+        "settings.ftl:pair-wait-for-supp-heading-text",
+        "settings.ftl:pair-wait-for-auth-heading-text"
+      ]
+    },
     "strings": []
   },
   "ellipsis": {
