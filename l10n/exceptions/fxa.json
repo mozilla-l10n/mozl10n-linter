@@ -24,5 +24,13 @@
       ]
     },
     "strings": []
+  },
+  "select": {
+    "locales": {
+      "cs": [
+        "payments.ftl:project-brand"
+      ]
+    },
+    "strings": []
   }
 }

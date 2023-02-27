@@ -464,7 +464,9 @@ class QualityCheck:
 
                 # If it's a selectExpression, check if the variable used in
                 # selector matches one of the placeables.
-                if "*[" in translation:
+                if "*[" in translation and not ignoreString(
+                    locale, "select", string_id
+                ):
                     l10n_select = checkSelectExpression()
                     ref_select = checkSelectExpression()
                     serializer = FluentSerializer()
