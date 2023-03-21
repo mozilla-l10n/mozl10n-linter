@@ -42,7 +42,7 @@ jobs:
       - name: Lint localization
         run: >
           python scripts_repo/l10n/android_l10n.py
-          --toml target_repo/mozilla-mobile.toml
+          --toml target_repo/firefox.toml
           --dest errors.txt
           --exceptions scripts_repo/l10n/exceptions/firefox_android.json
           --no-failure
