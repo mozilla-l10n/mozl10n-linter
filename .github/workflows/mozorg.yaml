@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/mozorg.yaml'
+      - '.github/requirements.txt'
       - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/mozorg.json'
   pull_request:
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/mozorg.yaml'
+      - '.github/requirements.txt'
       - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/mozorg.json'
   schedule:
@@ -38,23 +40,21 @@ jobs:
         run: |
           pip install -r scripts_repo/.github/requirements.txt
       - name: Lint localization (vendor)
-        # Allow to continue if the linter fails, so we can upload the list of
-        # errors as artifact
-        continue-on-error: true
         run: >
           python scripts_repo/l10n/fluent_l10n.py
           --toml target_repo/l10n-vendor.toml
           --ref en
           --dest errors_vendors.txt
           --exceptions scripts_repo/l10n/exceptions/mozorg.json
+          --no-failure
       - name: Lint localization (community)
-        continue-on-error: true
         run: >
           python scripts_repo/l10n/fluent_l10n.py
           --toml target_repo/l10n-pontoon.toml
           --ref en
           --dest errors_community.txt
           --exceptions scripts_repo/l10n/exceptions/mozorg.json
+          --no-failure
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

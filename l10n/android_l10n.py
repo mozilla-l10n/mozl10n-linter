@@ -94,7 +94,6 @@ class StringExtraction:
 
 class QualityCheck:
     def __init__(self, translations, reference_locale, exceptions_path):
-
         self.translations = translations
         self.reference_locale = reference_locale
         self.exceptions_path = exceptions_path
@@ -141,7 +140,7 @@ class QualityCheck:
                 sys.exit(e)
 
         """
-        Store specific reference strings for addictional FTL checks:
+        Store specific reference strings for additional FTL checks:
         - Strings with data-l10n-names
         - Strings with message, terms, or variable references
         """
@@ -238,6 +237,11 @@ class QualityCheck:
             for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "HTML", string_id):
+                    continue
+
+                # Ignore if it's an obsolete translation not available in the
+                # reference file.
+                if string_id not in self.translations[self.reference_locale]:
                     continue
 
                 translation = locale_translations[string_id]
@@ -360,6 +364,13 @@ def main():
         dest="exceptions_file",
         help="Path to JSON exceptions file",
     )
+    parser.add_argument(
+        "--no-failure",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        dest="exit_error",
+        help="If set, the script will exit with 1 in case of errors",
+    )
     args = parser.parse_args()
 
     extracted_strings = StringExtraction(
@@ -379,7 +390,8 @@ def main():
                 f.write("\n".join(output))
         # Print errors anyway on screen
         print("\n".join(output))
-        sys.exit(1)
+        if args.exit_error:
+            sys.exit(1)
     else:
         print("No issues found.")
 

@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/profiler.yaml'
+      - '.github/requirements.txt'
       - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/profiler.json'
   pull_request:
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/profiler.yaml'
+      - '.github/requirements.txt'
       - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/profiler.json'
   schedule:
@@ -39,19 +41,18 @@ jobs:
         run: |
           pip install -r scripts_repo/.github/requirements.txt
       - name: Lint localization
-        # Allow to continue if the linter fails, so we can upload the list of
-        # errors as artifact
-        continue-on-error: true
         run: >
           python scripts_repo/l10n/fluent_l10n.py
           --l10n target_repo/locales/
           --ref en-US --dest errors.txt
           --exceptions scripts_repo/l10n/exceptions/profiler.json
+          --no-failure
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: errors-list
           path: errors.txt
+          if-no-files-found: ignore
       - name: Fail on errors
         run: |
           if [ -f "errors.txt" ]; then
