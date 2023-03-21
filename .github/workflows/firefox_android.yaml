@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/firefox_android.yaml'
+      - '.github/requirements.txt'
       - 'l10n/android_l10n.py'
       - 'l10n/exceptions/firefox_android.json'
   pull_request:
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/firefox_android.yaml'
+      - '.github/requirements.txt'
       - 'l10n/android_l10n.py'
       - 'l10n/exceptions/firefox_android.json'
   schedule:

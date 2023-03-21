@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/vpn.yaml'
+      - '.github/requirements.txt'
       - 'l10n/xliff_l10n.py'
       - 'l10n/exceptions/vpn.json'
   pull_request:
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/vpn.yaml'
+      - '.github/requirements.txt'
       - 'l10n/xliff_l10n.py'
       - 'l10n/exceptions/vpn.json'
   schedule:

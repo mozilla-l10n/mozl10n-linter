@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/pocket.yaml'
+      - '.github/requirements.txt'
       - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/pocket.json'
   pull_request:
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/pocket.yaml'
+      - '.github/requirements.txt'
       - 'l10n/fluent_l10n.py'
       - 'l10n/exceptions/pocket.json'
   schedule:

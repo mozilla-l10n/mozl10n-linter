@@ -5,6 +5,7 @@ on:
       - main
     paths:
       - '.github/workflows/relay_addon.yaml'
+      - '.github/requirements.txt'
       - 'l10n/webext_l10n.py'
       - 'l10n/exceptions/relay_addon.json'
   pull_request:
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - '.github/workflows/relay_addon.yaml'
+      - '.github/requirements.txt'
       - 'l10n/webext_l10n.py'
       - 'l10n/exceptions/relay_addon.json'
   schedule:

@@ -1,4 +1,4 @@
-compare-locales==8.2.1
+compare-locales==9.0.*
 jsonschema==4.17.3
 lxml==4.9.2
 polib==1.1.1
