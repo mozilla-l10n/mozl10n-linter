@@ -40,14 +40,12 @@ jobs:
         run: |
           pip install -r scripts_repo/.github/requirements.txt
       - name: Lint localization
-        # Allow to continue if the linter fails, so we can upload the list of
-        # errors as artifact
-        continue-on-error: true
         run: >
           python scripts_repo/l10n/xliff_l10n.py
           --l10n target_repo/
           --dest errors.txt
           --exceptions scripts_repo/l10n/exceptions/focus_ios.json
+          --no-failure
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:

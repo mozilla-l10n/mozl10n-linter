@@ -46,5 +46,4 @@ class MyHTMLParser(HTMLParser):
             self.tags.append(f"</{tag}>")
 
     def get_tags(self):
-
         return self.tags

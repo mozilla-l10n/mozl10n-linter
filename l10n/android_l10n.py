@@ -94,7 +94,6 @@ class StringExtraction:
 
 class QualityCheck:
     def __init__(self, translations, reference_locale, exceptions_path):
-
         self.translations = translations
         self.reference_locale = reference_locale
         self.exceptions_path = exceptions_path
@@ -360,6 +359,13 @@ def main():
         dest="exceptions_file",
         help="Path to JSON exceptions file",
     )
+    parser.add_argument(
+        "--no-failure",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        dest="exit_error",
+        help="If set, the script will exit with 1 in case of errors",
+    )
     args = parser.parse_args()
 
     extracted_strings = StringExtraction(
@@ -379,7 +385,8 @@ def main():
                 f.write("\n".join(output))
         # Print errors anyway on screen
         print("\n".join(output))
-        sys.exit(1)
+        if args.exit_error:
+            sys.exit(1)
     else:
         print("No issues found.")
 
