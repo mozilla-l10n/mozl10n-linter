@@ -12,7 +12,7 @@
   "fluent-literal": {
     "locales": {},
     "strings": [
-      "app.ftl:offer-countdown-timer-alt"
+      "misc.ftl:offer-countdown-timer-alt"
     ]
   },
   "general": {
@@ -26,8 +26,8 @@
   "placeables": {
     "locales": {
       "sk": [
-        "app.ftl:profile-promo-email-blocking-label-forwarding",
-        "app.ftl:whatsnew-feature-alias-to-mask-snippet"
+        "profile.ftl:profile-promo-email-blocking-label-forwarding",
+        "whatsnew.ftl:whatsnew-feature-alias-to-mask-snippet"
       ]
     },
     "strings": []
