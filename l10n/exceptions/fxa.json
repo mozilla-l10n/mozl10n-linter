@@ -1,6 +1,9 @@
 {
   "HTML": {
     "locales": {
+      "cs": [
+        "payments.ftl:sub-next-bill-tax"
+      ]
       "zh-TW": [
         "settings.ftl:pair-wait-for-supp-heading-text",
         "settings.ftl:pair-wait-for-auth-heading-text"
