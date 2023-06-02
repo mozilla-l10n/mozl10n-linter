@@ -1,9 +1,17 @@
 {
-    "ellipsis": {
-        "locales": {},
-        "excluded_locales": [
-            "ja"
-        ]
+  "ellipsis": {
+    "locales": {},
+    "excluded_locales": [
+      "ja"
+    ]
+  },
+  "placeables": {
+    "locales": {
+      "tr": [
+        "firefox-ios.xliff:Onboarding.Welcome.Description.TreatementA.v114",
+        "firefox-ios.xliff:Onboarding.Welcome.Description.v114"
+      ]
     },
-    "placeables": {}
+    "strings": []
+  }
 }

@@ -6,11 +6,14 @@
         ]
     },
     "placeables": {
-        "cs": [
-            "focus-ios.xliff:Autocomplete.mySitesDesc"
-        ],
-        "pl": [
-            "focus-ios.xliff:trackingProtection.toggleDescription1"
-        ]
+        "locales": {
+            "cs": [
+                "focus-ios.xliff:Autocomplete.mySitesDesc"
+            ],
+            "pl": [
+                "focus-ios.xliff:trackingProtection.toggleDescription1"
+            ]
+        },
+        "strings": []
     }
 }
