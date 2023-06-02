@@ -30,8 +30,7 @@ jobs:
       - name: Clone target repository
         uses: actions/checkout@v3
         with:
-          repository: "mozilla/blurts-server"
-          ref: "localization"
+          repository: "mozilla-l10n/monitor-website-l10n"
           path: "target_repo"
       - name: Set up Python 3
         uses: actions/setup-python@v4
@@ -43,7 +42,7 @@ jobs:
       - name: Lint localization
         run: >
           python scripts_repo/l10n/fluent_l10n.py
-          --l10n target_repo/locales/
+          --l10n target_repo/
           --ref en
           --dest errors.txt
           --exceptions scripts_repo/l10n/exceptions/monitor.json
