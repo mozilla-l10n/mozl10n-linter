@@ -28,7 +28,17 @@
             }
         },
         "placeables": {
+            "$ref": "#/definitions/ExceptionsList"
+        }
+    },
+    "required": [
+        "ellipsis",
+        "placeables"
+    ],
+    "definitions": {
+        "ExceptionsList": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
                 "locales": {
                     "type": "object",
@@ -40,12 +50,18 @@
                             }
                         }
                     }
+                },
+                "strings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
-            }
+            },
+            "required": [
+                "locales",
+                "strings"
+            ]
         }
-    },
-    "required": [
-        "ellipsis",
-        "placeables"
-    ]
+    }
 }

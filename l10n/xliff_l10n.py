@@ -111,12 +111,15 @@ def main():
                 # Check placeables
                 ref_matches = placeables_pattern.findall(ref_string)
                 if ref_matches:
+                    string_exceptions = exceptions.get("placeables", {}).get(
+                        "strings", []
+                    )
                     locale_exceptions = (
                         exceptions.get("placeables", {})
                         .get("locales", {})
                         .get(locale, [])
                     )
-                    if string_id in locale_exceptions:
+                    if string_id in locale_exceptions + string_exceptions:
                         continue
                     ref_matches.sort()
                     l10n_matches = placeables_pattern.findall(l10n_string)
