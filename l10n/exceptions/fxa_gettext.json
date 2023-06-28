@@ -6,6 +6,12 @@
 	},
 	"HTML": {
 		"locales": {
+			"fr": [
+				"afb71e74e51de5a42e9af10d4461ff84e9c28f43cd8104153c5dc0688555c8ba"
+			],
+			"it": [
+				"afb71e74e51de5a42e9af10d4461ff84e9c28f43cd8104153c5dc0688555c8ba"
+			],
 			"zh-TW": [
 				"b5241fff2ca27859f78182bc74ba86e5662567af685965707138e97f58643baf"
 			]
