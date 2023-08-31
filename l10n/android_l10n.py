@@ -141,7 +141,6 @@ class QualityCheck:
 
         """
         Store specific reference strings for additional FTL checks:
-        - Strings with data-l10n-names
         - Strings with message, terms, or variable references
         """
         reference_data = self.translations[self.reference_locale]
@@ -320,7 +319,7 @@ class QualityCheck:
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
-                    # There are no data-l10n-name
+                    # There are no placeables
                     error_msg = (
                         f"Placeable missing in string ({string_id})\n"
                         f"  Translation: {translation}\n"
