@@ -15,7 +15,8 @@
     "locales": {},
     "excluded_locales": [
       "ja"
-    ]
+    ],
+    "strings": []
   },
   "general": {
     "locales": {},

@@ -7,7 +7,8 @@
     "locales": {},
     "excluded_locales": [
       "ja"
-    ]
+    ],
+    "strings": []
   },
   "fluent-literal": {
     "locales": {},

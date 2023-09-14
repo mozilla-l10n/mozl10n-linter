@@ -42,6 +42,12 @@
                     "items": {
                         "type": "string"
                     }
+                },
+                "strings": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
