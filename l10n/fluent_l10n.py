@@ -277,6 +277,8 @@ class QualityCheck:
                 return False
 
             if errorcode == "ellipsis":
+                if string_id in self.exceptions[errorcode].get("strings", []):
+                    return True
                 if locale in self.exceptions[errorcode][
                     "excluded_locales"
                 ] or string_id in self.exceptions[errorcode]["locales"].get(locale, {}):

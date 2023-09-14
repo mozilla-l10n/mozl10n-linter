@@ -26,7 +26,7 @@
         "en/firefox/features/fingerprinting.ftl:features-fingerprinting-the-practice-of",
         "en/products/vpn/more/vpn-or-proxy.ftl:vpn-or-proxy-the-most-important",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-have-you-ever",
-        "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-the-most-important" 
+        "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-the-most-important"
       ],
       "zh-TW": [
         "en/mozorg/about/history.ftl:history-the-history-of-firefox-and",
@@ -39,6 +39,9 @@
     "locales": {},
     "excluded_locales": [
       "ja"
+    ],
+    "strings": [
+      "en/firefox/features/fast-2023.ftl:features-fast-every-computer-program-you-run"
     ]
   },
   "general": {
