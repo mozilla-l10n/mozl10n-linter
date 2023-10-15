@@ -7,7 +7,8 @@
       ],
       "it": [
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
-        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2"
+        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2",
+        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ],
       "nn-NO": [
         "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
