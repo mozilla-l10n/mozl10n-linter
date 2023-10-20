@@ -29,11 +29,7 @@
     "strings": []
   },
   "ellipsis": {
-    "locales": {
-      "ca": [
-      "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:erase_action_cfr_message"
-      ]
-    },
+    "locales": {},
     "excluded_locales": [
       "ja"
     ]
