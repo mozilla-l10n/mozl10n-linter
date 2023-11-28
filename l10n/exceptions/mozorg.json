@@ -5,7 +5,7 @@
         "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum",
         "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback"
       ],
-       "de": [
+      "de": [
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ],
       "it": [
@@ -64,8 +64,7 @@
           "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
           "en/footer.ftl:footer-follow-firefox",
           "en/footer.ftl:footer-follow-mozilla",
-          "en/mozorg/newsletters.ftl:newsletters-beta-news",
-          "en/privacy/index.ftl:privacy-index-mozilla-accounts"
+          "en/mozorg/newsletters.ftl:newsletters-beta-news"
       ],
       "fr": [
           "en/navigation_v2.ftl:navigation-v2-firefox-browsers"
