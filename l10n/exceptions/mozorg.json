@@ -5,6 +5,9 @@
         "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum",
         "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback"
       ],
+       "de": [
+        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
+      ],
       "it": [
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
         "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2",
@@ -61,7 +64,8 @@
           "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
           "en/footer.ftl:footer-follow-firefox",
           "en/footer.ftl:footer-follow-mozilla",
-          "en/mozorg/newsletters.ftl:newsletters-beta-news"
+          "en/mozorg/newsletters.ftl:newsletters-beta-news",
+          "en/privacy/index.ftl:privacy-index-mozilla-accounts"
       ],
       "fr": [
           "en/navigation_v2.ftl:navigation-v2-firefox-browsers"
