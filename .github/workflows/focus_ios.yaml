@@ -33,7 +33,7 @@ jobs:
           repository: "mozilla-l10n/focusios-l10n"
           path: "target_repo"
       - name: Set up Python 3
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - name: Install Python dependencies
@@ -47,7 +47,7 @@ jobs:
           --exceptions scripts_repo/l10n/exceptions/focus_ios.json
           --no-failure
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: errors-list
           path: errors.txt
