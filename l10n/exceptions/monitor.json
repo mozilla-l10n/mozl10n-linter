@@ -20,8 +20,11 @@
   },
   "placeables": {
     "locales": {
-        "ca": [
-            "app.ftl:ecosystem-promo-body"
+        "zh-CN": [
+            "landing-all.ftl:landing-all-social-proof-title"
+        ],
+        "zh-TW": [
+            "landing-all.ftl:landing-all-social-proof-title"
         ]
     },
     "strings": []
