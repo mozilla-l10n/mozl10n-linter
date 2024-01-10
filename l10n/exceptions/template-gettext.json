@@ -1,24 +1,24 @@
 {
-    "ellipsis": {
-        "locales": {
-            "it": [
-                "string1",
-                "string2"
-            ]
-        },
-        "excluded_locales": [
-            "ja"
-        ]
-    },
-    "HTML": {
-        "locales": {}
-    },
-    "placeables": {
-        "locales": {
-            "it": [
-                "string1",
-                "string2"
-            ]
-        }
+  "HTML": {
+    "locales": {}
+  },
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ],
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
     }
+  },
+  "placeables": {
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
+    }
+  }
 }

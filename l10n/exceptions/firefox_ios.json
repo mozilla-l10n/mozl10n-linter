@@ -1,9 +1,9 @@
 {
   "ellipsis": {
-    "locales": {},
     "excluded_locales": [
       "ja"
-    ]
+    ],
+    "locales": {}
   },
   "placeables": {
     "locales": {

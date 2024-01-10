@@ -3,29 +3,29 @@
     "locales": {},
     "strings": []
   },
-  "ellipsis": {
+  "data-l10n-names": {
     "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
     "excluded_locales": [
       "ja"
     ],
+    "locales": {},
     "strings": []
   },
   "general": {
     "locales": {},
     "strings": []
   },
-  "data-l10n-names": {
-    "locales": {},
-    "strings": []
-  },
   "placeables": {
     "locales": {
-        "zh-CN": [
-            "landing-all.ftl:landing-all-social-proof-title"
-        ],
-        "zh-TW": [
-            "landing-all.ftl:landing-all-social-proof-title"
-        ]
+      "zh-CN": [
+        "landing-all.ftl:landing-all-social-proof-title"
+      ],
+      "zh-TW": [
+        "landing-all.ftl:landing-all-social-proof-title"
+      ]
     },
     "strings": []
   }

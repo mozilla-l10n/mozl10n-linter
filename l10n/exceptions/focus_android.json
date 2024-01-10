@@ -8,10 +8,10 @@
     "strings": []
   },
   "ellipsis": {
-    "locales": {},
     "excluded_locales": [
       "ja"
-    ]
+    ],
+    "locales": {}
   },
   "general": {
     "locales": {},

@@ -29,10 +29,10 @@
     "strings": []
   },
   "ellipsis": {
-    "locales": {},
     "excluded_locales": [
       "ja"
-    ]
+    ],
+    "locales": {}
   },
   "general": {
     "locales": {},
@@ -41,17 +41,17 @@
   "placeables": {
     "locales": {
       "cs": [
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected",
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab"
       ],
       "eu": [
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site"
       ],
       "he": [
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected",
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected"
+        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab"
       ],
       "rm": [
         "mozilla-mobile/android-components/components/feature/addons/src/main/res/values/strings.xml:mozac_feature_addons_status_unsigned"

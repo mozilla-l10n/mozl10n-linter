@@ -1,19 +1,19 @@
 {
-    "ellipsis": {
-        "locales": {
-            "it": [
-                "string1",
-                "string2"
-            ]
-        },
-        "excluded_locales": [
-            "ja"
-        ]
-    },
-    "placeholders": {
-        "it": [
-            "string1",
-            "string2"
-        ]
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ],
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
     }
+  },
+  "placeholders": {
+    "it": [
+      "string1",
+      "string2"
+    ]
+  }
 }

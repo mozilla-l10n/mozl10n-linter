@@ -3,11 +3,15 @@
     "locales": {},
     "strings": []
   },
-  "ellipsis": {
+  "data-l10n-names": {
     "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
     "excluded_locales": [
       "ja"
     ],
+    "locales": {},
     "strings": []
   },
   "fluent-literal": {
@@ -17,10 +21,6 @@
     ]
   },
   "general": {
-    "locales": {},
-    "strings": []
-  },
-  "data-l10n-names": {
     "locales": {},
     "strings": []
   },

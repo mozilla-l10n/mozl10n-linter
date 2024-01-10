@@ -1,19 +1,19 @@
 {
-    "ellipsis": {
-        "locales": {},
-        "excluded_locales": [
-            "ja"
-        ]
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ],
+    "locales": {}
+  },
+  "placeables": {
+    "locales": {
+      "cs": [
+        "focus-ios.xliff:Autocomplete.mySitesDesc"
+      ],
+      "pl": [
+        "focus-ios.xliff:trackingProtection.toggleDescription1"
+      ]
     },
-    "placeables": {
-        "locales": {
-            "cs": [
-                "focus-ios.xliff:Autocomplete.mySitesDesc"
-            ],
-            "pl": [
-                "focus-ios.xliff:trackingProtection.toggleDescription1"
-            ]
-        },
-        "strings": []
-    }
+    "strings": []
+  }
 }

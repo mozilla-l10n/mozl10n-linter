@@ -1,22 +1,22 @@
 {
-    "ellipsis": {
-        "locales": {
-            "it": [
-                "string1",
-                "string2"
-            ]
-        },
-        "excluded_locales": [
-            "ja"
-        ]
-    },
-    "placeables": {
-        "locales": {
-            "it": [
-                "string1",
-                "string2"
-            ]
-        },
-        "strings": []
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ],
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
     }
+  },
+  "placeables": {
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
+    },
+    "strings": []
+  }
 }

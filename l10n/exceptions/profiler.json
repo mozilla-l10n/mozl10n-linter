@@ -3,18 +3,18 @@
     "locales": {},
     "strings": []
   },
-  "ellipsis": {
+  "data-l10n-names": {
     "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
     "excluded_locales": [
       "ja"
     ],
-    "strings": []
-  },
-  "general": {
     "locales": {},
     "strings": []
   },
-  "data-l10n-names": {
+  "general": {
     "locales": {},
     "strings": []
   },

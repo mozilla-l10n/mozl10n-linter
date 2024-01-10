@@ -3,24 +3,24 @@
     "locales": {},
     "strings": []
   },
-  "ellipsis": {
+  "data-l10n-names": {
     "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
     "excluded_locales": [
       "ja"
     ],
-    "strings": []
-  },
-  "general": {
     "locales": {},
     "strings": []
   },
-  "data-l10n-names": {
+  "excluded_locales": [],
+  "general": {
     "locales": {},
     "strings": []
   },
   "placeables": {
     "locales": {},
     "strings": []
-  },
-  "excluded_locales": []
+  }
 }

@@ -9,9 +9,9 @@
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ],
       "it": [
+        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2",
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
-        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2",
-        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
+        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2"
       ],
       "nn-NO": [
         "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
@@ -25,16 +25,16 @@
         "en/firefox/privacy/passwords.ftl:privacy-passwords-in-general-the"
       ],
       "sq": [
-        "en/privacy/faq.ftl:privacy-faq-mozilla-doesnt-know-as-much",
         "en/firefox/browsers/history/what-is-a-browser.ftl:what-is-a-browser-when-the-web-browser",
         "en/firefox/features/fingerprinting.ftl:features-fingerprinting-the-practice-of",
+        "en/privacy/faq.ftl:privacy-faq-mozilla-doesnt-know-as-much",
         "en/products/vpn/more/vpn-or-proxy.ftl:vpn-or-proxy-the-most-important",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-have-you-ever",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-the-most-important"
       ],
       "tr": [
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
-      ],        
+      ],
       "zh-TW": [
         "en/mozorg/about/history.ftl:history-the-history-of-firefox-and",
         "en/mozorg/newsletters.ftl:newsletters-read-all-about-it-in-our-newsletter"
@@ -42,43 +42,43 @@
     },
     "strings": []
   },
-  "ellipsis": {
+  "data-l10n-names": {
     "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
     "excluded_locales": [
       "ja"
     ],
+    "locales": {},
     "strings": [
       "en/firefox/features/fast-2023.ftl:features-fast-every-computer-program-you-run"
     ]
   },
+  "excluded_locales": [
+    "am",
+    "ml",
+    "mr",
+    "ta"
+  ],
   "general": {
-    "locales": {},
-    "strings": []
-  },
-  "data-l10n-names": {
     "locales": {},
     "strings": []
   },
   "placeables": {
     "locales": {
       "cs": [
-          "en/firefox/browsers.ftl:firefox-browsers-enterprise-packages",
-          "en/firefox/browsers/mobile/ios.ftl:mobile-ios-add-firefox-across",
-          "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
-          "en/footer.ftl:footer-follow-firefox",
-          "en/footer.ftl:footer-follow-mozilla",
-          "en/mozorg/newsletters.ftl:newsletters-beta-news"
+        "en/firefox/browsers.ftl:firefox-browsers-enterprise-packages",
+        "en/firefox/browsers/mobile/ios.ftl:mobile-ios-add-firefox-across",
+        "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
+        "en/footer.ftl:footer-follow-firefox",
+        "en/footer.ftl:footer-follow-mozilla",
+        "en/mozorg/newsletters.ftl:newsletters-beta-news"
       ],
       "fr": [
-          "en/navigation_v2.ftl:navigation-v2-firefox-browsers"
+        "en/navigation_v2.ftl:navigation-v2-firefox-browsers"
       ]
     },
     "strings": []
-  },
-  "excluded_locales": [
-      "am",
-      "ml",
-      "mr",
-      "ta"
-  ]
+  }
 }

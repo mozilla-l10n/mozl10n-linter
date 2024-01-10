@@ -1,12 +1,12 @@
 {
-    "ellipsis": {
-        "locales": {},
-        "excluded_locales": [
-            "ja"
-        ]
-    },
-    "placeables": {
-        "locales": {},
-        "strings": []
-    }
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ],
+    "locales": {}
+  },
+  "placeables": {
+    "locales": {},
+    "strings": []
+  }
 }

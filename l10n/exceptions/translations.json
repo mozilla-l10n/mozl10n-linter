@@ -1,12 +1,12 @@
 {
-	"ellipsis": {
-		"excluded_locales": [
-			"ja"
-		]
-	},
-	"placeholders": {
-		"pl": [
-			"messages.json:neverForLanguageLabel"
-		]
-	}
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ]
+  },
+  "placeholders": {
+    "pl": [
+      "messages.json:neverForLanguageLabel"
+    ]
+  }
 }

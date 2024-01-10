@@ -1,8 +1,8 @@
 {
-	"ellipsis": {
-		"excluded_locales": [
-			"ja"
-		]
-	},
-	"placeholders": {}
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ]
+  },
+  "placeholders": {}
 }
