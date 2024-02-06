@@ -5,6 +5,9 @@
         "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum",
         "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback"
       ],
+      "da": [
+        "en/firefox/new/desktop.ftl:firefox-desktop-download-select-linux"
+      ],
       "de": [
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ],
