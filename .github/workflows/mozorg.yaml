@@ -63,8 +63,21 @@ jobs:
           if-no-files-found: ignore
       - name: Fail on errors
         run: |
-          cat errors_vendors.txt || echo "No vendor errors"
-          cat errors_community.txt || echo "No community errors"
+          echo "### There are errors" >> $GITHUB_STEP_SUMMARY
+          if [ -f "errors_vendors.txt" ]; then
+            echo "## Vendors" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors_vendors.txt >> $GITHUB_STEP_SUMMARY || echo "No vendor errors" >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f "errors_community.txt" ]; then
+            echo "## Community" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors_community.txt >> $GITHUB_STEP_SUMMARY || echo "No community errors" >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
           if [ -f "errors_vendors.txt" ] || [ -f "errors_community.txt" ]; then
             exit 1
           fi
