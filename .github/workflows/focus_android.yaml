@@ -55,6 +55,10 @@ jobs:
       - name: Fail on errors
         run: |
           if [ -f "errors.txt" ]; then
-            cat errors.txt
+            echo "### There are errors" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors.txt >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
