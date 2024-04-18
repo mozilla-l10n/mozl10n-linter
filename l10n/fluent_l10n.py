@@ -437,10 +437,11 @@ class QualityCheck:
 
                 # Check for empty translation
                 if translation == "":
+                    reference_string = reference_data.get(string_id, "")
                     error_msg = (
                         f"{string_id} is empty\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {reference}"
+                        f"  Reference: {reference_string}"
                     )
                     self.error_messages[locale].append(error_msg)
 

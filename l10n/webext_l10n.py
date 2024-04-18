@@ -165,7 +165,7 @@ def main():
                     f"  Translation: {l10n_message}\n"
                     f"  Reference: {reference_messages[message_id]}"
                 )
-                self.error_messages[locale].append(error_msg)
+                errors[normalized_locale].append(error_msg)
 
             # Check for ellipsis
             if not ignore_ellipsis and "..." in l10n_message:
