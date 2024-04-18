@@ -127,7 +127,7 @@ class QualityCheck:
 
             return False
 
-        placeable_pattern = re.compile(r"((%)(?:[0-9]+\$){0,1}([sd]))")
+        placeable_pattern = re.compile(r"((%)(?:\d+\$){0,1}(?:\.\d+)?([dfs]))")
 
         # Load exceptions
         if not self.exceptions_path:
