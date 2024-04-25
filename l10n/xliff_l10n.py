@@ -98,6 +98,10 @@ def main():
                 ref_string = trans_node.xpath("./x:source", namespaces=NS)[0].text
                 l10n_string = child.text
 
+                # There is a target but it's empty
+                if l10n_string is None:
+                    continue
+
                 # Check ellipsis
                 if not ignore_ellipsis and "..." in l10n_string:
                     if string_id in exceptions.get("ellipsis", {}).get(
