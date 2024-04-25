@@ -45,9 +45,9 @@ def main():
     args = parser.parse_args()
 
     workflows = {
-        "firefox_android": ["dlebedel"],
+        "firefox_android": ["dlebedel", "flodolo"],
         "firefox_ios": ["dlebedel"],
-        "focus_android": ["dlebedel"],
+        "focus_android": ["dlebedel", "flodolo"],
         "focus_ios": ["dlebedel"],
         "fxa": ["bolsson"],
         "fxa_gettext": ["bolsson"],
