@@ -139,15 +139,9 @@ class QualityCheck:
             except Exception as e:
                 sys.exit(e)
 
-        """
-        Store specific reference strings for additional FTL checks:
-        - Strings with message, terms, or variable references
-        """
         reference_data = self.translations[self.reference_locale]
         placeable_ids = {}
         for string_id, text in reference_data.items():
-            file_id, message_id = string_id.split(":")
-
             if not isinstance(text, str):
                 continue
 
@@ -226,6 +220,15 @@ class QualityCheck:
                 ):
                     error_msg = (
                         f"'...' in {string_id}\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
+                    self.error_messages[locale].append(error_msg)
+
+                # Check if the string has extra placeables
+                if list(placeable_pattern.finditer(translation)) and string_id not in placeable_ids:
+                    error_msg = (
+                        f"Extra placeables in {string_id}\n"
                         f"  Translation: {translation}\n"
                         f"  Reference: {reference}"
                     )
