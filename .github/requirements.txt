@@ -2,4 +2,4 @@ compare-locales==9.0.*
 jsonschema==4.23.*
 lxml==5.3.*
 polib==1.2.0
-requests==2.31.0
+requests==2.32.3
