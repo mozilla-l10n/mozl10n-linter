@@ -226,7 +226,10 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
                 # Check if the string has extra placeables
-                if list(placeable_pattern.finditer(translation)) and string_id not in placeable_ids:
+                if (
+                    list(placeable_pattern.finditer(translation))
+                    and string_id not in placeable_ids
+                ):
                     error_msg = (
                         f"Extra placeables in {string_id}\n"
                         f"  Translation: {translation}\n"
