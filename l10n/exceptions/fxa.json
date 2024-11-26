@@ -5,7 +5,7 @@
         "payments.ftl:sub-next-bill-tax"
       ],
       "de": [
-        "confirm-totp-reset-password-instruction-v2"
+        "settings.ftl:confirm-totp-reset-password-instruction-v2"
       ],
       "zh-TW": [
         "settings.ftl:pair-wait-for-auth-heading-text",
