@@ -34,7 +34,6 @@ It's possible to define [exceptions](https://github.com/mozilla-l10n/mozl10n-lin
 |---------|---------------|
 |[Firefox Multi-Account Containers](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mac.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mac.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mac.yaml)
 |[Firefox Relay Add-on](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay_addon.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay_addon.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay_addon.yaml)
-|[Firefox Translations](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/translations.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/translations.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/translations.yaml)
 
 ## XLIFF (iOS, qt)
 | Project | Linter Status |
