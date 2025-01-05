@@ -54,7 +54,6 @@ def main():
         "mac": ["flodolo"],
         "monitor": ["flodolo"],
         "mozorg": ["pmo"],
-        "pocket": ["pmo"],
         "profiler": ["flodolo"],
         "relay_addon": ["pmo"],
         "relay": ["pmo"],

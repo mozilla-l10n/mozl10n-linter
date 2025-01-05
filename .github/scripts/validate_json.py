@@ -35,11 +35,11 @@ def main():
         "mac.json": "webextension",
         "monitor.json": "fluent",
         "mozorg.json": "fluent",
-        "pocket.json": "fluent",
         "profiler.json": "fluent",
         "relay_addon.json": "webextension",
         "relay.json": "fluent",
         "translations.json": "webextension",
+        "vpn_extension.json": "webextension",
         "vpn.json": "xliff",
     }
 
