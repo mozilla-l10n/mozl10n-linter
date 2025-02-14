@@ -6,6 +6,7 @@
 
 from collections import defaultdict, Counter
 from custom_html_parser import MyHTMLParser
+from moz.l10n.paths import L10nConfigPaths, get_android_locale
 import argparse
 import json
 import os
@@ -34,27 +35,51 @@ class StringExtraction:
         """Extract strings using TOML configuration."""
 
         basedir = os.path.dirname(self.l10n_path)
-        project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
-        basedir = os.path.join(basedir, project_config.root)
-
+        project_config_paths = L10nConfigPaths(
+            self.l10n_path, locale_map={"android_locale": get_android_locale}
+        )
         reference_cache = {}
 
-        if not project_config.all_locales:
+        # TODO: remove comparison
+        project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
+        basedir = os.path.join(basedir, project_config.root)
+        if sorted(project_config.all_locales) != sorted(project_config_paths.locales):
+            print(
+                "Missing: ",
+                list(set(project_config.locales) - set(project_config_paths.locales)),
+            )
+            print(
+                "Added: ",
+                list(set(project_config_paths.locales) - set(project_config.locales)),
+            )
+        # TODO: end
+
+        if not project_config_paths.locales:
             print("No locales defined in the project configuration.")
 
-        for locale in project_config.all_locales:
+        for locale in project_config_paths.locales:
             print(f"Extracting strings for locale: {locale}.")
-            files = paths.ProjectFiles(locale, [project_config])
+            file_list = [
+                os.path.abspath(
+                    tgt_path.format(android_locale=get_android_locale(locale))
+                )
+                for (ref_path, tgt_path), locales in project_config_paths.all().items()
+                if locale in locales
+            ]
+            # Remove non existing files
+            file_list = [tgt_path for tgt_path in file_list if os.path.exists(tgt_path)]
 
+            # TODO: remove comparison
+            files = paths.ProjectFiles(locale, [project_config])
+            files_old = []
             for l10n_file, reference_file, _, _ in files:
                 if not os.path.exists(l10n_file):
                     # File not available in localization
                     continue
+                files_old.append(l10n_file)
+            # TODO: end
 
-                if not os.path.exists(reference_file):
-                    # File not available in reference
-                    continue
-
+            for l10n_file in file_list:
                 key_path = os.path.relpath(reference_file, basedir)
                 try:
                     p = parser.getParser(reference_file)
@@ -80,6 +105,14 @@ class StringExtraction:
                     for entity in p.parse()
                 )
             print(f"  {len(self.translations[locale])} strings extracted")
+
+            # TODO: remove comparison
+            files_old.sort()
+            file_list.sort()
+            if files_old != file_list:
+                print(locale)
+                print("Missing: ", list(set(files_old) - set(file_list)))
+                print("Added: ", list(set(file_list) - set(files_old)))
 
     def extractStrings(self):
         """Extract strings from all locales."""

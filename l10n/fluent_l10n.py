@@ -8,6 +8,7 @@ from collections import defaultdict, Counter
 from custom_html_parser import MyHTMLParser
 from fluent.syntax import ast, parse, visitor
 from fluent.syntax.serializer import FluentSerializer
+from moz.l10n.paths import L10nConfigPaths, get_android_locale
 from pathlib import Path
 import argparse
 import json
@@ -93,26 +94,48 @@ class StringExtraction:
         basedir = os.path.dirname(self.l10n_path)
         if not os.path.exists(self.l10n_path):
             sys.exit("Specified TOML file does not exist.")
+        project_config_paths = L10nConfigPaths(self.l10n_path)
+
+        # TODO: remove comparison
         project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
         basedir = os.path.join(basedir, project_config.root)
+        print(project_config.locales, project_config_paths.locales)
+        if sorted(project_config.all_locales) != sorted(project_config_paths.locales):
+            print(
+                "Missing: ",
+                list(set(project_config.locales) - set(project_config_paths.locales)),
+            )
+            print(
+                "Added: ",
+                list(set(project_config_paths.locales) - set(project_config.locales)),
+            )
+        # TODO: end
 
-        if not project_config.all_locales:
+        if not project_config_paths.locales:
             print("No locales defined in the project configuration.")
 
         read_references = []
-        for locale in project_config.all_locales:
+        for locale in project_config_paths.locales:
             print(f"Extracting strings for locale: {locale}.")
+            file_list = [
+                os.path.abspath(tgt_path.format(locales=locale))
+                for (ref_path, tgt_path), locales in project_config_paths.all().items()
+                if locale in locales
+            ]
+            # Remove non existing files
+            file_list = [tgt_path for tgt_path in file_list if os.path.exists(tgt_path)]
 
+            # TODO: remove comparison
             files = paths.ProjectFiles(locale, [project_config])
+            files_old = []
             for l10n_file, reference_file, _, _ in files:
                 if not os.path.exists(l10n_file):
                     # File not available in localization
                     continue
+                files_old.append(l10n_file)
+            # TODO: end
 
-                if not os.path.exists(reference_file):
-                    # File not available in reference
-                    continue
-
+            for l10n_file in file_list:
                 key_path = os.path.relpath(reference_file, basedir)
 
                 # Extract reference strings if not already available
@@ -126,9 +149,17 @@ class StringExtraction:
                 # Extract localized strings
                 self.storeFluentStrings(locale, l10n_file, key_path)
 
+            # TODO: remove comparison
+            files_old.sort()
+            file_list.sort()
+            if files_old != file_list:
+                print(locale)
+                print("Missing: ", list(set(files_old) - set(file_list)))
+                print("Added: ", list(set(file_list) - set(files_old)))
+
         # Use a second loop to remove obsolete strings, since reference files
         # are not available beforehand.
-        for locale in project_config.all_locales:
+        for locale in project_config_paths.locales:
             self.removeObsoleteStrings(locale)
 
     def extractLocale(self, locale, base_dir):
