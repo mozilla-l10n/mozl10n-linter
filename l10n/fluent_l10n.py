@@ -8,6 +8,7 @@ from collections import defaultdict, Counter
 from custom_html_parser import MyHTMLParser
 from fluent.syntax import ast, parse, visitor
 from fluent.syntax.serializer import FluentSerializer
+from moz.l10n.paths import L10nConfigPaths
 from pathlib import Path
 import argparse
 import json
@@ -16,12 +17,27 @@ import re
 import sys
 
 try:
-    from compare_locales import paths
     from compare_locales import parser
 except ImportError as e:
     print("FATAL: make sure that dependencies are installed")
     print(e)
     sys.exit(1)
+
+
+def getAllExceptions(data, result_set=None):
+    if result_set is None:
+        result_set = set()
+
+    if isinstance(data, dict):
+        for value in data.values():
+            getAllExceptions(value, result_set)
+    elif isinstance(data, list):
+        # If it's all short strings, it's likely a list of locales
+        cleaned_data = [i for i in data if len(i) > 6]
+        if cleaned_data:
+            result_set.update(cleaned_data)
+
+    return result_set
 
 
 class StringExtraction:
@@ -93,33 +109,44 @@ class StringExtraction:
         basedir = os.path.dirname(self.l10n_path)
         if not os.path.exists(self.l10n_path):
             sys.exit("Specified TOML file does not exist.")
-        project_config = paths.TOMLParser().parse(self.l10n_path, env={"l10n_base": ""})
-        basedir = os.path.join(basedir, project_config.root)
+        project_config_paths = L10nConfigPaths(self.l10n_path)
 
-        if not project_config.all_locales:
+        locales = list(project_config_paths.all_locales)
+        locales.sort()
+
+        if not locales:
             print("No locales defined in the project configuration.")
 
         read_references = []
-        for locale in project_config.all_locales:
+
+        for locale in locales:
             print(f"Extracting strings for locale: {locale}.")
+            file_list = [
+                (
+                    os.path.abspath(tgt_path.format(locale=locale)),
+                    os.path.abspath(ref_path.format(locale=None)),
+                )
+                for (ref_path, tgt_path), locales in project_config_paths.all().items()
+                if locale in locales
+            ]
 
-            files = paths.ProjectFiles(locale, [project_config])
-            for l10n_file, reference_file, _, _ in files:
+            for l10n_file, ref_file in file_list:
+                # Ignore missing files in locale
                 if not os.path.exists(l10n_file):
-                    # File not available in localization
+                    # print(f"Ignored missing file for {locale}: {l10n_file}")
+                    continue
+                # Ignore missing files in reference
+                if not os.path.exists(ref_file):
+                    print(f"Ignored missing reference file: {ref_file}")
                     continue
 
-                if not os.path.exists(reference_file):
-                    # File not available in reference
-                    continue
-
-                key_path = os.path.relpath(reference_file, basedir)
+                key_path = os.path.relpath(ref_file, basedir)
 
                 # Extract reference strings if not already available
-                if reference_file not in read_references:
+                if ref_file not in read_references:
                     self.storeFluentStrings(
                         self.reference_locale,
-                        reference_file,
+                        ref_file,
                         key_path,
                     )
 
@@ -128,7 +155,7 @@ class StringExtraction:
 
         # Use a second loop to remove obsolete strings, since reference files
         # are not available beforehand.
-        for locale in project_config.all_locales:
+        for locale in locales:
             self.removeObsoleteStrings(locale)
 
     def extractLocale(self, locale, base_dir):
@@ -309,6 +336,13 @@ class QualityCheck:
         - Strings with message, terms, or variable references
         """
         reference_data = self.translations[self.reference_locale]
+
+        # Check if there are obsolete exceptions
+        exception_ids = getAllExceptions(self.exceptions)
+        for id in exception_ids:
+            if id not in reference_data:
+                print(f"Obsolete exception: {id}")
+
         data_l10n_ids = {}
         placeable_ids = {}
         for string_id, text in reference_data.items():
@@ -673,7 +707,7 @@ def main():
         help="Path to folder including folders for each locale",
     )
     parser.add_argument(
-        "--ref", dest="reference_code", help="Reference language code", default="en-US"
+        "--ref", dest="reference_code", help="Reference locale code", default="en-US"
     )
     parser.add_argument("--dest", dest="dest_file", help="Save output to file")
     parser.add_argument(
