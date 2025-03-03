@@ -1,10 +1,6 @@
 {
   "HTML": {
     "locales": {
-      "cs": [
-        "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum",
-        "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback"
-      ],
       "da": [
         "en/firefox/new/desktop.ftl:firefox-desktop-download-select-linux"
       ],
@@ -13,8 +9,7 @@
       ],
       "it": [
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2",
-        "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox",
-        "en/products/vpn/landing.ftl:vpn-landing-faq-info-question-desc-v2"
+        "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox"
       ],
       "nn-NO": [
         "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
@@ -22,15 +17,9 @@
       "pl": [
         "en/firefox/browsers.ftl:firefox-browsers-build-sites-and-refine-your"
       ],
-      "pt-BR": [
-        "en/firefox/browsers/compare/ie.ftl:compare-ie-on-the-other-end-of-the-spectrum-fallback",
-        "en/firefox/features/translate.ftl:features-translate-with-the-to",
-        "en/firefox/privacy/passwords.ftl:privacy-passwords-in-general-the"
-      ],
       "sq": [
         "en/firefox/browsers/history/what-is-a-browser.ftl:what-is-a-browser-when-the-web-browser",
         "en/firefox/features/fingerprinting.ftl:features-fingerprinting-the-practice-of",
-        "en/privacy/faq.ftl:privacy-faq-mozilla-doesnt-know-as-much",
         "en/products/vpn/more/vpn-or-proxy.ftl:vpn-or-proxy-the-most-important",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-have-you-ever",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-the-most-important"
@@ -72,7 +61,6 @@
     "locales": {
       "cs": [
         "en/firefox/browsers.ftl:firefox-browsers-enterprise-packages",
-        "en/firefox/browsers/mobile/ios.ftl:mobile-ios-add-firefox-across",
         "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
         "en/footer.ftl:footer-follow-firefox",
         "en/footer.ftl:footer-follow-mozilla",

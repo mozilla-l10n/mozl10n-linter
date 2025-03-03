@@ -4,26 +4,8 @@
       "ar": [
         "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_host_message"
       ],
-      "cs": [
-        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
-      ],
       "el": [
         "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_unknown_protocol_message"
-      ],
-      "fa": [
-        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_redirect_loop_message"
-      ],
-      "id": [
-        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_file_not_found_message"
-      ],
-      "it": [
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:your_rights_content5"
-      ],
-      "my": [
-        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_port_blocked_message"
-      ],
-      "sq": [
-        "mozilla-mobile/android-components/components/browser/errorpages/src/main/res/values/strings.xml:mozac_browser_errorpages_net_timeout_message"
       ]
     },
     "strings": []
@@ -42,21 +24,10 @@
     "locales": {
       "cs": [
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site",
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab"
-      ],
-      "eu": [
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site"
       ],
       "he": [
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:create_collection_save_to_collection_tab_selected",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:history_search_group_site",
-        "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab"
-      ],
-      "rm": [
-        "mozilla-mobile/android-components/components/feature/addons/src/main/res/values/strings.xml:mozac_feature_addons_status_unsigned"
-      ],
-      "szl": [
         "mozilla-mobile/fenix/app/src/main/res/values/strings.xml:recently_closed_tab"
       ]
     },
