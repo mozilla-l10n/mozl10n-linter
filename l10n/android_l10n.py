@@ -49,12 +49,12 @@ class StringExtraction:
     def extractStringsToml(self):
         """Extract strings using TOML configuration."""
 
-        basedir = os.path.dirname(self.l10n_path)
         if not os.path.exists(self.l10n_path):
             sys.exit("Specified TOML file does not exist.")
         project_config_paths = L10nConfigPaths(
             self.l10n_path, locale_map={"android_locale": get_android_locale}
         )
+        basedir = project_config_paths.base
         reference_cache = {}
 
         locales = list(project_config_paths.all_locales)
