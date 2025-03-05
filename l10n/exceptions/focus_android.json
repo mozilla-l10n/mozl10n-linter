@@ -1,10 +1,6 @@
 {
   "HTML": {
-    "locales": {
-      "it": [
-        "app/src/main/res/values/strings.xml:your_rights_content5"
-      ]
-    },
+    "locales": {},
     "strings": []
   },
   "ellipsis": {
