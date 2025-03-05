@@ -119,18 +119,23 @@ class StringExtraction:
 
         read_references = []
 
+        all_files = [
+            (ref_path, tgt_path)
+            for (ref_path, tgt_path), _ in project_config_paths.all().items()
+        ]
         for locale in locales:
             print(f"Extracting strings for locale: {locale}.")
-            file_list = [
-                (
-                    os.path.abspath(tgt_path.format(locale=locale)),
-                    os.path.abspath(ref_path.format(locale=None)),
+            locale_files = [
+                (os.path.abspath(ref_path), os.path.abspath(tgt_path))
+                for (ref_path, raw_tgt_path) in all_files
+                if os.path.exists(
+                    tgt_path := project_config_paths.format_target_path(
+                        raw_tgt_path, locale
+                    )
                 )
-                for (ref_path, tgt_path), locales in project_config_paths.all().items()
-                if locale in locales
             ]
 
-            for l10n_file, ref_file in file_list:
+            for ref_file, l10n_file in locale_files:
                 # Ignore missing files in locale
                 if not os.path.exists(l10n_file):
                     # print(f"Ignored missing file for {locale}: {l10n_file}")
