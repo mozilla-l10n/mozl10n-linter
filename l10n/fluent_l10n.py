@@ -4,17 +4,20 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from collections import defaultdict, Counter
-from custom_html_parser import MyHTMLParser
-from fluent.syntax import ast, parse, visitor
-from fluent.syntax.serializer import FluentSerializer
-from moz.l10n.paths import L10nConfigPaths
-from pathlib import Path
 import argparse
 import json
 import os
 import re
 import sys
+
+from collections import Counter, defaultdict
+from pathlib import Path
+
+from custom_html_parser import MyHTMLParser
+from fluent.syntax import ast, parse, visitor
+from fluent.syntax.serializer import FluentSerializer
+from moz.l10n.paths import L10nConfigPaths
+
 
 try:
     from compare_locales import parser
@@ -261,7 +264,7 @@ class checkSelectExpression(visitor.Visitor):
     def visit_SelectExpression(self, node):
         # Store the variable used in the selectExpression
         if (
-            type(node.selector) == ast.VariableReference
+            isinstance(node.selector, ast.VariableReference)
             and node.selector.id.name not in self.select_vars
             and self.is_message
         ):

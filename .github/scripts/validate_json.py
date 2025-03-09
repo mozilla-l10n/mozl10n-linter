@@ -4,13 +4,15 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from collections import defaultdict
-from jsonschema import Draft7Validator
-from pathlib import Path
 import argparse
 import json
 import os
 import sys
+
+from collections import defaultdict
+from pathlib import Path
+
+from jsonschema import Draft7Validator
 
 
 def main():

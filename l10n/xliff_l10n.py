@@ -4,16 +4,18 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from collections import defaultdict
-from custom_html_parser import MyHTMLParser
-from glob import glob
-from lxml import etree
 import argparse
 import html
 import json
 import os
 import re
 import sys
+
+from collections import defaultdict
+from glob import glob
+
+from custom_html_parser import MyHTMLParser
+from lxml import etree
 
 
 def main():

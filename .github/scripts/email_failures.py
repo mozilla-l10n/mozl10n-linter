@@ -1,10 +1,12 @@
 #! /usr/bin/env python3
 
 import argparse
-import requests
 import smtplib
+
 from collections import defaultdict
 from email.mime.text import MIMEText
+
+import requests
 
 
 def send_email(subject, body, sender, recipient, password, server, port):

@@ -4,16 +4,19 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from collections import defaultdict
-from custom_html_parser import MyHTMLParser
-from pathlib import Path
 import argparse
-import json
 import hashlib
+import json
 import os
-import polib
 import re
 import sys
+
+from collections import defaultdict
+from pathlib import Path
+
+import polib
+
+from custom_html_parser import MyHTMLParser
 
 
 def ignoreString(exceptions, locale, errorcode, string_id):

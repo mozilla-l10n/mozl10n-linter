@@ -4,14 +4,17 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from collections import defaultdict, Counter
-from custom_html_parser import MyHTMLParser
-from moz.l10n.paths import L10nConfigPaths, get_android_locale
 import argparse
 import json
 import os
 import re
 import sys
+
+from collections import Counter, defaultdict
+
+from custom_html_parser import MyHTMLParser
+from moz.l10n.paths import L10nConfigPaths, get_android_locale
+
 
 try:
     from compare_locales import parser
