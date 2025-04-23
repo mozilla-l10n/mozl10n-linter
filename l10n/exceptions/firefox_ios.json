@@ -1,4 +1,8 @@
 {
+  "HTML": {
+    "locales": {},
+    "strings": []
+  },
   "ellipsis": {
     "excluded_locales": [
       "ja"

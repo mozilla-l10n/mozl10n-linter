@@ -143,6 +143,11 @@ def main():
                 html_parser.feed(html.unescape(ref_string))
                 ref_tags = html_parser.get_tags()
                 if ref_tags:
+                    if string_id in exceptions.get("HTML", {}).get("locales", {}).get(
+                        locale, []
+                    ):
+                        continue
+
                     html_parser.clear()
                     html_parser.feed(html.unescape(l10n_string))
                     l10n_tags = html_parser.get_tags()
