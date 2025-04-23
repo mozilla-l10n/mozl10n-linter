@@ -1,4 +1,13 @@
 {
+  "HTML": {
+    "locales": {
+      "it": [
+        "string1",
+        "string2"
+      ]
+    },
+    "strings": []
+  },
   "ellipsis": {
     "excluded_locales": [
       "ja"

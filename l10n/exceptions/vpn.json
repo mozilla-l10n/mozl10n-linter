@@ -1,4 +1,12 @@
 {
+  "HTML": {
+    "locales": {
+      "zh-CN": [
+        "mozillavpn.xliff:vpn.permissionMacos.instructions"
+      ]
+    },
+    "strings": []
+  },
   "ellipsis": {
     "excluded_locales": [
       "ja"

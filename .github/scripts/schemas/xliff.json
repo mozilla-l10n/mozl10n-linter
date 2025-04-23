@@ -29,11 +29,15 @@
         },
         "placeables": {
             "$ref": "#/definitions/ExceptionsList"
+        },
+        "HTML": {
+            "$ref": "#/definitions/ExceptionsList"
         }
     },
     "required": [
         "ellipsis",
-        "placeables"
+        "placeables",
+        "HTML"
     ],
     "definitions": {
         "ExceptionsList": {
