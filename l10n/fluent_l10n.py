@@ -477,8 +477,9 @@ class QualityCheck:
                     error_msg = f"Pilcrow character in string ({string_id})"
                     self.error_messages[locale].append(error_msg)
 
-                # Check for empty translation
-                if translation == "":
+                # Check for empty translation, or translations with just line
+                # breaks
+                if "".join(translation.splitlines()) == "":
                     reference_string = reference_data.get(string_id, "")
                     error_msg = (
                         f"{string_id} is empty\n"

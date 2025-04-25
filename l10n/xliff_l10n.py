@@ -170,8 +170,9 @@ def main():
                         f"'¶' in {string_id}\n  Translation: {l10n_string}"
                     )
 
-                # Check for empty translation
-                if l10n_string == "":
+                # Check for empty translation, or translations with just line
+                # breaks
+                if "".join(l10n_string.splitlines()) == "":
                     error_msg = (
                         f"{string_id} is empty\n"
                         f"  Translation: {l10n_string}\n"
