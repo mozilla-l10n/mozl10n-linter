@@ -110,10 +110,14 @@ class StringExtraction:
                     )
 
                 p.readFile(l10n_file)
+                # As of https://github.com/mozilla/pontoon/pull/3611, Pontoon
+                # uses moz.l10n for resource parsing, resulting in quotes being
+                # escaped. compare-locales doesn't escape them, so need to
+                # manually remove escapes.
                 self.translations[locale].update(
                     (
                         f"{key_path}:{entity.key}",
-                        entity.raw_val,
+                        entity.raw_val.replace("\\'", "'").replace('\\"', '"'),
                     )
                     for entity in p.parse()
                 )
