@@ -49,6 +49,7 @@ def main():
     workflows = {
         "firefox_android": ["dlebedel", "flodolo"],
         "firefox_ios": ["dlebedel"],
+        "firefoxcom": ["pmo"],
         "focus_android": ["dlebedel", "flodolo"],
         "focus_ios": ["dlebedel"],
         "fxa_gettext": ["bolsson"],

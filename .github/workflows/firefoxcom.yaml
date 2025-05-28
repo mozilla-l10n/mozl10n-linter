@@ -1,0 +1,83 @@
+name: FirefoxCom
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/firefoxcom.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/firefoxcom.json'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/firefoxcom.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/firefoxcom.json'
+  schedule:
+    - cron: '10 1 * * *'
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          path: "scripts_repo"
+      - name: Clone target repository
+        uses: actions/checkout@v4
+        with:
+          repository: "mozilla-l10n/www-firefox-l10n"
+          path: "target_repo"
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Python dependencies
+        run: |
+          pip install -r scripts_repo/.github/requirements.txt
+      - name: Lint localization (vendor)
+        run: >
+          python scripts_repo/l10n/fluent_l10n.py
+          --toml target_repo/l10n-vendor.toml
+          --ref en
+          --dest errors_vendors.txt
+          --exceptions scripts_repo/l10n/exceptions/firefoxcom.json
+          --no-failure
+      - name: Lint localization (community)
+        run: >
+          python scripts_repo/l10n/fluent_l10n.py
+          --toml target_repo/l10n-pontoon.toml
+          --ref en
+          --dest errors_community.txt
+          --exceptions scripts_repo/l10n/exceptions/firefoxcom.json
+          --no-failure
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: errors-list
+          path: errors_*.txt
+          if-no-files-found: ignore
+      - name: Fail on errors
+        run: |
+          echo "### There are errors" >> $GITHUB_STEP_SUMMARY
+          if [ -f "errors_vendors.txt" ]; then
+            echo "## Vendors" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors_vendors.txt >> $GITHUB_STEP_SUMMARY || echo "No vendor errors" >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f "errors_community.txt" ]; then
+            echo "## Community" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors_community.txt >> $GITHUB_STEP_SUMMARY || echo "No community errors" >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f "errors_vendors.txt" ] || [ -f "errors_community.txt" ]; then
+            exit 1
+          fi

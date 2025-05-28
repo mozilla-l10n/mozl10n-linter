@@ -26,6 +26,7 @@ It's possible to define [exceptions](https://github.com/mozilla-l10n/mozl10n-lin
 |[Firefox Relay](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay.yaml)
 |[Firefox Monitor](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml)
 |[Firefox Profiler](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml)
+|[firefox.com](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/firefoxcom.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/firefoxcom.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/firefoxcom.yaml)
 |[mozilla.org](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mozorg.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mozorg.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/mozorg.yaml)
 
 ## JSON (WebExtensions)
