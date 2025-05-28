@@ -1,0 +1,51 @@
+{
+  "HTML": {
+    "locales": {
+      "da": [
+        "en/firefox/download/desktop.ftl:firefox-desktop-download-select-linux"
+      ],
+      "de": [
+        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
+      ],
+      "tr": [
+        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
+      ]
+    },
+    "strings": []
+  },
+  "data-l10n-names": {
+    "locales": {},
+    "strings": []
+  },
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ],
+    "locales": {
+      "ar": [
+        "en/firefox/features/fast-2023.ftl:features-fast-every-computer-program-you-run"
+      ],
+      "ms": [
+        "en/firefox/features/fast-2023.ftl:features-fast-every-computer-program-you-run"
+      ],
+      "rm": [
+        "en/firefox/features/fast-2023.ftl:features-fast-every-computer-program-you-run"
+      ]
+    },
+    "strings": []
+  },
+  "excluded_locales": [
+    "am",
+    "ml",
+    "mr",
+    "ta"
+  ],
+  "general": {
+    "locales": {},
+    "strings": []
+  },
+  "placeables": {
+    "locales": {},
+    "strings": []
+  }
+}

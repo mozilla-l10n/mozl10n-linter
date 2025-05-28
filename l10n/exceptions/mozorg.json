@@ -4,18 +4,13 @@
       "da": [
         "en/firefox/new/desktop.ftl:firefox-desktop-download-select-linux"
       ],
-      "de": [
-        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
-      ],
       "it": [
-        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2",
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox"
       ],
       "nn-NO": [
         "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
       ],
       "pl": [
-        "en/firefox/browsers.ftl:firefox-browsers-build-sites-and-refine-your",
         "en/mozorg/about/this-site.ftl:about-this-site-colophon"
       ],
       "sq": [
@@ -24,9 +19,6 @@
         "en/products/vpn/more/vpn-or-proxy.ftl:vpn-or-proxy-the-most-important",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-have-you-ever",
         "en/products/vpn/more/when-to-use-a-vpn.ftl:vpn-when-to-use-the-most-important"
-      ],
-      "tr": [
-        "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ],
       "zh-TW": [
         "en/mozorg/about/history.ftl:history-the-history-of-firefox-and",
@@ -61,7 +53,6 @@
   "placeables": {
     "locales": {
       "cs": [
-        "en/firefox/browsers.ftl:firefox-browsers-enterprise-packages",
         "en/firefox/enterprise.ftl:firefox-enterprise-enterprise-downloads",
         "en/footer.ftl:footer-follow-firefox",
         "en/footer.ftl:footer-follow-mozilla",
