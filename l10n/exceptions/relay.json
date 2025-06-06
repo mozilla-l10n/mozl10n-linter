@@ -26,9 +26,8 @@
   },
   "placeables": {
     "locales": {
-      "sk": [
-        "profile.ftl:profile-promo-email-blocking-label-forwarding",
-        "whatsnew.ftl:whatsnew-feature-alias-to-mask-snippet"
+      "fr": [
+        "phones.ftl:phone-onboarding-step3-body"
       ]
     },
     "strings": []
