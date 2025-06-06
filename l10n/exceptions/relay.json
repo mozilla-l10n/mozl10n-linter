@@ -1,6 +1,10 @@
 {
   "HTML": {
-    "locales": {},
+     "locales": {
+      "fr": [
+        "phones.ftl:phone-onboarding-step3-body"
+      ]
+    },
     "strings": []
   },
   "data-l10n-names": {
@@ -25,12 +29,7 @@
     "strings": []
   },
   "placeables": {
-    "locales": {
-      "sk": [
-        "profile.ftl:profile-promo-email-blocking-label-forwarding",
-        "whatsnew.ftl:whatsnew-feature-alias-to-mask-snippet"
-      ]
-    },
+    "locales": {},
     "strings": []
   }
 }
