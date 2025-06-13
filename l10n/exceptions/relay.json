@@ -29,7 +29,11 @@
     "strings": []
   },
   "placeables": {
-    "locales": {},
+    "locales": {
+     "fr": [
+       "bundle.ftl:whatsnew-megabundle-snippet"
+     ]
+   },
     "strings": []
   }
 }
