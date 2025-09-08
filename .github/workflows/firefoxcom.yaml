@@ -33,7 +33,7 @@ jobs:
           repository: "mozilla-l10n/www-firefox-l10n"
           path: "target_repo"
       - name: Set up Python 3
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.11'
       - name: Install Python dependencies
