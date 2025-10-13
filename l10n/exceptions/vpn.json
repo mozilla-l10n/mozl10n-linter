@@ -2,7 +2,8 @@
   "HTML": {
     "locales": {
       "zh-CN": [
-        "mozillavpn.xliff:vpn.permissionMacos.instructions"
+        "mozillavpn.xliff:vpn.permissionMacos.instructions",
+        "mozillavpn.xliff:vpn.permissionMacos.instructionsTahoe"
       ]
     },
     "strings": []

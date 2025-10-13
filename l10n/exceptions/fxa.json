@@ -8,8 +8,8 @@
         "settings.ftl:confirm-totp-reset-password-instruction-v2"
       ],
       "he": [
-        "payments-next.ftl:subscription-content-current-billed-on-tax",
-        "payments-next.ftl:subscription-content-current-billed-on-no-tax"
+        "payments-next.ftl:subscription-content-current-billed-on-no-tax",
+        "payments-next.ftl:subscription-content-current-billed-on-tax"
       ],
       "zh-TW": [
         "settings.ftl:pair-wait-for-auth-heading-text",
