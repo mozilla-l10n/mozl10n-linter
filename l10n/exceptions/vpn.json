@@ -3,6 +3,7 @@
     "locales": {
       "zh-CN": [
         "mozillavpn.xliff:vpn.permissionMacos.instructions",
+        "mozillavpn.xliff:vpn.permissionMacos.instructionsMacOS26",
         "mozillavpn.xliff:vpn.permissionMacos.instructionsTahoe"
       ]
     },
