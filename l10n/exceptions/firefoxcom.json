@@ -7,6 +7,9 @@
       "de": [
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ],
+      "es-MX": [
+        "en/firefox/browsers/compare/edge.ftl:compare-edge-microsoft-has-to-make-their-shareholders"
+      ],
       "tr": [
         "en/firefox/browsers.ftl:firefox-browsers-get-the-browsers-strong-v2"
       ]
