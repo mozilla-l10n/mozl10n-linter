@@ -48,7 +48,20 @@
     "strings": []
   },
   "placeables": {
-    "locales": {},
+    "locales": {
+      "fr": [
+        "en/firefox/browsers/mobile/android.ftl:mobile-android-firefox-browser",
+        "en/firefox/browsers/mobile/android.ftl:mobile-android-firefox-browser-android",
+        "en/firefox/browsers/mobile/ios.ftl:mobile-ios-firefox-browser",
+        "en/firefox/browsers/mobile/ios.ftl:mobile-ios-firefox-browser-ios",
+        "en/firefox/download/desktop.ftl:firefox-desktop-download-firefox",
+        "en/firefox/download/download.ftl:firefox-new-desc",
+        "en/firefox/enterprise.ftl:firefox-enterprise-firefox-browser",
+        "en/firefox/enterprise.ftl:firefox-enterprise-firefox-browser-msi-installer",
+        "en/firefox/installer-help.ftl:installer-help-firefox-release-title",
+        "en/firefox/more/more.ftl:firefox-more-firefox-chromebook"
+      ]
+    },
     "strings": []
   }
 }
