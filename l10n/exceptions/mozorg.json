@@ -59,7 +59,23 @@
         "en/mozorg/newsletters.ftl:newsletters-beta-news"
       ],
       "fr": [
-        "en/navigation_v2.ftl:navigation-v2-firefox-browsers"
+        "en/firefox/accounts.ftl:firefox-accounts-firefox-browser",
+        "en/firefox/browsers/mobile/android.ftl:mobile-android-firefox-browser",
+        "en/firefox/browsers/mobile/android.ftl:mobile-android-firefox-browser-android",
+        "en/firefox/browsers/mobile/get-ios.ftl:get-ios-firefox-for-ios",
+        "en/firefox/browsers/mobile/ios.ftl:mobile-ios-firefox-browser",
+        "en/firefox/browsers/mobile/ios.ftl:mobile-ios-firefox-browser-ios",
+        "en/firefox/enterprise.ftl:firefox-enterprise-firefox-browser",
+        "en/firefox/enterprise.ftl:firefox-enterprise-firefox-browser-msi-installer",
+        "en/firefox/facebook_container.ftl:facebook-container-brand-name-firefox-browser",
+        "en/firefox/installer-help.ftl:installer-help-firefox-release-title",
+        "en/firefox/more.ftl:firefox-more-firefox-chromebook",
+        "en/firefox/new/desktop.ftl:firefox-desktop-download-firefox",
+        "en/firefox/new/desktop.ftl:firefox-desktop-download-firefox-browser",
+        "en/firefox/new/download.ftl:firefox-new-desc",
+        "en/navigation_v2.ftl:navigation-v2-firefox-browsers",
+        "en/navigation_v2.ftl:navigation-v2-firefox-for-mobile",
+        "en/privacy/index.ftl:privacy-index-firefox-browser"
       ]
     },
     "strings": []
