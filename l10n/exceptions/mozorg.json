@@ -69,10 +69,13 @@
         "en/firefox/enterprise.ftl:firefox-enterprise-firefox-browser-msi-installer",
         "en/firefox/facebook_container.ftl:facebook-container-brand-name-firefox-browser",
         "en/firefox/installer-help.ftl:installer-help-firefox-release-title",
+        "en/firefox/mobile.ftl:firefox-mobile-firefox-browser",
         "en/firefox/more.ftl:firefox-more-firefox-chromebook",
+        "en/firefox/more/misinformation.ftl:misinformation-brand-firefox-browser",
         "en/firefox/new/desktop.ftl:firefox-desktop-download-firefox",
         "en/firefox/new/desktop.ftl:firefox-desktop-download-firefox-browser",
         "en/firefox/new/download.ftl:firefox-new-desc",
+        "en/mozorg/home.ftl:home-firefox-browser",
         "en/navigation_v2.ftl:navigation-v2-firefox-browsers",
         "en/navigation_v2.ftl:navigation-v2-firefox-for-mobile",
         "en/privacy/index.ftl:privacy-index-firefox-browser"
