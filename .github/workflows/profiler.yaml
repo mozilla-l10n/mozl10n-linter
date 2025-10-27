@@ -48,7 +48,7 @@ jobs:
           --exceptions scripts_repo/l10n/exceptions/profiler.json
           --no-failure
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: errors-list
           path: errors.txt
