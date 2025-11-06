@@ -52,6 +52,7 @@ def main():
         "firefoxcom": ["pmo"],
         "focus_android": ["dlebedel", "flodolo"],
         "focus_ios": ["dlebedel"],
+        "fxa_cms": ["bolsson"],
         "fxa_gettext": ["bolsson"],
         "fxa": ["bolsson"],
         "mac": ["flodolo"],
