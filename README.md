@@ -23,6 +23,7 @@ It's possible to define [exceptions](https://github.com/mozilla-l10n/mozl10n-lin
 | Project | Linter Status |
 |---------|---------------|
 |[Mozilla accounts](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa.yaml)
+|[Mozilla accounts CMS](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa_cms.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa_cms.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa_cms.yaml)
 |[Firefox Relay](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/relay.yaml)
 |[Firefox Monitor](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/monitor.yaml)
 |[Firefox Profiler](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/profiler.yaml)

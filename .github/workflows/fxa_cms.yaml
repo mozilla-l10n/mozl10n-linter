@@ -1,0 +1,65 @@
+name: FxA CMS
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/fxa_cms.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/fxa_cms.json'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/fxa_cms.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/fluent_l10n.py'
+      - 'l10n/exceptions/fxa_cms.json'
+  schedule:
+    - cron: '10 1 * * *'
+  workflow_dispatch:
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v5
+        with:
+          path: "scripts_repo"
+      - name: Clone target repository
+        uses: actions/checkout@v5
+        with:
+          repository: "mozilla/fxa-cms-l10n"
+          path: "target_repo"
+      - name: Set up Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install Python dependencies
+        run: |
+          pip install -r scripts_repo/.github/requirements.txt
+      - name: Lint localization
+        run: >
+          python scripts_repo/l10n/fluent_l10n.py
+          --l10n target_repo/locales/
+          --ref en
+          --dest errors.txt
+          --exceptions scripts_repo/l10n/exceptions/fxa_cms.json
+          --no-failure
+      - name: Upload artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: errors-list
+          path: errors.txt
+          if-no-files-found: ignore
+      - name: Fail on errors
+        run: |
+          if [ -f "errors.txt" ]; then
+            echo "### There are errors" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors.txt >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
