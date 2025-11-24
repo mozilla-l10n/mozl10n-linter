@@ -24,11 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: "scripts_repo"
       - name: Clone target repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: "mozilla/fxa-cms-l10n"
           path: "target_repo"
