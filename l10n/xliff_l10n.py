@@ -14,7 +14,7 @@ import sys
 from collections import defaultdict
 from glob import glob
 
-from custom_html_parser import MyHTMLParser
+from custom_html_parser import get_html_tags
 from lxml import etree
 
 
@@ -72,7 +72,7 @@ def main():
 
     placeables_pattern = re.compile(r"(%[1-9ds]?\$?@|%[1-9])")
     errors = defaultdict(list)
-    html_parser = MyHTMLParser()
+
     for file_path in file_paths:
         # Extract and normalize locale code, relative file path
         rel_file_path = os.path.relpath(file_path, args.locales_path)
@@ -139,18 +139,14 @@ def main():
                         )
 
                 # Check HTML tags
-                html_parser.clear()
-                html_parser.feed(html.unescape(ref_string))
-                ref_tags = html_parser.get_tags()
+                ref_tags = get_html_tags(ref_string)
                 if ref_tags:
                     if string_id in exceptions.get("HTML", {}).get("locales", {}).get(
                         locale, []
                     ):
                         continue
 
-                    html_parser.clear()
-                    html_parser.feed(html.unescape(l10n_string))
-                    l10n_tags = html_parser.get_tags()
+                    l10n_tags = get_html_tags(l10n_string)
 
                     if l10n_tags != ref_tags:
                         # Ignore if only the order was changed

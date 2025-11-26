@@ -4,6 +4,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from html import unescape
 from html.parser import HTMLParser
 
 
@@ -45,5 +46,13 @@ class MyHTMLParser(HTMLParser):
         if tag not in ["br"]:
             self.tags.append(f"</{tag}>")
 
-    def get_tags(self):
+    def get_tags(self) -> list[str]:
         return self.tags
+
+
+def get_html_tags(html: str) -> list[str]:
+    html = unescape(html)
+
+    stripper = MyHTMLParser()
+    stripper.feed(html)
+    return stripper.get_tags()

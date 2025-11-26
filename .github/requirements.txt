@@ -1,6 +1,6 @@
 compare-locales~=9.0.4
 jsonschema~=4.25.1
-lxml~=6.0.2
-moz-l10n~=0.10.1
+lxml~=5.4.0
+moz-l10n[xml]~=0.10.1
 polib~=1.2.0
 requests~=2.32.5

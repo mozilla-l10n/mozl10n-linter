@@ -16,7 +16,7 @@ from pathlib import Path
 
 import polib
 
-from custom_html_parser import MyHTMLParser
+from custom_html_parser import get_html_tags
 
 
 def ignoreString(exceptions, locale, errorcode, string_id):
@@ -92,8 +92,6 @@ def main():
     ]
     locales.sort()
 
-    html_parser = MyHTMLParser()
-
     for locale in locales:
         l10n_path = os.path.join(base_path, locale)
         search_path = Path(l10n_path)
@@ -149,13 +147,8 @@ def main():
             if ignoreString(exceptions, normalized_locale, "HTML", message_id):
                 continue
 
-            html_parser.clear()
-            html_parser.feed(reference)
-            ref_tags = html_parser.get_tags()
-
-            html_parser.clear()
-            html_parser.feed(translation)
-            l10n_tags = html_parser.get_tags()
+            ref_tags = get_html_tags(reference)
+            l10n_tags = get_html_tags(translation)
 
             if l10n_tags != ref_tags:
                 # Ignore if only the order was changed

@@ -13,7 +13,7 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from custom_html_parser import MyHTMLParser
+from custom_html_parser import get_html_tags
 from fluent.syntax import ast, parse, visitor
 from fluent.syntax.serializer import FluentSerializer
 from moz.l10n.paths import L10nConfigPaths
@@ -378,7 +378,6 @@ class QualityCheck:
                 placeable_ids[string_id] = sorted(matches)
 
         # Store strings with HTML elements
-        html_parser = MyHTMLParser()
         html_strings = {}
         for string_id, text in reference_data.items():
             if not isinstance(text, str):
@@ -394,10 +393,7 @@ class QualityCheck:
             # will consider curly parentheses and other elements as starting
             # tags.
             cleaned_text = placeable_pattern.sub("", text)
-            html_parser.clear()
-            html_parser.feed(cleaned_text)
-
-            tags = html_parser.get_tags()
+            tags = get_html_tags(cleaned_text)
             if tags:
                 html_strings[string_id] = tags
 
@@ -538,7 +534,6 @@ class QualityCheck:
                             self.error_messages[locale].append(error_msg)
 
             # Check all localized strings for HTML elements mismatch or extra tags
-            html_parser = MyHTMLParser()
             for string_id, translation in locale_translations.items():
                 # Ignore excluded strings
                 if ignoreString(locale, "HTML", string_id):
@@ -552,10 +547,8 @@ class QualityCheck:
                     serializer = FluentSerializer()
                     translation = serializer.serialize(flattener.visit(resource))
 
-                html_parser.clear()
                 cleaned_translation = placeable_pattern.sub("", translation)
-                html_parser.feed(cleaned_translation)
-                tags = html_parser.get_tags()
+                tags = get_html_tags(cleaned_translation)
 
                 ref_tags = html_strings.get(string_id, [])
                 if tags != ref_tags:
