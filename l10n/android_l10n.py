@@ -12,32 +12,8 @@ import sys
 
 from collections import Counter, defaultdict
 
-from custom_html_parser import MyHTMLParser
+from functions import get_html_tags, getAllExceptions, parse_file
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
-
-
-try:
-    from compare_locales import parser
-except ImportError as e:
-    print("FATAL: make sure that dependencies are installed")
-    print(e)
-    sys.exit(1)
-
-
-def getAllExceptions(data, result_set=None):
-    if result_set is None:
-        result_set = set()
-
-    if isinstance(data, dict):
-        for value in data.values():
-            getAllExceptions(value, result_set)
-    elif isinstance(data, list):
-        # If it's all short strings, it's likely a list of locales
-        cleaned_data = [i for i in data if len(i) > 6]
-        if cleaned_data:
-            result_set.update(cleaned_data)
-
-    return result_set
 
 
 class StringExtraction:
@@ -93,34 +69,28 @@ class StringExtraction:
                     continue
 
                 key_path = os.path.relpath(ref_file, basedir)
-                try:
-                    p = parser.getParser(l10n_file)
-                except UserWarning:
-                    continue
+
                 # Store content of reference file if it wasn't read yet.
                 if key_path not in reference_cache:
-                    p.readFile(ref_file)
-                    reference_cache[key_path] = set(p.parse().keys())
-                    self.translations[self.reference_locale].update(
-                        (
-                            f"{key_path}:{entity.key}",
-                            entity.raw_val,
+                    try:
+                        parse_file(
+                            ref_file,
+                            self.translations[self.reference_locale],
+                            f"{key_path}",
                         )
-                        for entity in p.parse()
-                    )
+                    except Exception as e:
+                        print(f"Error parsing resource: {ref_file}")
+                        print(e)
 
-                p.readFile(l10n_file)
-                # As of https://github.com/mozilla/pontoon/pull/3611, Pontoon
-                # uses moz.l10n for resource parsing, resulting in quotes being
-                # escaped. compare-locales doesn't escape them, so need to
-                # manually remove escapes.
-                self.translations[locale].update(
-                    (
-                        f"{key_path}:{entity.key}",
-                        entity.raw_val.replace("\\'", "'").replace('\\"', '"'),
+                try:
+                    parse_file(
+                        l10n_file,
+                        self.translations[locale],
+                        f"{key_path}",
                     )
-                    for entity in p.parse()
-                )
+                except Exception as e:
+                    print(f"Error parsing resource: {l10n_file}")
+                    print(e)
             print(f"  {len(self.translations[locale])} strings extracted")
 
     def extractStrings(self):
@@ -190,7 +160,8 @@ class QualityCheck:
                 print(f"Obsolete exception: {id}")
 
         placeable_ids = {}
-        for string_id, text in reference_data.items():
+        for string_id, string_data in reference_data.items():
+            text = string_data["value"]
             if not isinstance(text, str):
                 continue
 
@@ -211,16 +182,13 @@ class QualityCheck:
                 }
 
         # Store strings with HTML elements
-        html_parser = MyHTMLParser()
         html_strings = {}
-        for string_id, text in reference_data.items():
+        for string_id, string_data in reference_data.items():
+            text = string_data["value"]
             if not isinstance(text, str):
                 continue
 
-            html_parser.clear()
-            html_parser.feed(text)
-
-            tags = html_parser.get_tags()
+            tags = get_html_tags(text)
             if tags:
                 html_strings[string_id] = tags
 
@@ -230,7 +198,8 @@ class QualityCheck:
                 continue
 
             # General checks on localized strings
-            for string_id, translation in locale_translations.items():
+            for string_id, string_data in locale_translations.items():
+                translation = string_data["value"]
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "general", string_id):
                     continue
@@ -288,8 +257,9 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
             # Check all localized strings for HTML elements mismatch or extra tags
-            html_parser = MyHTMLParser()
-            for string_id, translation in locale_translations.items():
+            for string_id, string_data in locale_translations.items():
+                translation = string_data["value"]
+                reference = self.translations[self.reference_locale][string_id]["value"]
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "HTML", string_id):
                     continue
@@ -303,9 +273,7 @@ class QualityCheck:
                 if not isinstance(translation, str):
                     continue
 
-                html_parser.clear()
-                html_parser.feed(translation)
-                tags = html_parser.get_tags()
+                tags = get_html_tags(translation)
 
                 ref_tags = html_strings.get(string_id, [])
                 if tags != ref_tags:
@@ -331,7 +299,7 @@ class QualityCheck:
                         f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
                         f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -344,7 +312,8 @@ class QualityCheck:
                 if ignoreString(exceptions, locale, "placeables", string_id):
                     continue
 
-                translation = locale_translations[string_id]
+                translation = locale_translations[string_id]["value"]
+                reference = self.translations[self.reference_locale][string_id]["value"]
                 if not isinstance(translation, str):
                     continue
                 matches_iterator = placeable_pattern.finditer(translation)
@@ -368,10 +337,16 @@ class QualityCheck:
                         # array.
                         if matches["unordered"] == groups["unordered"]:
                             continue
+
+                        # If it's plural, treats them as sets (remove duplicates)
+                        if locale_translations[string_id].get("android_plural"):
+                            if set(matches["unordered"]) == set(groups["unordered"]):
+                                continue
+
                         error_msg = (
                             f"Placeable mismatch in string ({string_id})\n"
                             f"  Translation: {translation}\n"
-                            f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                            f"  Reference: {reference}"
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
@@ -379,7 +354,7 @@ class QualityCheck:
                     error_msg = (
                         f"Placeable missing in string ({string_id})\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference}"
                     )
                     self.error_messages[locale].append(error_msg)
 
