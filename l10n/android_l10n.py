@@ -160,7 +160,8 @@ class QualityCheck:
                 print(f"Obsolete exception: {id}")
 
         placeable_ids = {}
-        for string_id, text in reference_data.items():
+        for string_id, string_data in reference_data.items():
+            text = string_data["value"]
             if not isinstance(text, str):
                 continue
 
@@ -182,7 +183,8 @@ class QualityCheck:
 
         # Store strings with HTML elements
         html_strings = {}
-        for string_id, text in reference_data.items():
+        for string_id, string_data in reference_data.items():
+            text = string_data["value"]
             if not isinstance(text, str):
                 continue
 
@@ -196,7 +198,8 @@ class QualityCheck:
                 continue
 
             # General checks on localized strings
-            for string_id, translation in locale_translations.items():
+            for string_id, string_data in locale_translations.items():
+                translation = string_data["value"]
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "general", string_id):
                     continue
@@ -254,7 +257,9 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
             # Check all localized strings for HTML elements mismatch or extra tags
-            for string_id, translation in locale_translations.items():
+            for string_id, string_data in locale_translations.items():
+                translation = string_data["value"]
+                reference = self.translations[self.reference_locale][string_id]["value"]
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "HTML", string_id):
                     continue
@@ -294,7 +299,7 @@ class QualityCheck:
                         f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
                         f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -307,7 +312,8 @@ class QualityCheck:
                 if ignoreString(exceptions, locale, "placeables", string_id):
                     continue
 
-                translation = locale_translations[string_id]
+                translation = locale_translations[string_id]["value"]
+                reference = self.translations[self.reference_locale][string_id]["value"]
                 if not isinstance(translation, str):
                     continue
                 matches_iterator = placeable_pattern.finditer(translation)
@@ -331,10 +337,16 @@ class QualityCheck:
                         # array.
                         if matches["unordered"] == groups["unordered"]:
                             continue
+
+                        # If it's plural, treats them as sets (remove duplicates)
+                        if locale_translations[string_id].get("android_plural"):
+                            if set(matches["unordered"]) == set(groups["unordered"]):
+                                continue
+
                         error_msg = (
                             f"Placeable mismatch in string ({string_id})\n"
                             f"  Translation: {translation}\n"
-                            f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                            f"  Reference: {reference}"
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
@@ -342,7 +354,7 @@ class QualityCheck:
                     error_msg = (
                         f"Placeable missing in string ({string_id})\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {self.translations[self.reference_locale][string_id]}"
+                        f"  Reference: {reference}"
                     )
                     self.error_messages[locale].append(error_msg)
 

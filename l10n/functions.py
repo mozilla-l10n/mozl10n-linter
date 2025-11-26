@@ -74,21 +74,26 @@ def parse_file(
                         # Store the value of an entry with attributes only
                         # if the value is not empty.
                         if not entry.value.is_empty():
-                            storage[string_id] = get_entry_value(entry.value)
+                            storage[string_id] = {"value": get_entry_value(entry.value)}
                         for attribute, attr_value in entry.properties.items():
                             attr_id = f"{string_id}.{attribute}"
-                            storage[attr_id] = get_entry_value(attr_value)
+                            storage[attr_id] = {"value": get_entry_value(attr_value)}
                     else:
                         if resource.format == Format.android:
                             # If it's a plural string in Android, each variant
                             # is stored within the message, following a format
                             # similar to Fluent.
                             if hasattr(entry.value, "variants"):
-                                storage[string_id] = serialize_select_variants(entry)
+                                storage[string_id] = {
+                                    "value": serialize_select_variants(entry),
+                                    "android_plural": True,
+                                }
                             else:
-                                storage[string_id] = get_entry_value(entry.value)
+                                storage[string_id] = {
+                                    "value": get_entry_value(entry.value)
+                                }
                         else:
-                            storage[string_id] = get_entry_value(entry.value)
+                            storage[string_id] = {"value": get_entry_value(entry.value)}
     except Exception as e:
         print(f"Error parsing file: {filename}")
         print(e)
