@@ -15,16 +15,8 @@ from pathlib import Path
 
 from fluent.syntax import ast, parse, visitor
 from fluent.syntax.serializer import FluentSerializer
-from functions import get_html_tags, getAllExceptions
+from functions import get_html_tags, getAllExceptions, parse_file
 from moz.l10n.paths import L10nConfigPaths
-
-
-try:
-    from compare_locales import parser
-except ImportError as e:
-    print("FATAL: make sure that dependencies are installed")
-    print(e)
-    sys.exit(1)
 
 
 class StringExtraction:
@@ -41,44 +33,7 @@ class StringExtraction:
 
     def storeFluentStrings(self, locale, filename, relative_filename):
         try:
-            file_extension = os.path.splitext(filename)[1]
-            file_parser = parser.getParser(file_extension)
-            file_parser.readFile(filename)
-            entities = file_parser.parse()
-            for entity in entities:
-                # Ignore Junk
-                if isinstance(entity, parser.Junk):
-                    continue
-                string_id = f"{relative_filename}:{entity}"
-
-                # Store the string ID
-                self.msg_ids[locale].append(string_id)
-
-                # Store value if defined
-                if entity.raw_val is not None:
-                    self.translations[locale][string_id] = entity.raw_val
-
-                # Store attributes
-                for attribute in entity.attributes:
-                    attr_string_id = f"{relative_filename}:{entity}.{attribute}"
-                    self.translations[locale][attr_string_id] = attribute.raw_val
-
-                    # Store attributes for checks if it's the reference
-                    # locale, if the string ID is available in the
-                    # reference locale, and if it's not a term.
-                    if (
-                        locale == self.reference_locale
-                        or string_id in self.msg_ids[self.reference_locale]
-                    ):
-                        if not isinstance(entity, parser.FluentTerm):
-                            if string_id not in self.msg_attributes[locale]:
-                                self.msg_attributes[locale][string_id] = [
-                                    str(attribute)
-                                ]
-                            else:
-                                self.msg_attributes[locale][string_id].append(
-                                    str(attribute)
-                                )
+            parse_file(filename, self.translations[locale], relative_filename)
         except Exception as e:
             print(f"Error parsing file: {filename}")
             print(e)
@@ -337,7 +292,8 @@ class QualityCheck:
 
         data_l10n_ids = {}
         placeable_ids = {}
-        for string_id, text in reference_data.items():
+        for string_id, string_data in reference_data.items():
+            text = string_data["value"]
             file_id, message_id = string_id.split(":")
 
             if not isinstance(text, str):
@@ -363,7 +319,8 @@ class QualityCheck:
 
         # Store strings with HTML elements
         html_strings = {}
-        for string_id, text in reference_data.items():
+        for string_id, string_data in reference_data.items():
+            text = string_data["value"]
             if not isinstance(text, str):
                 continue
 
@@ -443,7 +400,8 @@ class QualityCheck:
                 continue
 
             # General checks on localized strings
-            for string_id, translation in locale_translations.items():
+            for string_id, string_data in locale_translations.items():
+                translation = string_data["value"]
                 # Ignore excluded strings
                 if ignoreString(locale, "general", string_id):
                     continue
@@ -518,7 +476,8 @@ class QualityCheck:
                             self.error_messages[locale].append(error_msg)
 
             # Check all localized strings for HTML elements mismatch or extra tags
-            for string_id, translation in locale_translations.items():
+            for string_id, string_data in locale_translations.items():
+                translation = string_data["value"]
                 # Ignore excluded strings
                 if ignoreString(locale, "HTML", string_id):
                     continue
