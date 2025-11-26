@@ -13,9 +13,9 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from custom_html_parser import get_html_tags
 from fluent.syntax import ast, parse, visitor
 from fluent.syntax.serializer import FluentSerializer
+from functions import get_html_tags, getAllExceptions
 from moz.l10n.paths import L10nConfigPaths
 
 
@@ -25,22 +25,6 @@ except ImportError as e:
     print("FATAL: make sure that dependencies are installed")
     print(e)
     sys.exit(1)
-
-
-def getAllExceptions(data, result_set=None):
-    if result_set is None:
-        result_set = set()
-
-    if isinstance(data, dict):
-        for value in data.values():
-            getAllExceptions(value, result_set)
-    elif isinstance(data, list):
-        # If it's all short strings, it's likely a list of locales
-        cleaned_data = [i for i in data if len(i) > 6]
-        if cleaned_data:
-            result_set.update(cleaned_data)
-
-    return result_set
 
 
 class StringExtraction:

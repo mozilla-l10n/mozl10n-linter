@@ -5,7 +5,6 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import argparse
-import html
 import json
 import os
 import re
@@ -14,7 +13,7 @@ import sys
 from collections import defaultdict
 from glob import glob
 
-from custom_html_parser import get_html_tags
+from functions import get_html_tags
 from lxml import etree
 
 

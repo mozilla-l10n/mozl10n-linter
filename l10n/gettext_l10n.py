@@ -16,7 +16,7 @@ from pathlib import Path
 
 import polib
 
-from custom_html_parser import get_html_tags
+from functions import get_html_tags
 
 
 def ignoreString(exceptions, locale, errorcode, string_id):

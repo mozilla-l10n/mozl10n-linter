@@ -12,32 +12,8 @@ import sys
 
 from collections import Counter, defaultdict
 
-from custom_html_parser import get_html_tags
+from functions import get_html_tags, getAllExceptions, parse_file
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
-
-
-try:
-    from compare_locales import parser
-except ImportError as e:
-    print("FATAL: make sure that dependencies are installed")
-    print(e)
-    sys.exit(1)
-
-
-def getAllExceptions(data, result_set=None):
-    if result_set is None:
-        result_set = set()
-
-    if isinstance(data, dict):
-        for value in data.values():
-            getAllExceptions(value, result_set)
-    elif isinstance(data, list):
-        # If it's all short strings, it's likely a list of locales
-        cleaned_data = [i for i in data if len(i) > 6]
-        if cleaned_data:
-            result_set.update(cleaned_data)
-
-    return result_set
 
 
 class StringExtraction:
@@ -93,34 +69,28 @@ class StringExtraction:
                     continue
 
                 key_path = os.path.relpath(ref_file, basedir)
-                try:
-                    p = parser.getParser(l10n_file)
-                except UserWarning:
-                    continue
+
                 # Store content of reference file if it wasn't read yet.
                 if key_path not in reference_cache:
-                    p.readFile(ref_file)
-                    reference_cache[key_path] = set(p.parse().keys())
-                    self.translations[self.reference_locale].update(
-                        (
-                            f"{key_path}:{entity.key}",
-                            entity.raw_val,
+                    try:
+                        parse_file(
+                            ref_file,
+                            self.translations[self.reference_locale],
+                            f"{key_path}",
                         )
-                        for entity in p.parse()
-                    )
+                    except Exception as e:
+                        print(f"Error parsing resource: {ref_file}")
+                        print(e)
 
-                p.readFile(l10n_file)
-                # As of https://github.com/mozilla/pontoon/pull/3611, Pontoon
-                # uses moz.l10n for resource parsing, resulting in quotes being
-                # escaped. compare-locales doesn't escape them, so need to
-                # manually remove escapes.
-                self.translations[locale].update(
-                    (
-                        f"{key_path}:{entity.key}",
-                        entity.raw_val.replace("\\'", "'").replace('\\"', '"'),
+                try:
+                    parse_file(
+                        l10n_file,
+                        self.translations[locale],
+                        f"{key_path}",
                     )
-                    for entity in p.parse()
-                )
+                except Exception as e:
+                    print(f"Error parsing resource: {l10n_file}")
+                    print(e)
             print(f"  {len(self.translations[locale])} strings extracted")
 
     def extractStrings(self):
