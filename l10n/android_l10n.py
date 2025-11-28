@@ -210,9 +210,13 @@ class QualityCheck:
 
                 # Ignore if it's an obsolete translation not available in the
                 # reference file.
-                if string_id not in self.translations[self.reference_locale]:
+                reference = (
+                    self.translations[self.reference_locale]
+                    .get(string_id, {})
+                    .get("value", None)
+                )
+                if not reference:
                     continue
-                reference = self.translations[self.reference_locale][string_id]
 
                 # Check for pilcrow character
                 if "¶" in translation:
@@ -258,18 +262,21 @@ class QualityCheck:
 
             # Check all localized strings for HTML elements mismatch or extra tags
             for string_id, string_data in locale_translations.items():
-                translation = string_data["value"]
-                reference = self.translations[self.reference_locale][string_id]["value"]
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "HTML", string_id):
                     continue
 
                 # Ignore if it's an obsolete translation not available in the
                 # reference file.
-                if string_id not in self.translations[self.reference_locale]:
+                reference = (
+                    self.translations[self.reference_locale]
+                    .get(string_id, {})
+                    .get("value", None)
+                )
+                if not reference:
                     continue
 
-                translation = locale_translations[string_id]
+                translation = string_data["value"]
                 if not isinstance(translation, str):
                     continue
 
@@ -313,7 +320,11 @@ class QualityCheck:
                     continue
 
                 translation = locale_translations[string_id]["value"]
-                reference = self.translations[self.reference_locale][string_id]["value"]
+                reference = (
+                    self.translations[self.reference_locale]
+                    .get(string_id, {})
+                    .get("value", None)
+                )
                 if not isinstance(translation, str):
                     continue
                 matches_iterator = placeable_pattern.finditer(translation)
