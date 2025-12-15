@@ -517,7 +517,7 @@ class QualityCheck:
                         f"  Translation tags ({len(tags)}): {', '.join(tags)}\n"
                         f"  Reference tags ({len(ref_tags)}): {', '.join(ref_tags)}\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {reference_data[string_id]}"
+                        f"  Reference: {reference_data[string_id]['value']}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -546,7 +546,7 @@ class QualityCheck:
                         error_msg = (
                             f"data-l10n-name mismatch in string ({string_id})\n"
                             f"  Translation: {translation}\n"
-                            f"  Reference: {reference_data[string_id]}"
+                            f"  Reference: {reference_data[string_id]['value']}"
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
@@ -554,7 +554,7 @@ class QualityCheck:
                     error_msg = (
                         f"data-l10n-name missing in string ({string_id})\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {reference_data[string_id]}"
+                        f"  Reference: {reference_data[string_id]['value']}"
                     )
                     self.error_messages[locale].append(error_msg)
 
@@ -599,7 +599,7 @@ class QualityCheck:
                             f"Placeable mismatch in string ({string_id})\n"
                             f"{extra_msg}"
                             f"  Translation: {translation}\n"
-                            f"  Reference: {reference_data[string_id]}"
+                            f"  Reference: {reference_data[string_id]['value']}"
                         )
                         self.error_messages[locale].append(error_msg)
                 else:
@@ -608,7 +608,7 @@ class QualityCheck:
                         f"Placeable missing in string ({string_id})\n"
                         "  Missing: " + ", ".join(groups) + "\n"
                         f"  Translation: {translation}\n"
-                        f"  Reference: {reference_data[string_id]}"
+                        f"  Reference: {reference_data[string_id]['value']}"
                     )
                     self.error_messages[locale].append(error_msg)
 
