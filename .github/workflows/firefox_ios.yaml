@@ -47,7 +47,7 @@ jobs:
           --exceptions scripts_repo/l10n/exceptions/firefox_ios.json
           --no-failure
       - name: Upload artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: errors-list
           path: errors.txt
