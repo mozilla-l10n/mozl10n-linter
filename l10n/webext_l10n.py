@@ -138,7 +138,7 @@ def main():
             l10n_message = locale_messages[message_id]["text"]
             l10n_placeholders = placeholder_pattern.findall(l10n_message)
             # Make placeholders lowercase, and remove duplicates
-            l10n_placeholders = list(set(p.lower() for p in l10n_placeholders))
+            l10n_placeholders = list({p.lower() for p in l10n_placeholders})
 
             if sorted(placeholders) != sorted(l10n_placeholders):
                 errors[normalized_locale].append(

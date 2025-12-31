@@ -51,7 +51,7 @@ def parse_file(
         msg: SelectMessage = entry.value
         lines: list[str] = []
         for key_tuple, pattern in msg.variants.items():
-            key: Union[str, CatchallKey] = key_tuple[0] if key_tuple else "other"
+            key: str | CatchallKey = key_tuple[0] if key_tuple else "other"
             default = "*" if isinstance(key, CatchallKey) else ""
             label: str | None = key.value if isinstance(key, CatchallKey) else str(key)
             lines.append(

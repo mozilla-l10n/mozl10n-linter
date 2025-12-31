@@ -33,7 +33,7 @@ def main():
 
     for fn in file_paths:
         filename = os.path.basename(fn)
-        with open(fn, "r") as f:
+        with open(fn) as f:
             json_content = json.load(f)
             for id, message in json_content.items():
                 text = message["message"]
@@ -49,7 +49,7 @@ def main():
 
                 # Check placeholders
                 placeholders = placeholder_pattern.findall(text)
-                placeholders = list(set([p.lower() for p in placeholders]))
+                placeholders = list({p.lower() for p in placeholders})
                 placeholders.sort()
 
                 if placeholders:

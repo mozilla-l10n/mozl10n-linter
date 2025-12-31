@@ -27,7 +27,7 @@ def main():
     file_list = glob.glob(os.path.join(root_path, "**/*.json"), recursive=True)
     for filename in file_list:
         print(filename)
-        with open(filename, "r") as f:
+        with open(filename) as f:
             json_data = json.load(f)
 
         reorder_node(json_data)
