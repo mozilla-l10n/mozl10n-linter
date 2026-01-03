@@ -22,9 +22,9 @@ def reorder_node(node):
 
 def main():
     root_path = Path(__file__).resolve().parent.parent
-
-    for file_path in root_path.rglob("*.json"):
-        with open(file_path, "r", encoding="utf-8") as f:
+    json_path = root_path / "l10n"
+    for file_path in json_path.rglob("*.json"):
+        with open(file_path, encoding="utf-8") as f:
             json_data = json.load(f)
 
         reorder_node(json_data)
