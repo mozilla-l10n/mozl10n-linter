@@ -48,10 +48,10 @@ def main():
 
     workflows = {
         "firefox_android": ["dlebedel", "flodolo"],
-        "firefox_ios": ["dlebedel"],
+        "firefox_ios": ["dlebedel", "flodolo"],
         "firefoxcom": ["pmo"],
         "focus_android": ["dlebedel", "flodolo"],
-        "focus_ios": ["dlebedel"],
+        "focus_ios": ["dlebedel", "flodolo"],
         "fxa_cms": ["bolsson"],
         "fxa_gettext": ["bolsson"],
         "fxa": ["bolsson"],
