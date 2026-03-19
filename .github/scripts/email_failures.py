@@ -47,11 +47,11 @@ def main():
     args = parser.parse_args()
 
     workflows = {
-        "firefox_android": ["dlebedel", "flodolo"],
-        "firefox_ios": ["dlebedel", "flodolo"],
+        "firefox_android": ["flodolo"],
+        "firefox_ios": ["flodolo"],
         "firefoxcom": ["pmo"],
-        "focus_android": ["dlebedel", "flodolo"],
-        "focus_ios": ["dlebedel", "flodolo"],
+        "focus_android": ["flodolo"],
+        "focus_ios": ["flodolo"],
         "fxa_cms": ["bolsson"],
         "fxa_gettext": ["bolsson"],
         "fxa": ["bolsson"],
