@@ -3,9 +3,29 @@ on:
   schedule:
     - cron: '0 4 * * 1-5'
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Firefox Android"
+      - "Firefox iOS"
+      - "FirefoxCom"
+      - "Focus Android"
+      - "Focus iOS"
+      - "FxA"
+      - "FxA CMS"
+      - "FxA Gettext"
+      - "MAC"
+      - "Monitor"
+      - "MozOrg"
+      - "Profiler"
+      - "Relay"
+      - "Relay Add-on"
+      - "VPN Client"
+      - "VPN Extension"
+    types: [completed]
 jobs:
   email:
     runs-on: ubuntu-latest
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'failure'
     steps:
       - name: Clone repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -24,3 +44,4 @@ jobs:
           --api ${{ secrets.API_GITHUB_TOKEN }}
           --user ${{ secrets.SMTP_USER }}
           --password ${{ secrets.SMTP_PASSWORD }}
+          ${{ github.event_name == 'workflow_run' && format('--workflow {0} --new-only', github.event.workflow_run.path) || '' }}

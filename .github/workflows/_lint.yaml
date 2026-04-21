@@ -1,0 +1,64 @@
+name: Lint (reusable)
+on:
+  workflow_call:
+    inputs:
+      repository:
+        type: string
+        required: true
+      repository_ref:
+        type: string
+        required: false
+        default: ''
+      script:
+        type: string
+        required: true
+      script_args:
+        type: string
+        required: true
+      script_args_2:
+        type: string
+        required: false
+        default: ''
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          path: scripts_repo
+      - name: Clone target repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.repository_ref }}
+          path: target_repo
+      - name: Set up Python 3
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.11'
+      - name: Install Python dependencies
+        run: pip install -r scripts_repo/.github/requirements.txt
+      - name: Lint localization
+        run: python scripts_repo/l10n/${{ inputs.script }} ${{ inputs.script_args }}
+      - name: Lint localization (2)
+        if: inputs.script_args_2 != ''
+        run: python scripts_repo/l10n/${{ inputs.script }} ${{ inputs.script_args_2 }}
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: errors-list
+          path: errors*.txt
+          if-no-files-found: ignore
+      - name: Fail on errors
+        run: |
+          if compgen -G "errors*.txt" > /dev/null; then
+            echo "### There are errors" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat errors*.txt >> $GITHUB_STEP_SUMMARY
+            echo '' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
