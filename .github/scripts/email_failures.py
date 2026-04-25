@@ -62,7 +62,7 @@ def main():
     all_workflows = {
         "firefox_android": ["flodolo"],
         "firefox_ios": ["flodolo"],
-        "firefoxcom": ["pmo"],
+        "firefoxcom": ["pmo", "flodolo"],
         "focus_android": ["flodolo"],
         "focus_ios": ["flodolo"],
         "fxa_cms": ["bolsson"],
@@ -70,10 +70,10 @@ def main():
         "fxa": ["bolsson"],
         "mac": ["flodolo"],
         "monitor": ["flodolo"],
-        "mozorg": ["pmo"],
+        "mozorg": ["pmo", "flodolo"],
         "profiler": ["flodolo"],
-        "relay_addon": ["pmo"],
-        "relay": ["pmo"],
+        "relay_addon": ["pmo", "flodolo"],
+        "relay": ["pmo", "flodolo"],
         "vpn_extension": ["flodolo"],
         "vpn": ["flodolo"],
     }

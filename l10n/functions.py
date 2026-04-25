@@ -4,7 +4,6 @@
 
 from html import unescape
 from html.parser import HTMLParser
-from typing import Union
 
 from moz.l10n.formats import Format
 from moz.l10n.message import serialize_message
