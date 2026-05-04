@@ -126,6 +126,7 @@ def main():
                     )
                     if string_id in locale_exceptions + string_exceptions:
                         continue
+
                     ref_matches.sort()
                     l10n_matches = placeables_pattern.findall(l10n_string)
                     l10n_matches.sort()

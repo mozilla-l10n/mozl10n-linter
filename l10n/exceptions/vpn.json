@@ -18,6 +18,9 @@
   },
   "placeables": {
     "locales": {},
-    "strings": []
+    "strings": [
+      "mozillavpn.xliff:vpn.iosAppIntentsActivate.phrases",
+      "mozillavpn.xliff:vpn.iosAppIntentsDeactivate.phrases"
+    ]
   }
 }
