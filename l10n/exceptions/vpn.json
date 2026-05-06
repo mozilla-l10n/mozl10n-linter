@@ -20,7 +20,8 @@
     "locales": {},
     "strings": [
       "mozillavpn.xliff:vpn.iosAppIntentsActivate.phrases",
-      "mozillavpn.xliff:vpn.iosAppIntentsDeactivate.phrases"
+      "mozillavpn.xliff:vpn.iosAppIntentsDeactivate.phrases",
+      "mozillavpn.xliff:vpn.iosAppIntentsQueryStatus.phrases"
     ]
   }
 }
