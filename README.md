@@ -47,6 +47,8 @@ It's possible to define [exceptions](https://github.com/mozilla-l10n/mozl10n-lin
 ## Gettext
 | Project | Linter Status |
 |---------|---------------|
+|[Addons Front-end](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/addons_frontend.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/addons_frontend.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/addons_frontend.yaml)
+|[Addons Server](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/addons_server.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/addons_server.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/addons_server.yaml)
 |[Mozilla accounts](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa_gettext.yaml)|[![Linter status](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa_gettext.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/fxa_gettext.yaml)
 
 ## Email notifications

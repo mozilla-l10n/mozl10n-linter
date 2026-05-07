@@ -1,0 +1,35 @@
+name: Addons Server
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/addons_server.yaml'
+      - '.github/workflows/_lint.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/gettext_l10n.py'
+      - 'l10n/exceptions/addons_server.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/addons_server.yaml'
+      - '.github/workflows/_lint.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/gettext_l10n.py'
+      - 'l10n/exceptions/addons_server.json'
+  schedule:
+    - cron: '15 1 * * *'
+    - cron: '15 9 * * *'
+    - cron: '15 17 * * *'
+  workflow_dispatch:
+jobs:
+  lint:
+    uses: ./.github/workflows/_lint.yaml
+    with:
+      repository: mozilla/addons-server
+      target_sparse: locale
+      script: gettext_l10n.py
+      script_args: >-
+        --l10n target_repo/locale/
+        --dest errors.txt
+        --exceptions scripts_repo/l10n/exceptions/addons_server.json
+        --no-failure

@@ -1,0 +1,13 @@
+{
+  "HTML": {
+    "locales": {}
+  },
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ]
+  },
+  "placeables": {
+    "locales": {}
+  }
+}
