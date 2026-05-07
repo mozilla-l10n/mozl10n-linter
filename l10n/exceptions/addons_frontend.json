@@ -1,6 +1,10 @@
 {
   "HTML": {
-    "locales": {}
+    "locales": {
+      "sq": [
+        "7ea1a8a25b1ef37788949ef2f7ce8652f096592f4718d80fdaa40479e19f9264"
+      ]
+    }
   },
   "ellipsis": {
     "excluded_locales": [
@@ -8,6 +12,13 @@
     ]
   },
   "placeables": {
-    "locales": {}
+    "locales": {
+      "pl": [
+        "6d4d4bd8c37d14eada8b4e9e60c66171b47b3ed6c81249f4a4a02bfea4144fb0",
+        "827c2cb5fa253ee3602dc8d0221a5638886d3f5ce875f20c8f1e5f178b45f2e7",
+        "a50b7c17e81f05bdcc8bf6513d473603986172b0f540537a1243f847c016ff0f",
+        "a645bf81bc8f9f6e3d8bdff593144629fb2642a978836ee9e12b56782db64811"
+      ]
+    }
   }
 }
