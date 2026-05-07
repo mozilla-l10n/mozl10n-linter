@@ -82,7 +82,7 @@ def main():
             sys.exit(e)
 
     errors = defaultdict(list)
-    placeable_pattern = re.compile(r"%\([a-zA-Z]+\)s")
+    placeable_pattern = re.compile(r"%\([a-zA-Z]+\)s|\{[a-zA-Z][a-zA-Z0-9_]*\}")
 
     # Get a list of locales (subfolders in <locales_path>, exclude hidden folders)
     locales = [
@@ -130,6 +130,8 @@ def main():
             if sorted(ref_placeholders) != sorted(l10n_placeholders):
                 errors[normalized_locale].append(
                     f"Placeholder mismatch in {message_id}\n"
+                    f"  Translation placeholders ({len(l10n_placeholders)}): {', '.join(l10n_placeholders)}\n"
+                    f"  Reference placeholders ({len(ref_placeholders)}): {', '.join(ref_placeholders)}\n"
                     f"  Translation: {translation}\n"
                     f"  Reference: {reference}"
                 )
