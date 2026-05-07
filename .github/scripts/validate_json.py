@@ -28,6 +28,8 @@ def main():
 
     schemas_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "schemas"))
     schemas = {
+        "addons_frontend.json": "gettext",
+        "addons_server.json": "gettext",
         "firefox_android.json": "android",
         "firefox_ios.json": "xliff",
         "focus_android.json": "android",

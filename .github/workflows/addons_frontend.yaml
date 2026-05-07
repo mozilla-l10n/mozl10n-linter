@@ -1,0 +1,35 @@
+name: Addons Front-end
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/addons_frontend.yaml'
+      - '.github/workflows/_lint.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/gettext_l10n.py'
+      - 'l10n/exceptions/addons_frontend.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/addons_frontend.yaml'
+      - '.github/workflows/_lint.yaml'
+      - '.github/requirements.txt'
+      - 'l10n/gettext_l10n.py'
+      - 'l10n/exceptions/addons_frontend.json'
+  schedule:
+    - cron: '20 1 * * *'
+    - cron: '20 9 * * *'
+    - cron: '20 17 * * *'
+  workflow_dispatch:
+jobs:
+  lint:
+    uses: ./.github/workflows/_lint.yaml
+    with:
+      repository: mozilla/addons-frontend
+      target_sparse: locale
+      script: gettext_l10n.py
+      script_args: >-
+        --l10n target_repo/locale/
+        --dest errors.txt
+        --exceptions scripts_repo/l10n/exceptions/addons_frontend.json
+        --no-failure

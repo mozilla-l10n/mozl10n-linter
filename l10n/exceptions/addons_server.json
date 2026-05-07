@@ -1,0 +1,32 @@
+{
+  "HTML": {
+    "locales": {
+      "cs": [
+        "25ea83f727442b2d79f9ebb1f0a8a30022c2d079661384320caab98f7f4ed445",
+        "25ea83f727442b2d79f9ebb1f0a8a30022c2d079661384320caab98f7f4ed445"
+      ],
+      "hr": [
+        "10462156a90b669144c0e7529c87f6f25877e65f631940abbf6c71346c9c5412"
+      ],
+      "sq": [
+        "021da81e2f11d9ff4d8e600d18a419fe4688d2c611fc32696fd58dfcba955327",
+        "1fe60e041a4392d6c52db32f9fa518fffdf5e0ffc059d986c1771c06b9f47e30",
+        "64987cb92fdb33eb9aad4fef8108960119d06b831de244a1ed9e6c859d127f31",
+        "ebfc1f2bd1d9b8958d39274b81550426732578b190620ea583526427c5d4c336",
+        "fd7e9d995d7bdfbdfe4a698ffe460ad9bc3e7c58360de860be5483f2ce364883"
+      ]
+    }
+  },
+  "ellipsis": {
+    "excluded_locales": [
+      "ja"
+    ]
+  },
+  "placeables": {
+    "locales": {
+      "cs": [
+        "25ea83f727442b2d79f9ebb1f0a8a30022c2d079661384320caab98f7f4ed445"
+      ]
+    }
+  }
+}

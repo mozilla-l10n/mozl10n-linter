@@ -60,6 +60,8 @@ def main():
     args = parser.parse_args()
 
     all_workflows = {
+        "addons_frontend": ["pmo", "flodolo"],
+        "addons_server": ["pmo", "flodolo"],
         "firefox_android": ["flodolo"],
         "firefox_ios": ["flodolo"],
         "firefoxcom": ["pmo", "flodolo"],
