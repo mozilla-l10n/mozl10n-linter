@@ -2,7 +2,6 @@
   "HTML": {
     "locales": {
       "cs": [
-        "25ea83f727442b2d79f9ebb1f0a8a30022c2d079661384320caab98f7f4ed445",
         "25ea83f727442b2d79f9ebb1f0a8a30022c2d079661384320caab98f7f4ed445"
       ],
       "hr": [
@@ -26,6 +25,9 @@
     "locales": {
       "cs": [
         "25ea83f727442b2d79f9ebb1f0a8a30022c2d079661384320caab98f7f4ed445"
+      ],
+      "zh-CN": [
+        "1d06f203af0b9bf8a0cf530b416c7d940e10f6a1ea7830de605347aa3f36d4ce"
       ]
     }
   }

@@ -82,7 +82,7 @@ def main():
             sys.exit(e)
 
     errors = defaultdict(list)
-    placeable_pattern = re.compile(r"%\([a-zA-Z]+\)s|\{[a-zA-Z][a-zA-Z0-9_]*\}")
+    placeable_pattern = re.compile(r"%\(\w+\)s|\{\w+\}")
 
     # Get a list of locales (subfolders in <locales_path>, exclude hidden folders)
     locales = [
