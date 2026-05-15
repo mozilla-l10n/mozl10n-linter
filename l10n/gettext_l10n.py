@@ -108,20 +108,50 @@ def main():
 
                 locale_messages[msgid] = {
                     "reference": entry.msgid,
+                    "reference_plural": entry.msgid_plural,
                     "translation": entry.msgstr,
+                    "translations_plural": entry.msgstr_plural,
                 }
 
         # Check for missing placeables
         for message_id, message_data in locale_messages.items():
             reference = message_data["reference"]
+            reference_plural = message_data["reference_plural"]
             translation = message_data["translation"]
-
-            # Skip if message isn't translated
-            if translation == "":
-                continue
+            translations_plural = message_data["translations_plural"]
 
             # Skip if it's a known exception
             if ignoreString(exceptions, normalized_locale, "placeables", message_id):
+                continue
+
+            if reference_plural:
+                # Plural entry: only flag a translated plural form when it
+                # contains a placeholder that exists in neither English form.
+                # Missing placeholders are tolerated because a locale's
+                # plural form may legitimately drop a variable that English
+                # uses only in its plural (or vice versa).
+                ref_set = set(placeable_pattern.findall(reference)) | set(
+                    placeable_pattern.findall(reference_plural)
+                )
+                for idx in sorted(translations_plural.keys()):
+                    plural_translation = translations_plural[idx]
+                    if not plural_translation:
+                        continue
+                    l10n_set = set(placeable_pattern.findall(plural_translation))
+                    extras = l10n_set - ref_set
+                    if extras:
+                        errors[normalized_locale].append(
+                            f"Unknown placeholder(s) in {message_id} (plural form {idx})\n"
+                            f"  Extra placeholders ({len(extras)}): {', '.join(sorted(extras))}\n"
+                            f"  Reference placeholders ({len(ref_set)}): {', '.join(sorted(ref_set))}\n"
+                            f"  Translation: {plural_translation}\n"
+                            f"  Reference (singular): {reference}\n"
+                            f"  Reference (plural): {reference_plural}"
+                        )
+                continue
+
+            # Skip if message isn't translated
+            if translation == "":
                 continue
 
             ref_placeholders = placeable_pattern.findall(reference)
