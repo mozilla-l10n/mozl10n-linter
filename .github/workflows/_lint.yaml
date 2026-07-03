@@ -73,7 +73,7 @@ jobs:
       - name: Look up cache
         id: lookup
         if: steps.compute.outputs.cache_key != ''
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: ${{ steps.compute.outputs.cache_key }}
           path: .lint-marker
@@ -104,7 +104,7 @@ jobs:
           path: target_repo
           sparse-checkout: ${{ inputs.target_sparse }}
       - name: Set up Python 3
-        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: '3.11'
       - name: Install Python dependencies
@@ -127,7 +127,7 @@ jobs:
           fi
       - name: Save cache marker
         if: steps.marker.outputs.save == 'true'
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           key: ${{ needs.preflight.outputs.cache_key }}
           path: .lint-marker
