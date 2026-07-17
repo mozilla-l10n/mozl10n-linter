@@ -406,7 +406,6 @@ class QualityCheck:
                 if ignoreString(locale, "general", string_id):
                     continue
 
-                translation = locale_translations[string_id]
                 if not isinstance(translation, str):
                     continue
 
@@ -418,7 +417,7 @@ class QualityCheck:
                 # Check for empty translation, or translations with just line
                 # breaks
                 if "".join(translation.splitlines()) == "":
-                    reference_string = reference_data.get(string_id, "")
+                    reference_string = reference_data[string_id]["value"]
                     error_msg = (
                         f"{string_id} is empty\n"
                         f"  Translation: {translation}\n"
@@ -460,7 +459,7 @@ class QualityCheck:
                     serializer = FluentSerializer()
                     message_id = string_id.split(":")[1]
                     l10n_select.visit(parse(f"{message_id} = {translation}"))
-                    reference_string = reference_data.get(string_id, "")
+                    reference_string = reference_data[string_id]["value"]
                     ref_select.visit(parse(f"{message_id} = {reference_string}"))
 
                     for select_var in l10n_select.select_vars:
@@ -530,7 +529,7 @@ class QualityCheck:
                 if ignoreString(locale, "data-l10n-names", string_id):
                     continue
 
-                translation = locale_translations[string_id]
+                translation = locale_translations[string_id]["value"]
                 if not isinstance(translation, str):
                     continue
                 matches_iterator = datal10n_pattern.finditer(translation)
@@ -567,7 +566,7 @@ class QualityCheck:
                 if ignoreString(locale, "placeables", string_id):
                     continue
 
-                translation = locale_translations[string_id]
+                translation = locale_translations[string_id]["value"]
                 if not isinstance(translation, str):
                     continue
                 matches_iterator = placeable_pattern.finditer(translation)
