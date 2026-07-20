@@ -204,7 +204,6 @@ class QualityCheck:
                 if ignoreString(exceptions, locale, "general", string_id):
                     continue
 
-                translation = locale_translations[string_id]
                 if not isinstance(translation, str):
                     continue
 
