@@ -144,7 +144,42 @@ class QualityCheck:
 
             return False
 
-        placeable_pattern = re.compile(r"((%)(?:\d+\$){0,1},?(?:\.\d+)?([dfs]))")
+        # Java formatter syntax: %[index$][flags][width][.precision]conversion,
+        # e.g. `%s`, `%1$s`, `%,d`, `%.2f`, `%03d`. The `-` and `0` flags
+        # require a width (`%0d` and `%-d` throw MissingFormatWidthException),
+        # so they only appear in the first alternative. The space flag is left
+        # out on purpose: it would turn any text with a percent sign followed
+        # by a word (`100% done`) into a placeable.
+        placeable_pattern = re.compile(
+            r"((%)(\d+\$)?(?:[-#+0,(]*[1-9][0-9]*|[#+,(]*)(?:\.[0-9]+)?([dfs]))"
+        )
+        # Keep malformed-candidate detection specific to Android. The generic
+        # printf marker also treats width-plus-letter sequences as format-like,
+        # which can mistake percent-encoded text such as `%20World` for a
+        # malformed placeable. Here, an otherwise ambiguous candidate is only
+        # considered malformed when it ends in one of Android's supported
+        # conversions. `$` and `@` remain unambiguous syntax markers.
+        android_candidate_pattern = re.compile(
+            r"%(?:\d+\$)?[-#+0,(]*[0-9]*(?:\.[0-9]+)?"
+            r"(?:hh|h|ll|l|q|z|t|j)?[a-zA-Z@]?[$@]*"
+        )
+        android_marker_pattern = re.compile(r"[$@]|[dfs]$")
+
+        def get_malformed_android_placeables(text):
+            return get_malformed_placeables(
+                text,
+                placeable_pattern,
+                candidate_pattern=android_candidate_pattern,
+                marker_pattern=android_marker_pattern,
+            )
+
+        def get_unordered(match):
+            """Return a placeable without its argument index, `%1$03d` -> `%03d`."""
+            index = match.group(3)
+
+            return (
+                match.group(1) if not index else f"%{match.group(1)[1 + len(index) :]}"
+            )
 
         # Load exceptions
         if not self.exceptions_path:
@@ -174,12 +209,7 @@ class QualityCheck:
             matches = defaultdict(list)
             for m in matches_iterator:
                 matches["original"].append(m.group(1))
-                if len(m.group()) > 3:
-                    # String is using ordered placeables
-                    matches["unordered"].append(m.group(2) + m.group(3))
-                else:
-                    # String is already using unordered placeables
-                    matches["unordered"].append(m.group(1))
+                matches["unordered"].append(get_unordered(m))
             if matches:
                 placeable_ids[string_id] = {
                     "original": sorted(matches["original"]),
@@ -271,8 +301,8 @@ class QualityCheck:
                     exceptions, locale, "placeables", string_id
                 ):
                     malformed = Counter(
-                        get_malformed_placeables(translation, placeable_pattern)
-                    ) - Counter(get_malformed_placeables(reference, placeable_pattern))
+                        get_malformed_android_placeables(translation)
+                    ) - Counter(get_malformed_android_placeables(reference))
                     if malformed:
                         error_msg = (
                             f"Malformed placeables in {string_id}\n"
@@ -353,12 +383,7 @@ class QualityCheck:
                 matches = defaultdict(list)
                 for m in matches_iterator:
                     matches["original"].append(m.group(1))
-                    if len(m.group()) > 3:
-                        # String is using ordered placeables
-                        matches["unordered"].append(m.group(2) + m.group(3))
-                    else:
-                        # String is already using unordered placeables
-                        matches["unordered"].append(m.group(1))
+                    matches["unordered"].append(get_unordered(m))
 
                 if matches:
                     translated_groups = sorted(matches["original"])
