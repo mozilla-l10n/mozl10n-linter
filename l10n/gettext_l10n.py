@@ -11,12 +11,17 @@ import os
 import re
 import sys
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import polib
 
-from functions import get_html_tags
+from functions import (
+    get_html_tags,
+    get_malformed_placeables,
+    python_candidate_pattern,
+    python_marker_pattern,
+)
 
 
 def ignoreString(exceptions, locale, errorcode, string_id):
@@ -84,6 +89,15 @@ def main():
     errors = defaultdict(list)
     placeable_pattern = re.compile(r"%\(\w+\)s|\{\w+\}")
 
+    def get_malformed_placeholders(text):
+        return get_malformed_placeables(
+            text,
+            placeable_pattern,
+            candidate_pattern=python_candidate_pattern,
+            marker_pattern=python_marker_pattern,
+            stray_pattern=None,
+        )
+
     # Get a list of locales (subfolders in <locales_path>, exclude hidden folders)
     locales = [
         f
@@ -124,6 +138,10 @@ def main():
             if ignoreString(exceptions, normalized_locale, "placeables", message_id):
                 continue
 
+            # Translated texts to check for malformed placeholders. A text is
+            # only checked if it doesn't have a placeholder mismatch already.
+            malformed_candidates = []
+
             if reference_plural:
                 # Plural entry: only flag a translated plural form when it
                 # contains a placeholder that exists in neither English form.
@@ -148,23 +166,43 @@ def main():
                             f"  Reference (singular): {reference}\n"
                             f"  Reference (plural): {reference_plural}"
                         )
-                continue
+                    else:
+                        malformed_candidates.append(plural_translation)
+            elif translation != "":
+                ref_placeholders = placeable_pattern.findall(reference)
+                l10n_placeholders = placeable_pattern.findall(translation)
 
-            # Skip if message isn't translated
-            if translation == "":
-                continue
+                if sorted(ref_placeholders) != sorted(l10n_placeholders):
+                    errors[normalized_locale].append(
+                        f"Placeholder mismatch in {message_id}\n"
+                        f"  Translation placeholders ({len(l10n_placeholders)}): {', '.join(l10n_placeholders)}\n"
+                        f"  Reference placeholders ({len(ref_placeholders)}): {', '.join(ref_placeholders)}\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
+                else:
+                    malformed_candidates.append(translation)
 
-            ref_placeholders = placeable_pattern.findall(reference)
-            l10n_placeholders = placeable_pattern.findall(translation)
-
-            if sorted(ref_placeholders) != sorted(l10n_placeholders):
-                errors[normalized_locale].append(
-                    f"Placeholder mismatch in {message_id}\n"
-                    f"  Translation placeholders ({len(l10n_placeholders)}): {', '.join(l10n_placeholders)}\n"
-                    f"  Reference placeholders ({len(ref_placeholders)}): {', '.join(ref_placeholders)}\n"
-                    f"  Translation: {translation}\n"
-                    f"  Reference: {reference}"
-                )
+            # Check for malformed placeholders, e.g. `%(count)d` instead of
+            # `%(count)s`. Ignore the ones already present in the reference.
+            if malformed_candidates:
+                # `|` keeps the highest count from either reference form: a
+                # translation is compared against a single English form, so
+                # the counts shouldn't be added up.
+                ref_malformed = Counter(
+                    get_malformed_placeholders(reference)
+                ) | Counter(get_malformed_placeholders(reference_plural or ""))
+                for text in malformed_candidates:
+                    malformed = (
+                        Counter(get_malformed_placeholders(text)) - ref_malformed
+                    )
+                    if malformed:
+                        errors[normalized_locale].append(
+                            f"Malformed placeholder(s) in {message_id}\n"
+                            f"  Malformed placeholders: {', '.join(sorted(malformed.elements()))}\n"
+                            f"  Translation: {text}\n"
+                            f"  Reference: {reference}"
+                        )
 
         # Check for HTML tags
         for message_id, message_data in locale_messages.items():

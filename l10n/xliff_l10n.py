@@ -10,10 +10,10 @@ import os
 import re
 import sys
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 from glob import glob
 
-from functions import get_html_tags
+from functions import get_html_tags, get_malformed_placeables
 from lxml import etree
 
 
@@ -69,7 +69,18 @@ def main():
         except Exception as e:
             sys.exit(e)
 
-    placeables_pattern = re.compile(r"(%[1-9ds]?\$?@|%[1-9])")
+    # Printf-style placeables, e.g. `%@`, `%d`, `%1$@`, `%1$.2f`, `%03d`. The
+    # conversion characters are limited to the ones actually used in these
+    # projects: anything else, including length modifiers (`%1$lld`), is
+    # reported as malformed, and can be added here if it turns out to be
+    # legitimate.
+    # The space flag (`% d`) is left out on purpose: it would turn any text
+    # with a percent sign followed by a word (`100% sure`) into a placeable.
+    printf_pattern = re.compile(r"%(?:[1-9][0-9]*\$)?[-+#0]*[0-9]*(?:\.[0-9]+)?[@dsfu]")
+    # Qt-style placeables, e.g. `%1`. Unlike printf, Qt has no escaping for
+    # literal percent signs.
+    qt_pattern = re.compile(r"%[1-9][0-9]*")
+    placeables_pattern = re.compile(f"{printf_pattern.pattern}|{qt_pattern.pattern}")
     errors = defaultdict(list)
 
     for file_path in file_paths:
@@ -114,26 +125,59 @@ def main():
                     )
 
                 # Check placeables
-                ref_matches = placeables_pattern.findall(ref_string)
-                if ref_matches:
-                    string_exceptions = exceptions.get("placeables", {}).get(
-                        "strings", []
-                    )
-                    locale_exceptions = (
-                        exceptions.get("placeables", {})
-                        .get("locales", {})
-                        .get(locale, [])
-                    )
-                    if string_id in locale_exceptions + string_exceptions:
-                        continue
+                string_exceptions = exceptions.get("placeables", {}).get("strings", [])
+                locale_exceptions = (
+                    exceptions.get("placeables", {}).get("locales", {}).get(locale, [])
+                )
+                ignore_placeables = string_id in locale_exceptions + string_exceptions
 
-                    ref_matches.sort()
-                    l10n_matches = placeables_pattern.findall(l10n_string)
-                    l10n_matches.sort()
-
-                    if ref_matches != l10n_matches:
+                mismatch = False
+                ref_matches = sorted(placeables_pattern.findall(ref_string))
+                l10n_matches = sorted(placeables_pattern.findall(l10n_string))
+                if not ignore_placeables:
+                    if ref_matches:
+                        if ref_matches != l10n_matches:
+                            mismatch = True
+                            errors[locale].append(
+                                f"Variable mismatch in {string_id}\n"
+                                f"  Translation: {l10n_string}\n"
+                                f"  Reference: {ref_string}"
+                            )
+                    elif printf_pattern.search(l10n_string):
+                        # The reference has no placeables, so the translation
+                        # shouldn't have any either. Only printf-style ones
+                        # are reported: a bare `%1` is indistinguishable from
+                        # a percentage written before the number (`%50` in
+                        # Turkish), which is legitimate in a plain string.
+                        mismatch = True
                         errors[locale].append(
-                            f"Variable mismatch in {string_id}\n"
+                            f"Extra placeables in {string_id}\n"
+                            f"  Translation: {l10n_string}\n"
+                            f"  Reference: {ref_string}"
+                        )
+
+                # Check for malformed placeables, e.g. `%2$@$` instead of
+                # `%2$@`. Ignore the ones already present in the reference.
+                if not ignore_placeables and not mismatch:
+                    # Percent signs are only escaped in printf-style strings,
+                    # not in Qt strings. Rely on the syntax used in the
+                    # reference to tell them apart.
+                    is_printf = bool(printf_pattern.search(ref_string))
+                    l10n_malformed = get_malformed_placeables(
+                        l10n_string,
+                        placeables_pattern,
+                        check_percent_escaping=is_printf,
+                    )
+                    ref_malformed = get_malformed_placeables(
+                        ref_string,
+                        placeables_pattern,
+                        check_percent_escaping=is_printf,
+                    )
+                    malformed = Counter(l10n_malformed) - Counter(ref_malformed)
+                    if malformed:
+                        errors[locale].append(
+                            f"Malformed placeables in {string_id}\n"
+                            f"  Malformed placeables: {', '.join(sorted(malformed.elements()))}\n"
                             f"  Translation: {l10n_string}\n"
                             f"  Reference: {ref_string}"
                         )

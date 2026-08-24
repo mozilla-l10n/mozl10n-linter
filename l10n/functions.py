@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import re
+
 from html import unescape
 from html.parser import HTMLParser
 
@@ -31,6 +33,103 @@ def getAllExceptions(data, result_set=None):
             result_set.update(cleaned_data)
 
     return result_set
+
+
+# A candidate placeable is a percent sign, an optional argument index, width,
+# precision and length modifier, at most one conversion character, plus any
+# trailing `$` or `@`. Text following a complete placeable is not part of the
+# candidate, since several locales attach suffixes directly to a placeable
+# (e.g. `%@iin` in Finnish).
+printf_candidate_pattern = re.compile(r"%[0-9$.]*(?:hh|h|ll|l|q|z|t|j)?[a-zA-Z@]?[$@]*")
+
+# Characters that are part of placeable syntax, and shouldn't be left over
+# after a complete placeable.
+printf_stray_pattern = re.compile(r"[$@]+")
+
+# A candidate is only reported when it includes one of these characters,
+# otherwise it's indistinguishable from a literal percent sign (`50% off`, or
+# `%50` in Turkish).
+printf_marker_pattern = re.compile(r"[$@]")
+
+# Python format: `%(name)s`. Trailing characters are never treated as strays,
+# since a literal `$` can legitimately follow a placeable (`%(price)s$`).
+python_candidate_pattern = re.compile(r"%\(?\w*\)?[a-zA-Z]?")
+python_marker_pattern = re.compile(r"[(]")
+
+
+def get_malformed_placeables(
+    text: str,
+    valid_pattern: re.Pattern,
+    candidate_pattern: re.Pattern = printf_candidate_pattern,
+    marker_pattern: re.Pattern = printf_marker_pattern,
+    stray_pattern: re.Pattern | None = printf_stray_pattern,
+    check_percent_escaping: bool = True,
+) -> list[str]:
+    """Return placeable-like chunks in text that aren't valid placeables.
+
+    Three cases are reported:
+    - A valid placeable with leftover placeable characters attached to it,
+      e.g. `%2$@$` instead of `%2$@`.
+    - A chunk matching candidate_pattern and marker_pattern, but not the
+      valid pattern, e.g. `%$@` or `%(count)d`.
+    - Any other unescaped percent sign, but only if the text includes at
+      least one valid placeable: the text is then a format string, where a
+      literal percent sign needs to be escaped as `%%`. In a text without
+      placeables, `50% off` or `%50` (Turkish) are perfectly valid.
+
+    The last case, and the special meaning of `%%`, only apply to printf-style
+    formats: set check_percent_escaping to False for syntaxes that don't
+    escape percent signs, e.g. Qt's `%1`.
+    """
+    malformed = []
+    unescaped = []
+    has_placeables = False
+
+    def get_end(match: re.Match) -> int:
+        """Return the end of a match, including strays attached to it."""
+        stray_match = stray_pattern.match(text, match.end()) if stray_pattern else None
+        if not stray_match:
+            return match.end()
+
+        # Report the whole malformed chunk, e.g. all of `%2$lld` and not just
+        # the `%2$` part that the stray pattern covers.
+        candidate = candidate_pattern.match(text, match.start())
+
+        return max(stray_match.end(), candidate.end())
+
+    position = 0
+    while (index := text.find("%", position)) != -1:
+        if check_percent_escaping and text.startswith("%%", index):
+            # An escaped percent sign, unless it's followed by a placeable:
+            # in `%%3$@` the escaping swallows the percent sign, and the
+            # placeable is lost.
+            escaped_match = valid_pattern.match(text, index + 1)
+            if not escaped_match:
+                position = index + 2
+                continue
+            position = get_end(escaped_match)
+            malformed.append(text[index:position])
+            continue
+
+        valid_match = valid_pattern.match(text, index)
+        if valid_match:
+            has_placeables = True
+            position = get_end(valid_match)
+            if position != valid_match.end():
+                malformed.append(text[index:position])
+            continue
+
+        candidate = candidate_pattern.match(text, index).group()
+        if marker_pattern.search(candidate):
+            malformed.append(candidate)
+        else:
+            unescaped.append(candidate)
+        position = index + max(len(candidate), 1)
+
+    if has_placeables and check_percent_escaping:
+        malformed.extend(unescaped)
+
+    return malformed
 
 
 def parse_file(
