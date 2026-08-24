@@ -46,10 +46,13 @@ printf_candidate_pattern = re.compile(r"%[0-9$.]*(?:hh|h|ll|l|q|z|t|j)?[a-zA-Z@]
 # after a complete placeable.
 printf_stray_pattern = re.compile(r"[$@]+")
 
-# A candidate is only reported when it includes one of these characters,
-# otherwise it's indistinguishable from a literal percent sign (`50% off`, or
-# `%50` in Turkish).
-printf_marker_pattern = re.compile(r"[$@]")
+# A candidate is only reported when it matches one of these: a placeable
+# character, or a conversion character preceded by a width, a precision or a
+# length modifier (`%03g`, `%lld`). Anything else is indistinguishable from a
+# literal percent sign (`50% off`, `50%off`, or `%50` in Turkish).
+printf_marker_pattern = re.compile(
+    r"[$@]|^%[0-9.]+[a-zA-Z]|^%(?:hh|h|ll|l|q|z|t|j)[a-zA-Z]"
+)
 
 # Python format: `%(name)s`. Trailing characters are never treated as strays,
 # since a literal `$` can legitimately follow a placeable (`%(price)s$`).

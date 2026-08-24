@@ -1,8 +1,8 @@
 line-length = 88
 indent-width = 4
 
-# Assume Python 3.11
-target-version = "py311"
+# Assume Python 3.13, the version the workflows run on
+target-version = "py313"
 
 [lint]
 ignore = [
@@ -12,6 +12,7 @@ select = [
     "E",  # pycodestyle errors
     "F",  # pyflakes
     "I",  # isort
+    "UP", # pyupgrade
     "W",  # pycodestyle warnings
 ]
 

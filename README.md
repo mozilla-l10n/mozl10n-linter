@@ -11,6 +11,8 @@ The list of errors for failed runs is available as an artifact (`errors-list`):
 
 It's possible to define [exceptions](https://github.com/mozilla-l10n/mozl10n-linter/tree/main/l10n/exceptions) for specific type of checks in each project.
 
+[![Tests](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/tests.yaml/badge.svg)](https://github.com/mozilla-l10n/mozl10n-linter/actions/workflows/tests.yaml)
+
 ## Android (XML)
 
 | Project | Linter Status |

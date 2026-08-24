@@ -21,6 +21,27 @@ from functions import (
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 
 
+# Java formatter syntax: %[index$][flags][width][.precision]conversion, e.g.
+# `%s`, `%1$s`, `%,d`, `%.2f`, `%03d`. The `-` and `0` flags require a width
+# (`%0d` and `%-d` throw MissingFormatWidthException), so they only appear in
+# the first alternative. The space flag is left out on purpose: it would turn
+# any text with a percent sign followed by a word (`100% done`) into a
+# placeable.
+placeable_pattern = re.compile(
+    r"((%)(\d+\$)?(?:[-#+0,(]*[1-9][0-9]*|[#+,(]*)(?:\.[0-9]+)?([dfs]))"
+)
+# Keep malformed-candidate detection specific to Android. The generic printf
+# marker also treats width-plus-letter sequences as format-like, which can
+# mistake percent-encoded text such as `%20World` for a malformed placeable.
+# Here, an otherwise ambiguous candidate is only considered malformed when it
+# ends in one of Android's supported conversions. `$` and `@` remain
+# unambiguous syntax markers.
+android_candidate_pattern = re.compile(
+    r"%(?:\d+\$)?[-#+0,(]*[0-9]*(?:\.[0-9]+)?(?:hh|h|ll|l|q|z|t|j)?[a-zA-Z@]?[$@]*"
+)
+android_marker_pattern = re.compile(r"[$@]|[dfs]$")
+
+
 class StringExtraction:
     def __init__(self, l10n_path, reference_locale):
         """Initialize object."""
@@ -144,7 +165,81 @@ class QualityCheck:
 
             return False
 
-        placeable_pattern = re.compile(r"((%)(?:\d+\$){0,1},?(?:\.\d+)?([dfs]))")
+        def mask_url_percent_escapes(text):
+            """Hide percent-encoded bytes in URL-like, whitespace-delimited text."""
+            masked = list(text)
+            for escape in re.finditer(r"%[0-9A-Fa-f]{2}", text):
+                # `%%20` is how a literal percent sign is written in a format
+                # string, so the escape is already correct: masking it would
+                # hide the `%%` from the malformed check.
+                if escape.start() > 0 and text[escape.start() - 1] == "%":
+                    continue
+
+                # A percent escape encodes a character that can't be written
+                # as is, never a control character. `%02d` in a URL is a
+                # formatter with a width, not an encoded STX.
+                if int(escape.group()[1:], 16) < 0x20:
+                    continue
+
+                token_start = (
+                    max(
+                        text.rfind(separator, 0, escape.start())
+                        for separator in " \t\r\n\"'"
+                    )
+                    + 1
+                )
+                token_end_match = re.search(r"[\s\"']", text[escape.end() :])
+                token_end = (
+                    escape.end() + token_end_match.start()
+                    if token_end_match
+                    else len(text)
+                )
+                token = text[token_start:token_end]
+                # A bare slash isn't enough to assume a URL: `d` and `f` are
+                # hex digits, so `%02d/%02d` would be masked, and the string
+                # would silently lose all of its placeables.
+                if "://" in token or token.startswith("www."):
+                    masked[escape.start()] = "％"
+
+            return "".join(masked)
+
+        def get_malformed_android_placeables(text):
+            return get_malformed_placeables(
+                mask_url_percent_escapes(text),
+                placeable_pattern,
+                candidate_pattern=android_candidate_pattern,
+                marker_pattern=android_marker_pattern,
+            )
+
+        def get_placeable_matches(text):
+            """Return matches, excluding percent escapes inside URL-like tokens."""
+            return list(placeable_pattern.finditer(mask_url_percent_escapes(text)))
+
+        def get_placeable_groups(text, is_plural=False):
+            """Return raw placeables and canonical argument/specification pairs."""
+            original = []
+            canonical = []
+            # Each variant of a plural is a separate format string, stored on
+            # its own line. The implicit argument index restarts on each of
+            # them, otherwise it ends up encoding the number of plural forms
+            # of the locale, which legitimately differs from the reference.
+            segments = text.split("\n") if is_plural else [text]
+            for segment in segments:
+                next_implicit_index = 1
+                for match in get_placeable_matches(segment):
+                    raw = match.group(1)
+                    explicit_index = match.group(3)
+                    if explicit_index:
+                        argument_index = int(explicit_index[:-1])
+                        specification = f"%{raw[1 + len(explicit_index) :]}"
+                    else:
+                        argument_index = next_implicit_index
+                        next_implicit_index += 1
+                        specification = raw
+                    original.append(raw)
+                    canonical.append((argument_index, specification))
+
+            return {"original": sorted(original), "canonical": canonical}
 
         # Load exceptions
         if not self.exceptions_path:
@@ -170,21 +265,11 @@ class QualityCheck:
             if not isinstance(text, str):
                 continue
 
-            matches_iterator = placeable_pattern.finditer(text)
-            matches = defaultdict(list)
-            for m in matches_iterator:
-                matches["original"].append(m.group(1))
-                if len(m.group()) > 3:
-                    # String is using ordered placeables
-                    matches["unordered"].append(m.group(2) + m.group(3))
-                else:
-                    # String is already using unordered placeables
-                    matches["unordered"].append(m.group(1))
-            if matches:
-                placeable_ids[string_id] = {
-                    "original": sorted(matches["original"]),
-                    "unordered": matches["unordered"],
-                }
+            matches = get_placeable_groups(
+                text, string_data.get("android_plural", False)
+            )
+            if matches["original"]:
+                placeable_ids[string_id] = matches
 
         # Store strings with HTML elements
         html_strings = {}
@@ -201,6 +286,8 @@ class QualityCheck:
             # Ignore reference locale
             if locale == self.reference_locale:
                 continue
+
+            reported_placeable_ids = set()
 
             # General checks on localized strings
             for string_id, string_data in locale_translations.items():
@@ -253,9 +340,13 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
                 # Check if the string has extra placeables
+                ignore_placeables = ignoreString(
+                    exceptions, locale, "placeables", string_id
+                )
                 extra_placeables = (
-                    list(placeable_pattern.finditer(translation))
+                    get_placeable_matches(translation)
                     and string_id not in placeable_ids
+                    and not ignore_placeables
                 )
                 if extra_placeables:
                     error_msg = (
@@ -264,15 +355,14 @@ class QualityCheck:
                         f"  Reference: {reference}"
                     )
                     self.error_messages[locale].append(error_msg)
+                    reported_placeable_ids.add(string_id)
 
                 # Check for malformed placeables, e.g. `%1$s$` instead of
                 # `%1$s`.
-                if not extra_placeables and not ignoreString(
-                    exceptions, locale, "placeables", string_id
-                ):
+                if not extra_placeables and not ignore_placeables:
                     malformed = Counter(
-                        get_malformed_placeables(translation, placeable_pattern)
-                    ) - Counter(get_malformed_placeables(reference, placeable_pattern))
+                        get_malformed_android_placeables(translation)
+                    ) - Counter(get_malformed_android_placeables(reference))
                     if malformed:
                         error_msg = (
                             f"Malformed placeables in {string_id}\n"
@@ -281,6 +371,7 @@ class QualityCheck:
                             f"  Reference: {reference}"
                         )
                         self.error_messages[locale].append(error_msg)
+                        reported_placeable_ids.add(string_id)
 
             # Check all localized strings for HTML elements mismatch or extra tags
             for string_id, string_data in locale_translations.items():
@@ -340,6 +431,8 @@ class QualityCheck:
                 # Ignore excluded strings
                 if ignoreString(exceptions, locale, "placeables", string_id):
                     continue
+                if string_id in reported_placeable_ids:
+                    continue
 
                 translation = locale_translations[string_id]["value"]
                 reference = (
@@ -349,39 +442,27 @@ class QualityCheck:
                 )
                 if not isinstance(translation, str):
                     continue
-                matches_iterator = placeable_pattern.finditer(translation)
-                matches = defaultdict(list)
-                for m in matches_iterator:
-                    matches["original"].append(m.group(1))
-                    if len(m.group()) > 3:
-                        # String is using ordered placeables
-                        matches["unordered"].append(m.group(2) + m.group(3))
-                    else:
-                        # String is already using unordered placeables
-                        matches["unordered"].append(m.group(1))
+                is_plural = locale_translations[string_id].get("android_plural", False)
+                matches = get_placeable_groups(translation, is_plural)
 
-                if matches:
-                    translated_groups = sorted(matches["original"])
-                    if translated_groups != groups["original"]:
-                        # Groups are not matching, but the translation might be
-                        # using ordered placeables instead of unordered, or
-                        # the other way around.
-                        # "%1$s" would be stored as "%s" in the "unordered"
-                        # array.
-                        if matches["unordered"] == groups["unordered"]:
+                if matches["original"]:
+                    # Compare argument identities independently from display
+                    # order, so `%s: %d` and `%2$d: %1$s` match, while the
+                    # unindexed and unsafe `%d: %s` does not.
+                    if Counter(matches["canonical"]) == Counter(groups["canonical"]):
+                        continue
+
+                    # If it's plural, treats them as sets (remove duplicates)
+                    if is_plural:
+                        if set(matches["canonical"]) == set(groups["canonical"]):
                             continue
 
-                        # If it's plural, treats them as sets (remove duplicates)
-                        if locale_translations[string_id].get("android_plural"):
-                            if set(matches["unordered"]) == set(groups["unordered"]):
-                                continue
-
-                        error_msg = (
-                            f"Placeable mismatch in string ({string_id})\n"
-                            f"  Translation: {translation}\n"
-                            f"  Reference: {reference}"
-                        )
-                        self.error_messages[locale].append(error_msg)
+                    error_msg = (
+                        f"Placeable mismatch in string ({string_id})\n"
+                        f"  Translation: {translation}\n"
+                        f"  Reference: {reference}"
+                    )
+                    self.error_messages[locale].append(error_msg)
                 else:
                     # There are no placeables
                     error_msg = (

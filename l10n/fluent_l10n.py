@@ -417,7 +417,9 @@ class QualityCheck:
                 # Check for empty translation, or translations with just line
                 # breaks
                 if "".join(translation.splitlines()) == "":
-                    reference_string = reference_data.get(string_id, {}).get("value", "")
+                    reference_string = reference_data.get(string_id, {}).get(
+                        "value", ""
+                    )
                     error_msg = (
                         f"{string_id} is empty\n"
                         f"  Translation: {translation}\n"
@@ -459,7 +461,9 @@ class QualityCheck:
                     serializer = FluentSerializer()
                     message_id = string_id.split(":")[1]
                     l10n_select.visit(parse(f"{message_id} = {translation}"))
-                    reference_string = reference_data.get(string_id, {}).get("value", "")
+                    reference_string = reference_data.get(string_id, {}).get(
+                        "value", ""
+                    )
                     ref_select.visit(parse(f"{message_id} = {reference_string}"))
 
                     for select_var in l10n_select.select_vars:
