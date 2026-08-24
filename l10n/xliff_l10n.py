@@ -17,6 +17,53 @@ from functions import get_html_tags, get_malformed_placeables
 from lxml import etree
 
 
+# Printf-style placeables, e.g. `%@`, `%d`, `%1$@`, `%1$.2f`, `%03d`. The
+# conversion characters are limited to the ones actually used in these
+# projects: anything else, including length modifiers (`%1$lld`), is reported
+# as malformed, and can be added here if it turns out to be legitimate.
+# The space flag (`% d`) is left out on purpose: it would turn any text with a
+# percent sign followed by a word (`100% sure`) into a placeable.
+printf_pattern = re.compile(
+    r"%(?:([1-9][0-9]*)\$)?([-+#0]*[0-9]*(?:\.[0-9]+)?)([@dsfu])"
+)
+# Qt-style placeables, e.g. `%1`. Unlike printf, Qt has no escaping for
+# literal percent signs.
+qt_pattern = re.compile(r"%([1-9][0-9]*)")
+placeables_pattern = re.compile(
+    f"(?:{printf_pattern.pattern})|(?:{qt_pattern.pattern})"
+)
+
+
+def get_placeable_groups(text):
+    """Return canonical argument/specification pairs, with their syntax."""
+    groups = []
+    next_implicit_index = 1
+    for match in placeables_pattern.finditer(text):
+        raw = match.group()
+        printf_match = printf_pattern.fullmatch(raw)
+        if printf_match:
+            explicit_index, formatting, conversion = printf_match.groups()
+            if explicit_index:
+                argument_index = int(explicit_index)
+            else:
+                argument_index = next_implicit_index
+                next_implicit_index += 1
+            specification = f"%{formatting}{conversion}"
+            kind = "printf"
+        else:
+            argument_index = int(qt_pattern.fullmatch(raw).group(1))
+            specification = "qt"
+            kind = "qt"
+        groups.append(
+            {
+                "canonical": (argument_index, specification),
+                "kind": kind,
+            }
+        )
+
+    return groups
+
+
 def main():
     NS = {"x": "urn:oasis:names:tc:xliff:document:1.2"}
 
@@ -69,57 +116,14 @@ def main():
         except Exception as e:
             sys.exit(e)
 
-    # Printf-style placeables, e.g. `%@`, `%d`, `%1$@`, `%1$.2f`, `%03d`. The
-    # conversion characters are limited to the ones actually used in these
-    # projects: anything else, including length modifiers (`%1$lld`), is
-    # reported as malformed, and can be added here if it turns out to be
-    # legitimate.
-    # The space flag (`% d`) is left out on purpose: it would turn any text
-    # with a percent sign followed by a word (`100% sure`) into a placeable.
-    printf_pattern = re.compile(
-        r"%(?:([1-9][0-9]*)\$)?([-+#0]*[0-9]*(?:\.[0-9]+)?)([@dsfu])"
-    )
-    # Qt-style placeables, e.g. `%1`. Unlike printf, Qt has no escaping for
-    # literal percent signs.
-    qt_pattern = re.compile(r"%([1-9][0-9]*)")
-    placeables_pattern = re.compile(
-        f"(?:{printf_pattern.pattern})|(?:{qt_pattern.pattern})"
-    )
-
-    def get_placeable_groups(text):
-        """Return canonical argument/specification pairs, with their syntax."""
-        groups = []
-        next_implicit_index = 1
-        for match in placeables_pattern.finditer(text):
-            raw = match.group()
-            printf_match = printf_pattern.fullmatch(raw)
-            if printf_match:
-                explicit_index, formatting, conversion = printf_match.groups()
-                if explicit_index:
-                    argument_index = int(explicit_index)
-                else:
-                    argument_index = next_implicit_index
-                    next_implicit_index += 1
-                specification = f"%{formatting}{conversion}"
-                kind = "printf"
-            else:
-                argument_index = int(qt_pattern.fullmatch(raw).group(1))
-                specification = "qt"
-                kind = "qt"
-            groups.append(
-                {
-                    "canonical": (argument_index, specification),
-                    "kind": kind,
-                }
-            )
-
-        return groups
-
     errors = defaultdict(list)
 
     for file_path in file_paths:
-        # Extract and normalize locale code, relative file path
-        rel_file_path = os.path.relpath(file_path, args.locales_path)
+        # Extract and normalize locale code, relative file path. The paths
+        # come from `locales_path`, so the relative path has to be computed
+        # against it, and not against the raw argument: they differ as soon
+        # as there's a symlink in the middle.
+        rel_file_path = os.path.relpath(file_path, locales_path)
         locale_folder = rel_file_path.split(os.sep)[0]
         locale = locale_folder.replace("_", "-")
         rel_file_path = rel_file_path.split(locale_folder)[1:][0].lstrip(os.path.sep)

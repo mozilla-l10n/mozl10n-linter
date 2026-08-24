@@ -24,6 +24,21 @@ from functions import (
 )
 
 
+# Python format placeholders, e.g. `%(count)s`, and `{count}` for messages
+# using `str.format()`.
+placeable_pattern = re.compile(r"%\(\w+\)s|\{\w+\}")
+
+
+def get_malformed_placeholders(text):
+    return get_malformed_placeables(
+        text,
+        placeable_pattern,
+        candidate_pattern=python_candidate_pattern,
+        marker_pattern=python_marker_pattern,
+        stray_pattern=None,
+    )
+
+
 def ignoreString(exceptions, locale, errorcode, string_id):
     """Check if a string should be ignored"""
 
@@ -87,16 +102,6 @@ def main():
             sys.exit(e)
 
     errors = defaultdict(list)
-    placeable_pattern = re.compile(r"%\(\w+\)s|\{\w+\}")
-
-    def get_malformed_placeholders(text):
-        return get_malformed_placeables(
-            text,
-            placeable_pattern,
-            candidate_pattern=python_candidate_pattern,
-            marker_pattern=python_marker_pattern,
-            stray_pattern=None,
-        )
 
     # Get a list of locales (subfolders in <locales_path>, exclude hidden folders)
     locales = [

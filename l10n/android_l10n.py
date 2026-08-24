@@ -21,6 +21,27 @@ from functions import (
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 
 
+# Java formatter syntax: %[index$][flags][width][.precision]conversion, e.g.
+# `%s`, `%1$s`, `%,d`, `%.2f`, `%03d`. The `-` and `0` flags require a width
+# (`%0d` and `%-d` throw MissingFormatWidthException), so they only appear in
+# the first alternative. The space flag is left out on purpose: it would turn
+# any text with a percent sign followed by a word (`100% done`) into a
+# placeable.
+placeable_pattern = re.compile(
+    r"((%)(\d+\$)?(?:[-#+0,(]*[1-9][0-9]*|[#+,(]*)(?:\.[0-9]+)?([dfs]))"
+)
+# Keep malformed-candidate detection specific to Android. The generic printf
+# marker also treats width-plus-letter sequences as format-like, which can
+# mistake percent-encoded text such as `%20World` for a malformed placeable.
+# Here, an otherwise ambiguous candidate is only considered malformed when it
+# ends in one of Android's supported conversions. `$` and `@` remain
+# unambiguous syntax markers.
+android_candidate_pattern = re.compile(
+    r"%(?:\d+\$)?[-#+0,(]*[0-9]*(?:\.[0-9]+)?(?:hh|h|ll|l|q|z|t|j)?[a-zA-Z@]?[$@]*"
+)
+android_marker_pattern = re.compile(r"[$@]|[dfs]$")
+
+
 class StringExtraction:
     def __init__(self, l10n_path, reference_locale):
         """Initialize object."""
@@ -144,27 +165,6 @@ class QualityCheck:
 
             return False
 
-        # Java formatter syntax: %[index$][flags][width][.precision]conversion,
-        # e.g. `%s`, `%1$s`, `%,d`, `%.2f`, `%03d`. The `-` and `0` flags
-        # require a width (`%0d` and `%-d` throw MissingFormatWidthException),
-        # so they only appear in the first alternative. The space flag is left
-        # out on purpose: it would turn any text with a percent sign followed
-        # by a word (`100% done`) into a placeable.
-        placeable_pattern = re.compile(
-            r"((%)(\d+\$)?(?:[-#+0,(]*[1-9][0-9]*|[#+,(]*)(?:\.[0-9]+)?([dfs]))"
-        )
-        # Keep malformed-candidate detection specific to Android. The generic
-        # printf marker also treats width-plus-letter sequences as format-like,
-        # which can mistake percent-encoded text such as `%20World` for a
-        # malformed placeable. Here, an otherwise ambiguous candidate is only
-        # considered malformed when it ends in one of Android's supported
-        # conversions. `$` and `@` remain unambiguous syntax markers.
-        android_candidate_pattern = re.compile(
-            r"%(?:\d+\$)?[-#+0,(]*[0-9]*(?:\.[0-9]+)?"
-            r"(?:hh|h|ll|l|q|z|t|j)?[a-zA-Z@]?[$@]*"
-        )
-        android_marker_pattern = re.compile(r"[$@]|[dfs]$")
-
         def mask_url_percent_escapes(text):
             """Hide percent-encoded bytes in URL-like, whitespace-delimited text."""
             masked = list(text)
@@ -173,6 +173,12 @@ class QualityCheck:
                 # string, so the escape is already correct: masking it would
                 # hide the `%%` from the malformed check.
                 if escape.start() > 0 and text[escape.start() - 1] == "%":
+                    continue
+
+                # A percent escape encodes a character that can't be written
+                # as is, never a control character. `%02d` in a URL is a
+                # formatter with a width, not an encoded STX.
+                if int(escape.group()[1:], 16) < 0x20:
                     continue
 
                 token_start = (
