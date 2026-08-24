@@ -76,11 +76,45 @@ def main():
     # legitimate.
     # The space flag (`% d`) is left out on purpose: it would turn any text
     # with a percent sign followed by a word (`100% sure`) into a placeable.
-    printf_pattern = re.compile(r"%(?:[1-9][0-9]*\$)?[-+#0]*[0-9]*(?:\.[0-9]+)?[@dsfu]")
+    printf_pattern = re.compile(
+        r"%(?:([1-9][0-9]*)\$)?([-+#0]*[0-9]*(?:\.[0-9]+)?)([@dsfu])"
+    )
     # Qt-style placeables, e.g. `%1`. Unlike printf, Qt has no escaping for
     # literal percent signs.
-    qt_pattern = re.compile(r"%[1-9][0-9]*")
-    placeables_pattern = re.compile(f"{printf_pattern.pattern}|{qt_pattern.pattern}")
+    qt_pattern = re.compile(r"%([1-9][0-9]*)")
+    placeables_pattern = re.compile(
+        f"(?:{printf_pattern.pattern})|(?:{qt_pattern.pattern})"
+    )
+
+    def get_placeable_groups(text):
+        """Return canonical argument/specification pairs, with their syntax."""
+        groups = []
+        next_implicit_index = 1
+        for match in placeables_pattern.finditer(text):
+            raw = match.group()
+            printf_match = printf_pattern.fullmatch(raw)
+            if printf_match:
+                explicit_index, formatting, conversion = printf_match.groups()
+                if explicit_index:
+                    argument_index = int(explicit_index)
+                else:
+                    argument_index = next_implicit_index
+                    next_implicit_index += 1
+                specification = f"%{formatting}{conversion}"
+                kind = "printf"
+            else:
+                argument_index = int(qt_pattern.fullmatch(raw).group(1))
+                specification = "qt"
+                kind = "qt"
+            groups.append(
+                {
+                    "canonical": (argument_index, specification),
+                    "kind": kind,
+                }
+            )
+
+        return groups
+
     errors = defaultdict(list)
 
     for file_path in file_paths:
@@ -132,18 +166,24 @@ def main():
                 ignore_placeables = string_id in locale_exceptions + string_exceptions
 
                 mismatch = False
-                ref_matches = sorted(placeables_pattern.findall(ref_string))
-                l10n_matches = sorted(placeables_pattern.findall(l10n_string))
+                ref_groups = get_placeable_groups(ref_string)
+                l10n_groups = get_placeable_groups(l10n_string)
                 if not ignore_placeables:
-                    if ref_matches:
-                        if ref_matches != l10n_matches:
+                    if ref_groups:
+                        ref_canonical = Counter(
+                            group["canonical"] for group in ref_groups
+                        )
+                        l10n_canonical = Counter(
+                            group["canonical"] for group in l10n_groups
+                        )
+                        if ref_canonical != l10n_canonical:
                             mismatch = True
                             errors[locale].append(
                                 f"Variable mismatch in {string_id}\n"
                                 f"  Translation: {l10n_string}\n"
                                 f"  Reference: {ref_string}"
                             )
-                    elif printf_pattern.search(l10n_string):
+                    elif any(group["kind"] == "printf" for group in l10n_groups):
                         # The reference has no placeables, so the translation
                         # shouldn't have any either. Only printf-style ones
                         # are reported: a bare `%1` is indistinguishable from
@@ -162,7 +202,7 @@ def main():
                     # Percent signs are only escaped in printf-style strings,
                     # not in Qt strings. Rely on the syntax used in the
                     # reference to tell them apart.
-                    is_printf = bool(printf_pattern.search(ref_string))
+                    is_printf = any(group["kind"] == "printf" for group in ref_groups)
                     l10n_malformed = get_malformed_placeables(
                         l10n_string,
                         placeables_pattern,
