@@ -12,7 +12,12 @@ import sys
 
 from collections import Counter, defaultdict
 
-from functions import get_html_tags, getAllExceptions, parse_file
+from functions import (
+    get_html_tags,
+    get_malformed_placeables,
+    getAllExceptions,
+    parse_file,
+)
 from moz.l10n.paths import L10nConfigPaths, get_android_locale
 
 
@@ -248,16 +253,34 @@ class QualityCheck:
                     self.error_messages[locale].append(error_msg)
 
                 # Check if the string has extra placeables
-                if (
+                extra_placeables = (
                     list(placeable_pattern.finditer(translation))
                     and string_id not in placeable_ids
-                ):
+                )
+                if extra_placeables:
                     error_msg = (
                         f"Extra placeables in {string_id}\n"
                         f"  Translation: {translation}\n"
                         f"  Reference: {reference}"
                     )
                     self.error_messages[locale].append(error_msg)
+
+                # Check for malformed placeables, e.g. `%1$s$` instead of
+                # `%1$s`.
+                if not extra_placeables and not ignoreString(
+                    exceptions, locale, "placeables", string_id
+                ):
+                    malformed = Counter(
+                        get_malformed_placeables(translation, placeable_pattern)
+                    ) - Counter(get_malformed_placeables(reference, placeable_pattern))
+                    if malformed:
+                        error_msg = (
+                            f"Malformed placeables in {string_id}\n"
+                            f"  Malformed placeables: {', '.join(sorted(malformed.elements()))}\n"
+                            f"  Translation: {translation}\n"
+                            f"  Reference: {reference}"
+                        )
+                        self.error_messages[locale].append(error_msg)
 
             # Check all localized strings for HTML elements mismatch or extra tags
             for string_id, string_data in locale_translations.items():
