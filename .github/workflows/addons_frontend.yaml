@@ -25,11 +25,10 @@ jobs:
   lint:
     uses: ./.github/workflows/_lint.yaml
     with:
-      repository: mozilla/addons-frontend
-      target_sparse: locale
+      repository: mozilla-l10n/addons-frontend-l10n
       script: gettext_l10n.py
       script_args: >-
-        --l10n target_repo/locale/
+        --l10n target_repo/
         --dest errors.txt
         --exceptions scripts_repo/l10n/exceptions/addons_frontend.json
         --no-failure
