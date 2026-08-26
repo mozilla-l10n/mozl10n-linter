@@ -26,7 +26,6 @@ jobs:
     uses: ./.github/workflows/_lint.yaml
     with:
       repository: mozilla-l10n/addons-server-l10n
-      target_sparse: locale
       script: gettext_l10n.py
       script_args: >-
         --l10n target_repo/locale/
