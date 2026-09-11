@@ -1,5 +1,5 @@
 jsonschema~=4.26.0
 lxml~=6.1.2
-moz-l10n[xml]~=0.14.1
+moz-l10n[xml]~=0.14.2
 polib~=1.2.0
 requests~=2.34.2
