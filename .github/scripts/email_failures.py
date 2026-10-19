@@ -60,11 +60,11 @@ def main():
     args = parser.parse_args()
 
     all_workflows = {
-        "addons_frontend": ["flodolo"],
-        "addons_server": ["flodolo"],
+        "addons_frontend": ["ebinen", "flodolo"],
+        "addons_server": ["ebinen", "flodolo"],
         "firefox_android": ["cpedraza", "flodolo"],
         "firefox_ios": ["cpedraza", "flodolo"],
-        "firefoxcom": ["flodolo"],
+        "firefoxcom": ["ebinen", "flodolo"],
         "focus_android": ["cpedraza", "flodolo"],
         "focus_ios": ["cpedraza", "flodolo"],
         "fxa_cms": ["bolsson"],
@@ -72,10 +72,10 @@ def main():
         "fxa": ["bolsson"],
         "mac": ["flodolo"],
         "monitor": ["flodolo"],
-        "mozorg": ["flodolo"],
+        "mozorg": ["ebinen", "flodolo"],
         "profiler": ["flodolo"],
-        "relay_addon": ["flodolo"],
-        "relay": ["flodolo"],
+        "relay_addon": ["ebinen", "flodolo"],
+        "relay": ["ebinen", "flodolo"],
         "vpn_extension": ["flodolo"],
         "vpn": ["flodolo"],
     }
