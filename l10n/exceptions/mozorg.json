@@ -7,6 +7,10 @@
       "it": [
         "en/mozorg/about/history.ftl:history-in-2013-we-launched-firefox"
       ],
+      "lv": [
+        "en/firefox/browsers/compare/edge.ftl:compare-edge-microsoft-has-to-make-their-shareholders",
+        "en/firefox/browsers/compare/shared.ftl:compare-shared-since-we-dont-have-to-make"
+      ],
       "nn-NO": [
         "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
       ],
