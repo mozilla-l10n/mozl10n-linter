@@ -9,7 +9,9 @@
       ],
       "lv": [
         "en/firefox/browsers/compare/edge.ftl:compare-edge-microsoft-has-to-make-their-shareholders",
-        "en/firefox/browsers/compare/shared.ftl:compare-shared-since-we-dont-have-to-make"
+        "en/firefox/browsers/compare/shared.ftl:compare-shared-since-we-dont-have-to-make",
+        "en/firefox/new/desktop.ftl:firefox-desktop-download-do-what-you-do-v2",
+        "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
       ],
       "nn-NO": [
         "en/mozorg/about/manifesto.ftl:manifesto-our-10-principles"
