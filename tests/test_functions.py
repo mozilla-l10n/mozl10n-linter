@@ -22,7 +22,7 @@ from functions import (
     python_marker_pattern,
 )
 from gettext_l10n import placeable_pattern as gettext_pattern
-from xliff_l10n import placeables_pattern as xliff_pattern
+from xliff_l10n import get_markdown_links, placeables_pattern as xliff_pattern
 
 
 def xliff_malformed(text, check_percent_escaping=True):
@@ -178,3 +178,25 @@ def test_malformed_placeables_reports_every_occurrence():
 )
 def test_get_html_tags(html, expected):
     assert get_html_tags(html) == expected
+
+
+@pytest.mark.parametrize(
+    "text, expected",
+    [
+        ("Read the [Privacy Notice](PRIVACY_NOTICE_URL).", ["PRIVACY_NOTICE_URL"]),
+        ("[One](URL_1) and [two](URL_2)", ["URL_1", "URL_2"]),
+        ("No links here", []),
+        ("[text] (URL)", []),
+        # Links without visible text are ignored.
+        ("[](URL)", []),
+        ("[ ](URL)", []),
+        # Escaped brackets in the link text, parentheses in the URL.
+        (r"[Informativa \[privacy\]](PRIVACY_NOTICE_URL)", ["PRIVACY_NOTICE_URL"]),
+        (
+            "[Policy](https://example.com/wiki/Privacy_(policy))",
+            ["https://example.com/wiki/Privacy_(policy)"],
+        ),
+    ],
+)
+def test_get_markdown_links(text, expected):
+    assert get_markdown_links(text) == expected
