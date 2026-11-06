@@ -131,11 +131,11 @@ PRIVACY = "We’ve updated our [Privacy Notice](PRIVACY_NOTICE_URL) in %@."
 
 def test_markdown_link_with_translated_text_is_allowed(run_linter, xliff_project):
     units = {
-        "notice": (
+        "single": (
             PRIVACY,
             "Abbiamo aggiornato l’[informativa](PRIVACY_NOTICE_URL) di %@.",
         ),
-        "pair": (
+        "double": (
             "Read [terms](TERMS_URL) and [notice](NOTICE_URL)",
             "Leggi [informativa](NOTICE_URL) e [termini](TERMS_URL)",
         ),

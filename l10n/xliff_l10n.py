@@ -50,13 +50,13 @@ def get_markdown_links(text):
     like headings or lists, and returns a list with one `inline` token. Its
     `children` are the inline tokens in order, as a flat list: nested markup
     is represented by opening and closing tokens. For example,
-    `We [the **Notice**](URL)` becomes:
+    `Read [new **Policy**](URL)` becomes:
 
-        text "We "
+        text "Read "
         link_open (attrs {"href": "URL"})
-        text "the "
+        text "new "
         strong_open
-        text "Notice"
+        text "Policy"
         strong_close
         link_close
 
