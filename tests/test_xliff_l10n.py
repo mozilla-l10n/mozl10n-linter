@@ -124,3 +124,69 @@ def test_locale_is_read_from_the_folder_name(run_linter, xliff_project):
     units = {"greeting": ("Hello %@", "Ciao %@$")}
     errors = run_linter("xliff_l10n.py", ["--l10n", xliff_project(units, "zh_TW")])
     assert "Locale: zh-TW" in errors
+
+
+PRIVACY = "We’ve updated our [Privacy Notice](PRIVACY_NOTICE_URL) in %@."
+
+
+def test_markdown_link_with_translated_text_is_allowed(run_linter, xliff_project):
+    units = {
+        "single": (
+            PRIVACY,
+            "Abbiamo aggiornato l’[informativa](PRIVACY_NOTICE_URL) di %@.",
+        ),
+        "double": (
+            "Read [terms](TERMS_URL) and [notice](NOTICE_URL)",
+            "Leggi [informativa](NOTICE_URL) e [termini](TERMS_URL)",
+        ),
+    }
+    assert lint(run_linter, xliff_project, units) == ""
+
+
+def test_localized_markdown_url(run_linter, xliff_project):
+    units = {"notice": (PRIVACY, "Atualizámos o [Aviso](privacy_NOTICE_URL) no %@.")}
+    errors = lint(run_linter, xliff_project, units)
+    assert "Mismatched markdown links in test.xliff:notice" in errors
+    assert "Translation links (1): privacy_NOTICE_URL" in errors
+    assert "Reference links (1): PRIVACY_NOTICE_URL" in errors
+
+
+def test_missing_markdown_link(run_linter, xliff_project):
+    units = {
+        "dropped": (PRIVACY, "Abbiamo aggiornato l’informativa di %@."),
+    }
+    errors = lint(run_linter, xliff_project, units)
+    assert "Mismatched markdown links in test.xliff:dropped" in errors
+    assert "Translation links (0): \n" in errors
+
+
+def test_markdown_links_ignore_other_exceptions(run_linter, xliff_project):
+    # The HTML check skips the rest of the checks for excepted strings: the
+    # string needs HTML tags for that to happen.
+    units = {
+        "notice": (
+            "We’ve updated our <b>[Privacy Notice](PRIVACY_NOTICE_URL)</b> in %@.",
+            "Atualizámos o <b>[Aviso](PRIVACY_URL)</b> no %@.",
+        )
+    }
+    exceptions = {
+        "placeables": {"locales": {"it": ["test.xliff:notice"]}, "strings": []},
+        "HTML": {"locales": {"it": ["test.xliff:notice"]}, "strings": []},
+    }
+    errors = lint(run_linter, xliff_project, units, exceptions=exceptions)
+    assert "Mismatched markdown links in test.xliff:notice" in errors
+
+
+def test_extra_markdown_link(run_linter, xliff_project):
+    units = {
+        "plain": ("Read the Privacy Notice", "Leggi l’[informativa](PRIVACY_URL)"),
+        "doubled": (
+            PRIVACY,
+            "[Abbiamo](PRIVACY_NOTICE_URL) aggiornato l’[informativa](PRIVACY_NOTICE_URL) di %@.",
+        ),
+    }
+    errors = lint(run_linter, xliff_project, units)
+    assert "Mismatched markdown links in test.xliff:plain" in errors
+    assert "Reference links (0): \n" in errors
+    assert "Mismatched markdown links in test.xliff:doubled" in errors
+    assert "Translation links (2): PRIVACY_NOTICE_URL, PRIVACY_NOTICE_URL" in errors

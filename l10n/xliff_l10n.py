@@ -15,6 +15,7 @@ from glob import glob
 
 from functions import get_html_tags, get_malformed_placeables
 from lxml import etree
+from markdown_it import MarkdownIt
 
 
 # Printf-style placeables, e.g. `%@`, `%d`, `%1$@`, `%1$.2f`, `%03d`. The
@@ -32,6 +33,53 @@ qt_pattern = re.compile(r"%([1-9][0-9]*)")
 placeables_pattern = re.compile(
     f"(?:{printf_pattern.pattern})|(?:{qt_pattern.pattern})"
 )
+
+# Markdown links are parsed with a CommonMark parser, the same specification
+# followed by Apple's parser on iOS.
+markdown_parser = MarkdownIt("commonmark")
+
+
+def get_markdown_links(text):
+    """Return the URLs of markdown links in text, e.g. `PRIVACY_NOTICE_URL`
+    for `[Privacy Notice](PRIVACY_NOTICE_URL)`. The link text is localizable,
+    the URL is not.
+
+    Links without text are ignored: they would be invisible.
+
+    `parseInline()` parses text as a single paragraph, without block syntax
+    like headings or lists, and returns a list with one `inline` token. Its
+    `children` are the inline tokens in order, as a flat list: nested markup
+    is represented by opening and closing tokens. For example,
+    `Read [new **Policy**](URL)` becomes:
+
+        text "Read "
+        link_open (attrs {"href": "URL"})
+        text "new "
+        strong_open
+        text "Policy"
+        strong_close
+        link_close
+
+    The `href` attribute already has escapes resolved and is percent-encoded
+    (`<a b>` becomes `a%20b`). In CommonMark, links can't contain other links,
+    so tracking the current link between `link_open` and `link_close` is
+    enough.
+    """
+    links = []
+    href = None
+    has_text = False
+    for token in markdown_parser.parseInline(text)[0].children:
+        if token.type == "link_open":
+            href = token.attrs["href"]
+            has_text = False
+        elif token.type == "link_close":
+            if has_text:
+                links.append(href)
+            href = None
+        elif href is not None and token.content.strip():
+            has_text = True
+
+    return links
 
 
 def get_placeable_groups(text):
@@ -222,6 +270,21 @@ def main():
                         errors[locale].append(
                             f"Malformed placeables in {string_id}\n"
                             f"  Malformed placeables: {', '.join(sorted(malformed.elements()))}\n"
+                            f"  Translation: {l10n_string}\n"
+                            f"  Reference: {ref_string}"
+                        )
+
+                # Check markdown links: missing, extra, or with a different
+                # URL. Most strings don't have any, so a plain substring test
+                # avoids parsing them.
+                if "](" in ref_string or "](" in l10n_string:
+                    ref_links = get_markdown_links(ref_string)
+                    l10n_links = get_markdown_links(l10n_string)
+                    if Counter(l10n_links) != Counter(ref_links):
+                        errors[locale].append(
+                            f"Mismatched markdown links in {string_id}\n"
+                            f"  Translation links ({len(l10n_links)}): {', '.join(l10n_links)}\n"
+                            f"  Reference links ({len(ref_links)}): {', '.join(ref_links)}\n"
                             f"  Translation: {l10n_string}\n"
                             f"  Reference: {ref_string}"
                         )
